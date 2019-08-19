@@ -13,8 +13,10 @@ public class Controller {
     // TODO Status und Profilbild
     // TODO Windows-Notifications
 
-    // TODO Show Network Graphically
+    // TODO Show Network Graphically (transport of sent messages)
 
+
+    //TODO Filter for specific words (Swear words --> *****) [List for words who will be censored?]
 
     //
     //
