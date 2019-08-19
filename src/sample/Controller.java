@@ -13,7 +13,6 @@ public class Controller {
     // TODO Status und Profilbild
     // TODO Windows-Notifications
 
-
     // TODO Show Network Graphically (transport of sent messages)
 
 
