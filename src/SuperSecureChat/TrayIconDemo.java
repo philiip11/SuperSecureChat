@@ -5,18 +5,20 @@ import java.awt.TrayIcon.MessageType;
 
 public class TrayIconDemo {
 
-//    public static void test() throws AWTException {
-//        if (SystemTray.isSupported()) {
-//            TrayIconDemo td = new TrayIconDemo();
-//            td.displayTray();
-//        } else {
-//            System.err.println("System tray not supported!");
-//        }
-//    }
+    public static void test() throws AWTException {
+        if (SystemTray.isSupported()) {
+            TrayIconDemo td = new TrayIconDemo();
+            td.displayTray();
+        } else {
+            System.err.println("System tray not supported!");
+        }
+    }
 
     public void displayTray() throws AWTException {
 
+
         SystemTray tray = SystemTray.getSystemTray();
+
 
         Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
 
