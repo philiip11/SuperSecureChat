@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXBadge?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="anchorPane" prefHeight="40.0" styleClass="contactItem"
+            xmlns="http://javafx.com/javafx/8.0.192">
+    <children>
+        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" fx:id="contactImage"/>
+        <Label fx:id="label1" layoutX="50.0" layoutY="16.0" text="Label"/>
+        <JFXBadge layoutX="350.0" prefHeight="48.0" prefWidth="48.0"/>
+    </children>
+</AnchorPane>

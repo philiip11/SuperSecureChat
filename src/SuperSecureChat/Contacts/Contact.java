@@ -1,4 +1,4 @@
-package SuperSecureChat;
+package SuperSecureChat.Contacts;
 
 import javafx.scene.image.Image;
 
@@ -46,5 +46,9 @@ public class Contact {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public String getName() {
+        return vorname + " " + nachname;
     }
 }

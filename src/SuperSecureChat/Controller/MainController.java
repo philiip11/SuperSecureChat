@@ -72,7 +72,7 @@ public class MainController {
 
             //TODO Datenbank laden
             try {
-                Thread.sleep(2000); // Nur zu Testzwecken
+                Thread.sleep(500); // Nur zu Testzwecken
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

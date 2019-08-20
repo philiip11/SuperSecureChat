@@ -2,6 +2,9 @@
     -fx-font-size: 22px;
 }
 
+.contactItem {
+    -fx-text-fill: black;
+}
 
 
 
@@ -71,16 +74,16 @@
 }
 
 .jfx-list-view .label {
-    -fx-font-size: 22px;
+    -fx-font-size: 16px;
     -fx-min-width: 0px;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-text-alignment: right;
     -fx-wrap-text: false;
 
 }
 
 .jfx-list-view .jfx-list-cell:selected .label {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-alignment: center-right;
 }
 
