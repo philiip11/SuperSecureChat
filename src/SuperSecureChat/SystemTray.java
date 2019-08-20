@@ -1,14 +1,14 @@
-package sample;
-
+package SuperSecureChat;
 
 import java.awt.*;
-import java.awt.TrayIcon.MessageType;
 
-public class TrayIconDemo {
+public class SystemTray {
+
+
 
     public static void main(String[] args) throws AWTException {
-        if (SystemTray.isSupported()) {
-            TrayIconDemo td = new TrayIconDemo();
+        if (java.awt.SystemTray.isSupported()) {
+            SystemTray td = new SystemTray();
             td.displayTray();
         } else {
             System.err.println("System tray not supported!");
@@ -18,7 +18,7 @@ public class TrayIconDemo {
 
     public void displayTray() throws AWTException {
         //Obtain only one instance of the SystemTray object
-        SystemTray tray = SystemTray.getSystemTray();
+        java.awt.SystemTray tray = java.awt.SystemTray.getSystemTray();
 
         //If the icon is a file
         Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
@@ -32,6 +32,6 @@ public class TrayIconDemo {
         trayIcon.setToolTip("System tray icon demo");
         tray.add(trayIcon);
 
-        trayIcon.displayMessage("Header Demo Test", "notification demo", MessageType.INFO);
+        trayIcon.displayMessage("Header Demo Test", "notification demo", TrayIcon.MessageType.INFO);
     }           //"It is working, isn't it" -->  Front text in the notification header     //"notification demo" --> the text under the notification
 }

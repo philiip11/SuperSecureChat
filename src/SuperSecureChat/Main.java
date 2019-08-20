@@ -21,7 +21,7 @@ public class Main extends Application {
         primaryStage.setTitle("SuperSecureChat");
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon256.png")));
         JFXDecorator decorator = new JFXDecorator(primaryStage, root);
-        decorator.setCustomMaximize(true);
+        decorator.setCustomMaximize(false);
         decorator.setGraphic(new ImageView(this.getClass().getResource("/icon32.png").toExternalForm()));
         Scene scene = new Scene(decorator, 600, 800, true, SceneAntialiasing.BALANCED);
         final ObservableList<String> stylesheets = scene.getStylesheets();
