@@ -1,0 +1,78 @@
+.numberButton {
+    -fx-background-color: #111111;
+    -fx-text-fill: white;
+    -fx-font-size: 42px;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 100px;
+    -jfx-button-type: RAISED;
+}
+
+.otherButton {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+    -fx-font-size: 36px;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 100px;
+}
+
+.otherButton .jfx-rippler {
+    -jfx-rippler-fill: #076611;
+
+}
+
+.numbers {
+    -fx-text-fill: white;
+    -fx-font-size: 42px;
+    -jfx-focus-color: blue;
+    -fx-min-width: 500px;
+    -fx-display-caret: false;
+
+}
+
+.text-badge .badge-pane {
+    -fx-background-color: #888888;
+    -fx-background-radius: 23;
+    -fx-pref-width: 23;
+    -fx-pref-height: 23;
+    -fx-alignment: center;
+}
+
+.text-badge Label {
+    -fx-font-weight: BOLD;
+    -fx-font-size: 14.0px;
+    -fx-text-fill: WHITE;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-arrow {
+    -fx-padding: 0 0 0 0;
+    -fx-background-color: #ff1744;
+}
+
+.scroll-pane .button {
+    -fx-background-color: #0d47a1;
+}
+
+.jfx-list-view .label {
+    -fx-font-size: 22px;
+    -fx-min-width: 0px;
+    -fx-text-fill: white;
+    -fx-text-alignment: right;
+    -fx-wrap-text: false;
+
+}
+
+.jfx-list-view .jfx-list-cell:selected .label {
+    -fx-text-fill: white;
+    -fx-alignment: center-right;
+}
+
+.jfx-list-view .jfx-list-cell {
+    -fx-min-width: 340px;
+    -fx-background-color: #333333;
+    -fx-alignment: center-right;
+
+}
