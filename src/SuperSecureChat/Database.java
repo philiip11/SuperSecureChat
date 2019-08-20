@@ -2,11 +2,11 @@ package SuperSecureChat;
 
 import java.sql.*;
 
-class DBController {
+class Database {
 
-    private static final DBController dbcontroller = new DBController();
+    private static final Database database = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static Connection connection;
 
     static {
@@ -18,15 +18,15 @@ class DBController {
         }
     }
 
-    private DBController() {
+    private Database() {
     }
 
-    public static DBController getInstance() {
-        return dbcontroller;
+    public static Database getInstance() {
+        return database;
     }
 
     public static void main(String[] args) {
-        DBController dbc = DBController.getInstance();
+        Database dbc = Database.getInstance();
         dbc.initDBConnection();
         dbc.handleDB();
     }
@@ -72,9 +72,8 @@ class DBController {
                 stmt.executeUpdate("DROP TABLE IF EXISTS messages;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT ,sender TEXT, reciever TEXT,text TEXT, data BLOB, trace TEXT);");
-
-                stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT);");
+                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, reciever TEXT, text TEXT, data BLOB, trace TEXT, read INTEGER, created TEXT, received INTEGER);");
+                stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT);");
                 stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, firstname TEXT, lastname TEXT, url TEXT);");
                 stmt.close();
 
@@ -85,5 +84,9 @@ class DBController {
             System.err.println("Couldn't handle DB-Query");
             e.printStackTrace();
         }
+    }
+
+    private void newMessage(Message message) {
+
     }
 }
