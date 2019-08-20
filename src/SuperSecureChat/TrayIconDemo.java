@@ -10,7 +10,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class TrayIconDemo {
-    public static final String PATH_TO_TRAY_ICON = "C:\\Users\\voelz\\Downloads\\Telefon.png";
+    public static final String PATH_TO_TRAY_ICON = "C:\\Users\\voelz\\Downloads\\messengericon.jpg";
+
     public static void test() throws AWTException {
         if (SystemTray.isSupported()) {   //frägt ab ob SystemTray vom System unterstützt wird
             TrayIconDemo td = new TrayIconDemo();
@@ -25,10 +26,6 @@ public class TrayIconDemo {
 
 
         SystemTray tray = SystemTray.getSystemTray();
-
-        PopupMenu popupMenu = new PopupMenu();
-        MenuItem exitItem = new MenuItem("exit");
-        popupMenu.add(exitItem);
 
 
         TrayIcon trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat"); //tiny symbol (just text for now)
