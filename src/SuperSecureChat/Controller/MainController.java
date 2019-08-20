@@ -16,6 +16,11 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Properties;
+
 public class MainController {
 
     // TODO Implement Chat
@@ -46,27 +51,36 @@ public class MainController {
     }
 
     private void init() {
+        try (OutputStream output = new FileOutputStream("config.properties")) {
+            Properties prop = new Properties();
 
-        String username = new com.sun.security.auth.module.NTSystem().getName(); // Nutzername
-        System.out.println(username);
-        String fullName = getFullName();
-        String[] nameArr = fullName.split(",");
-        vorname = nameArr[1].trim();
-        nachname = nameArr[0].trim();
-        System.out.println(fullName);
-        Platform.runLater(() -> {
-            usernameLabel.setText(vorname);
-        });
+            String username = new com.sun.security.auth.module.NTSystem().getName(); // Nutzername
+            System.out.println(username);
+            prop.setProperty("username", username);
+            String fullName = getFullName();
+            String[] nameArr = fullName.split(",");
+            vorname = nameArr[1].trim();
+            nachname = nameArr[0].trim();
+            prop.setProperty("vorname", vorname);
+            prop.setProperty("nachname", nachname);
+            System.out.println(fullName);
+            Platform.runLater(() -> {
+                usernameLabel.setText(vorname);
+            });
+            prop.store(output, "");
 
-        //TODO Datenbank laden
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            //TODO Datenbank laden
+            try {
+                Thread.sleep(2000); // Nur zu Testzwecken
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Platform.runLater(this::openContacts);
+            Platform.runLater(this::close);
+
+        } catch (IOException io) {
+            io.printStackTrace();
         }
-        Platform.runLater(this::openContacts);
-        Platform.runLater(this::close);
-
 
     }
 

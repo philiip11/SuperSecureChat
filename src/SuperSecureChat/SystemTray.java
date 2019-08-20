@@ -21,9 +21,9 @@ public class SystemTray {
         java.awt.SystemTray tray = java.awt.SystemTray.getSystemTray();
 
         //If the icon is a file
-        Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
+        //Image image = Toolkit.getDefaultToolkit().createImage("/icon.png");
         //Alternative (if the icon is on the classpath):
-        //Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon.png"));
+        Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("/icon.png"));
 
         TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
         //Let the system resize the image if needed
