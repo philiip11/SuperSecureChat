@@ -9,11 +9,22 @@ public class Contact {
     private String url;
     private Image image;
 
-    public Contact(String vorname, String nachname, String url, Image image) {
+    private int notifications;
+
+    public Contact(String vorname, String nachname, String url, Image image, int notifications) {
         this.vorname = vorname;
         this.nachname = nachname;
         this.url = url;
         this.image = image;
+        this.notifications = notifications;
+    }
+
+    public int getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
     }
 
     public String getVorname() {

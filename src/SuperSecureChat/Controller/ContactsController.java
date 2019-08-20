@@ -59,11 +59,11 @@ public class ContactsController {
         //TODO Load Real Contacts from Database
         contacts = FXCollections.observableArrayList();
         contacts.addAll(
-                new Contact("Max", "Mustermann", null, null),
-                new Contact("John", "Smith", null, null),
-                new Contact("John", "Doe", null, null),
-                new Contact("Jane", "Doe", null, null),
-                new Contact("Erika", "Mustermann", null, null)
+                new Contact("Max", "Mustermann", null, new Image(getClass().getResourceAsStream("/icon.png")), 4),
+                new Contact("John", "Smith", null, null, 0),
+                new Contact("John", "Doe", null, null, 0),
+                new Contact("Jane", "Doe", null, null, 1),
+                new Contact("Erika", "Mustermann", null, null, 0)
         );
     }
 
