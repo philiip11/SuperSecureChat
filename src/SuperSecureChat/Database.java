@@ -72,8 +72,8 @@ class DBController {
                 stmt.executeUpdate("DROP TABLE IF EXISTS messages;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT ,sender TEXT, reciever TEXT,text TEXT, data BLOB, trace TEXT);");
 
+                stmt.executeUpdate("CREATE TABLE messages (id TEXT ,sender TEXT, reciever TEXT,text TEXT, data BLOB, trace TEXT);");
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT);");
                 stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, firstname TEXT, lastname TEXT, url TEXT);");
                 stmt.close();
