@@ -1,4 +1,4 @@
-package sample;
+package SuperSecureChat.Controller;
 
 public class Controller {
     // TODO Implement Chat
@@ -7,13 +7,14 @@ public class Controller {
     // TODO Find Users via TCP
     // TODO Encrypt Messages
     // TODO Send Messages via TCP to Every User
-    // TODO Filter Messages
+    // TODO Filter Messages send to me
     // TODO Save Messages in Database
     // TODO Ping for Online-Status
     // TODO Status und Profilbild
     // TODO Windows-Notifications
 
     // TODO Show Network Graphically
+
 
 
     //
