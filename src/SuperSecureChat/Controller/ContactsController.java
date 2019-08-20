@@ -18,11 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 
 public class ContactsController {
 
@@ -43,7 +38,7 @@ public class ContactsController {
 
     private void init() {
 
-        try (InputStream input = new FileInputStream("config.properties")) {
+        /*try (InputStream input = new FileInputStream("config.properties")) {
             Properties prop = new Properties();
             prop.load(input);
             vorname = prop.getProperty("vorname");
@@ -51,9 +46,7 @@ public class ContactsController {
             username = prop.getProperty("username");
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-
-        nameLabel.setText(vorname + " " + nachname);
+        }*/
 
 
         loadContacts();
@@ -78,6 +71,7 @@ public class ContactsController {
         contactJFXListView.setItems(contacts);
         contactJFXListView.setCellFactory(contactListView -> new ContactListViewCell());
         contactJFXListView.setOnMouseClicked(this::onContactClicked);
+        contactJFXListView.setExpanded(true);
     }
 
     private void onContactClicked(MouseEvent mouseEvent) {
@@ -91,6 +85,8 @@ public class ContactsController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
             Parent root = loader.load();
+            ChatController chatController = loader.getController();
+            chatController.setContact(contact);
             Stage stage = new Stage();
             stage.setTitle(contact.getName());
             stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon256.png")));
@@ -105,8 +101,6 @@ public class ContactsController {
                     getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
                     getClass().getResource("/css/super-secure-chat.css").toExternalForm());
 
-            ChatController chatController = loader.getController();
-            chatController.setContact(contact);
             stage.setScene(scene);
             stage.show();
         } catch (Exception ignored) {
@@ -115,4 +109,11 @@ public class ContactsController {
 
     }
 
+
+    public void setData(String username, String vorname, String nachname) {
+        this.username = username;
+        this.vorname = vorname;
+        this.nachname = nachname;
+        nameLabel.setText(vorname + " " + nachname);
+    }
 }

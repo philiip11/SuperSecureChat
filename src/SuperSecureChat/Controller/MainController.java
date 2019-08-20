@@ -16,11 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Properties;
-
 public class MainController {
 
     // TODO Implement Chat
@@ -44,6 +39,7 @@ public class MainController {
 
     private String vorname;
     private String nachname;
+    private String username;
 
     public void initialize() {
         //TODO Set KeyCombos
@@ -52,16 +48,18 @@ public class MainController {
     }
 
     private void init() {
-        try (OutputStream output = new FileOutputStream("config.properties")) {
+        String fullName = getFullName();
+        String[] nameArr = fullName.split(",");
+        vorname = nameArr[1].trim();
+        nachname = nameArr[0].trim();
+        Platform.runLater(() -> {
+            usernameLabel.setText(vorname);
+        });
+        /*try (OutputStream output = new FileOutputStream("config.properties")) {
             Properties prop = new Properties();
-
-            String username = new com.sun.security.auth.module.NTSystem().getName(); // Nutzername
+            username = new com.sun.security.auth.module.NTSystem().getName(); // Nutzername
             System.out.println(username);
             prop.setProperty("username", username);
-            String fullName = getFullName();
-            String[] nameArr = fullName.split(",");
-            vorname = nameArr[1].trim();
-            nachname = nameArr[0].trim();
             prop.setProperty("vorname", vorname);
             prop.setProperty("nachname", nachname);
             System.out.println(fullName);
@@ -69,20 +67,18 @@ public class MainController {
                 usernameLabel.setText(vorname);
             });
             prop.store(output, "");
-
-            //TODO Datenbank laden
-            try {
-                Thread.sleep(500); // Nur zu Testzwecken
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Platform.runLater(this::openContacts);
-            Platform.runLater(this::close);
-
         } catch (IOException io) {
             io.printStackTrace();
-        }
+        }*/
 
+        //TODO Datenbank laden
+        try {
+            Thread.sleep(1500); // Nur zu Testzwecken
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Platform.runLater(this::openContacts);
+        Platform.runLater(this::close);
     }
 
     private void close() {
@@ -94,7 +90,11 @@ public class MainController {
         int width = 400;
         int height = 800;
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/contacts.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/contacts.fxml"));
+
+            Parent root = loader.load();
+            ContactsController contactsController = loader.getController();
+            contactsController.setData(username, vorname, nachname);
             Stage stage = new Stage();
             stage.setTitle("SSC - Kontakte");
             stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon256.png")));

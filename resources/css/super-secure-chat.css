@@ -4,10 +4,21 @@
 
 .contactItem {
     -fx-text-fill: black;
+    -fx-background-color: transparent;
 }
 
+AnchorPane, GridPane {
+    -fx-background-color: #111111;
+}
 
+Label {
+    -fx-text-fill: white;
+}
 
+JFXListView {
+    -fx-background-color: #111111;
+
+}
 
 
 
@@ -76,20 +87,20 @@
 .jfx-list-view .label {
     -fx-font-size: 16px;
     -fx-min-width: 0px;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-text-alignment: right;
     -fx-wrap-text: false;
 
 }
 
 .jfx-list-view .jfx-list-cell:selected .label {
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-alignment: center-right;
 }
 
 .jfx-list-view .jfx-list-cell {
     -fx-min-width: 340px;
-    -fx-background-color: #333333;
+    -fx-background-color: #111111;
     -fx-alignment: center-right;
 
 }

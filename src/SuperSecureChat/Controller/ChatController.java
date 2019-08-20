@@ -8,4 +8,8 @@ public class ChatController {
     public void setContact(Contact contact) {
         this.contact = contact;
     }
+
+    public void initialize() {
+
+    }
 }

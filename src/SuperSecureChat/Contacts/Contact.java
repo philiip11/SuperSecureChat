@@ -51,4 +51,10 @@ public class Contact {
     public String getName() {
         return vorname + " " + nachname;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
 }
