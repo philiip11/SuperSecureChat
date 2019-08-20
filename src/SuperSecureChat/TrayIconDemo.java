@@ -30,5 +30,10 @@ public class TrayIconDemo {
         tray.add(trayIcon);
 
         trayIcon.displayMessage("Test_Notification_Header", "notification demo message", MessageType.INFO);
+
+
+        //TODO every time a message get sent, notification //timer? --> abfragen bei nachrichtempfang
+        //TODO own Icon for display message
+        //TODO Symbol for chat? (tiny symbol in the symbols place )
     }
 }
