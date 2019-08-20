@@ -1,1 +1,3 @@
 /config.properties
+*.db
+/testdb.db

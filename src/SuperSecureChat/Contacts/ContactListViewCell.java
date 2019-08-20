@@ -1,5 +1,6 @@
 package SuperSecureChat.Contacts;
 
+import SuperSecureChat.Database;
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
 import javafx.fxml.FXML;
@@ -24,6 +25,7 @@ public class ContactListViewCell extends JFXListCell<Contact> {
 
     //TODO
     private FXMLLoader mLLoader;
+    Database db = Database.getInstance();
 
     @Override
     protected void updateItem(Contact contact, boolean empty) {
@@ -47,8 +49,9 @@ public class ContactListViewCell extends JFXListCell<Contact> {
             }
             label1.setText(contact.getVorname() + " " + contact.getNachname());
             contactImage.setImage(contact.getImage());
-            badge.setEnabled(contact.getNotifications() > 0);
-            badge.setText(String.valueOf(contact.getNotifications()));
+            int notifications = db.countUnreadMessagesByContact(contact);
+            badge.setEnabled(notifications > 0);
+            badge.setText(String.valueOf(notifications));
 
 
             setText(null);
