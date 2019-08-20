@@ -33,7 +33,7 @@ public class Main extends Application {
                 getClass().getResource("/css/super-secure-chat.css").toExternalForm());
 
 
-        SystemTray trayIcondemotest = new SystemTray();       //Display text could work this way (works)
+        TrayIconDemo trayIcondemotest = new TrayIconDemo();       //Display text could work this way (works)
         trayIcondemotest.displayTray(); //Displays the message in the notificaton
 
 
