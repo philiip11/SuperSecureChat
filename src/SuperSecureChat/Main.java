@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
 
     //TODO Change Icon
@@ -30,6 +31,11 @@ public class Main extends Application {
                 getClass().getResource("/css/custom.css").toExternalForm(),
                 getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
                 getClass().getResource("/css/super-secure-chat.css").toExternalForm());
+
+
+        SystemTray trayIcondemotest = new SystemTray();       //Display text could work this way (works)
+        trayIcondemotest.displayTray(); //Displays the message in the notificaton
+
 
         primaryStage.setScene(scene);
         primaryStage.show();
