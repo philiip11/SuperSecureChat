@@ -15,6 +15,7 @@ public class TrayIconDemo {
         }
     }
 
+
     public void displayTray() throws AWTException {
         //Obtain only one instance of the SystemTray object
         SystemTray tray = SystemTray.getSystemTray();
