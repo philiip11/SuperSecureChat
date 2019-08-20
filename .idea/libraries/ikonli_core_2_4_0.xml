@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="ikonli-core-2.4.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/SuperSecureChat/lib/ikonli-core-2.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/SuperSecureChat/lib/ikonli-fontawesome5-pack-2.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/SuperSecureChat/lib/ikonli-javafx-2.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/SuperSecureChat/lib/jfoenix-8.0.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
