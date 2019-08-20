@@ -1,12 +1,14 @@
 package SuperSecureChat;
 
+import SuperSecureChat.Contacts.Contact;
+
 import java.sql.*;
 
-class Database {
+public class Database {
 
     private static final Database database = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 0;
     private static Connection connection;
 
     static {
@@ -43,37 +45,37 @@ class Database {
             throw new RuntimeException(e);
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                try {
-                    if (!connection.isClosed() && connection != null) {
-                        connection.close();
-                        if (connection.isClosed())
-                            System.out.println("Connection to Database closed");
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                if (!connection.isClosed() && connection != null) {
+                    connection.close();
+                    if (connection.isClosed())
+                        System.out.println("Connection to Database closed");
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        });
+        }));
     }
 
     private void handleDB() {
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("PRAGMA user_version;");
+            String pragma = "PRAGMA "; // Fixes Intellij Errors
+            ResultSet rs = stmt.executeQuery(pragma + "user_version;");
             int databaseVersion = rs.getInt(1);
             System.out.println(rs.getInt(1));
             if (databaseVersion != DB_VERSION) {
-                stmt.executeUpdate("PRAGMA user_version = " + DB_VERSION);
+                stmt.executeUpdate(pragma + "user_version = " + DB_VERSION);
 
 
                 stmt = connection.createStatement();
                 stmt.executeUpdate("DROP TABLE IF EXISTS messages;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, reciever TEXT, text TEXT, data BLOB, trace TEXT, read INTEGER, created TEXT, received INTEGER);");
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT);");
+                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, reciever TEXT, text TEXT, data BLOB, trace TEXT, read INTEGER, created TEXT, received INTEGER," +
+                        "UNIQUE(id, sender) ,FOREIGN KEY(sender) REFERENCES contacts (id),FOREIGN KEY(reciever) REFERENCES contacts (id));");
                 stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, firstname TEXT, lastname TEXT, url TEXT);");
                 stmt.close();
 
@@ -86,7 +88,17 @@ class Database {
         }
     }
 
-    private void newMessage(Message message) {
-
+    public void newMessage(Message message) {
+        //TODO
     }
+
+    public void newContact(Contact contact) {
+        //TODO
+    }
+
+    public int countUnreadMessagesByContact(Contact contact) {
+        //TODO
+        return 42;
+    }
+
 }
