@@ -12,6 +12,7 @@ public class Controller {
     // TODO Ping for Online-Status (cmd ping like request to see if one is online, [online/offline])
     // TODO Status und Profilbild
 
+
     // TODO Windows-Notifications   (found some awt guide, not javafx tho)
 
 
