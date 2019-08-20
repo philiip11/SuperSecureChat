@@ -38,6 +38,7 @@ public class MainController {
 
     // TODO Show Network Graphically
 
+
     @FXML
     Label usernameLabel;
 

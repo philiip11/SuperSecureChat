@@ -30,6 +30,6 @@ public class TrayIconDemo {
         trayIcon.setToolTip("System tray icon demo");
         tray.add(trayIcon);
 
-        trayIcon.displayMessage("Hello, World", "notification demo", MessageType.INFO);
+        trayIcon.displayMessage("Test_Notification_Header", "notification demo message", MessageType.INFO);
     }
 }
