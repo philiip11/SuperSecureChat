@@ -7,8 +7,9 @@
             xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.ChatController">
     <children>
         <JFXButton fx:id="sendMessage" buttonType="RAISED" layoutX="537.0" layoutY="378.0" mnemonicParsing="false"
-                   text="Send" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="16.0"/>
-        <JFXTextField layoutX="14.0" layoutY="378.0" prefHeight="25.0" prefWidth="554.0" AnchorPane.bottomAnchor="16.0"
+                   onAction="#buttonClick" text="Send" AnchorPane.bottomAnchor="16.0"
+                   AnchorPane.rightAnchor="16.0"/>
+      <JFXTextField layoutX="14.0" layoutY="378.0" prefHeight="25.0" prefWidth="554.0" AnchorPane.bottomAnchor="16.0"
                       AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="69.0"/>
     </children>
 </AnchorPane>
