@@ -27,6 +27,7 @@ public class UDPClient implements Runnable {
     @Override
     public void run() {
         network = Network.getInstance();
+        System.out.println("UDP run");
         try {
             while (true) {
                 c = new DatagramSocket();

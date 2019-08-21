@@ -14,7 +14,7 @@ public class Network {
     private ArrayList<TCPServer> tcpServers = new ArrayList<>();
     private ArrayList<TCPClient> tcpClients = new ArrayList<>();
     private ArrayList<String> myIPs;
-    private ArrayList<String> otherIPs;
+    private ArrayList<String> otherIPs = new ArrayList<>();
 
     public Network() {
         myIPs = getMyIpAdresses();
@@ -33,8 +33,9 @@ public class Network {
     }
 
     public void initUDP() {
-        UDPServer.getInstance().run();
-        UDPClient.getInstance().run();
+        System.out.println("Start UDP...");
+        new Thread(() -> UDPServer.getInstance().run()).start();
+        new Thread(() -> UDPClient.getInstance().run()).start();
     }
 
     public void addIP(String ip) {

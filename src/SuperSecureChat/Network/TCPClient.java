@@ -19,7 +19,7 @@ public class TCPClient {
     }
 
     public static void main(String[] args) throws Exception {
-        TCPClient client = new TCPClient("169.254.162.72", TCPServer.PORT);
+        TCPClient client = new TCPClient("172.17.27.237", TCPServer.PORT);
 
         System.out.println("\r\nConnected to Server: " + client.socket.getInetAddress());
         new Thread(client::start).start();
