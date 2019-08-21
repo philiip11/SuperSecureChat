@@ -32,9 +32,8 @@ public class Main extends Application {
                 getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
                 getClass().getResource("/css/super-secure-chat.css").toExternalForm());
 
-
-        TrayIconDemo trayIcondemotest = new TrayIconDemo();
-        trayIcondemotest.displayTray();                             //Displays the message in the notificaton corner
+        SystemTrayIcon systemTrayIcon = new SystemTrayIcon();
+        systemTrayIcon.displayTray();                                 //Displays the message in the notificaton corner
 
 
         primaryStage.setScene(scene);
