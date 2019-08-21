@@ -1,5 +1,7 @@
 // TODO Implement Chat
 
+
+    // TODO Change Icon to something unique, not FB Messenger
     // TODO Implement GUI via JavaFX
     // TODO Find Users via TCP
     // TODO Encrypt Messages (just the user the message was meant for can read it)
