@@ -54,11 +54,11 @@ public class UDPClient implements Runnable {
                         } catch (Exception e) {
                         }
 
-                        System.out.println(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
+                        //System.out.println(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
                     }
                 }
 
-                System.out.println(getClass().getName() + ">>> Done looping over all network interfaces. Now waiting for a reply!");
+                //System.out.println(getClass().getName() + ">>> Done looping over all network interfaces. Now waiting for a reply!");
 
                 //Wait for a response
                 byte[] recvBuf = new byte[15000];

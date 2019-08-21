@@ -30,7 +30,7 @@ public class UDPServer implements Runnable {
             socket.setBroadcast(true);
 
             while (true) {
-                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
+                //System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
 
                 //Receive a packet
                 byte[] recvBuf = new byte[15000];
@@ -39,8 +39,8 @@ public class UDPServer implements Runnable {
 
 
                 if (myIPs.contains(packet.getAddress().getHostAddress())) {
-                    System.out.println(getClass().getName() + ">>>Discovery packet received from: myself (" + packet.getAddress().getHostAddress() + ")");
-                    System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
+                    //System.out.println(getClass().getName() + ">>>Discovery packet received from: myself (" + packet.getAddress().getHostAddress() + ")");
+                    //System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
 
                 } else {
                     //Packet received
