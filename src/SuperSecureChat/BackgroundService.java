@@ -1,6 +1,6 @@
 package SuperSecureChat;
 
-import SuperSecureChat.Network.UDPServer;
+import SuperSecureChat.Network.Network;
 
 import java.awt.*;
 
@@ -16,7 +16,7 @@ public class BackgroundService implements Runnable {
     @Override
     public void run() {
         startSystemTray();
-        UDPServer.getInstance().run();
+        Network.startUDPServer();
 
     }
 
