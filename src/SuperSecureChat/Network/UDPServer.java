@@ -24,7 +24,7 @@ public class UDPServer implements Runnable {
     @Override
     public void run() {
         try {
-            ArrayList<String> myIPs = Network.getMyIpAdresses();
+            ArrayList<String> myIPs = Network.getInstance().getMyIPs();
             //Keep a socket open to listen to all the UDP trafic that is destined for this port
             DatagramSocket socket = new DatagramSocket(40, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
@@ -52,8 +52,6 @@ public class UDPServer implements Runnable {
                     if (message.equals("DISCOVER_SUPERSECURECHAT_REQUEST")) {
                         byte[] sendData = "DISCOVER_SUPERSECURECHAT_RESPONSE".getBytes();
 
-                        TCPServer tcpServer = new TCPServer();
-                        tcpServer.run();
                         //Send a response
                         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                         socket.send(sendPacket);

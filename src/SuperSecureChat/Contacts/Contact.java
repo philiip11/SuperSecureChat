@@ -1,6 +1,7 @@
 package SuperSecureChat.Contacts;
 
 import javafx.scene.image.Image;
+import org.json.simple.JSONObject;
 
 import java.util.Date;
 
@@ -14,6 +15,25 @@ public class Contact {
     private Date lastOnline;
     private Image image;
     private int notifications;
+
+
+    public String toJSONString() {
+        return toJSON().toJSONString();
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJSON() {
+        JSONObject jsonMessage = new JSONObject();
+        jsonMessage.put("id", id);
+        jsonMessage.put("firstname", firstname);
+        jsonMessage.put("lastname", lastname);
+        jsonMessage.put("url", url);
+        jsonMessage.put("lastOnline", lastOnline);
+        jsonMessage.put("image", image);
+        jsonMessage.put("notifications", notifications);
+        return jsonMessage;
+    }
 
     public Contact(String id, String firstname, String lastname, String url, Date lastOnline, Image image, int notifications) {
         this.id = id;

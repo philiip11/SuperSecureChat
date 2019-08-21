@@ -9,7 +9,48 @@ import java.util.Enumeration;
 
 public class Network {
 
-    static ArrayList<String> getMyIpAdresses() {
+    private static final Network INSTANCE = new Network();
+
+    private ArrayList<TCPServer> tcpServers = new ArrayList<>();
+    private ArrayList<TCPClient> tcpClients = new ArrayList<>();
+    private ArrayList<String> myIPs;
+    private ArrayList<String> otherIPs;
+
+    public Network() {
+        myIPs = getMyIpAdresses();
+        for (String ip : myIPs) {
+            TCPServer tcpServer = new TCPServer(ip);
+            if (!tcpServer.isError()) {
+                System.out.println("Created Server: " + ip);
+                tcpServers.add(tcpServer);
+            }
+        }
+
+    }
+
+    public static Network getInstance() {
+        return INSTANCE;
+    }
+
+    public void initUDP() {
+        UDPServer.getInstance().run();
+        UDPClient.getInstance().run();
+    }
+
+    public void addIP(String ip) {
+        if (!otherIPs.contains(ip)) {
+            otherIPs.add(ip);
+            System.out.println("Neue IP: " + ip);
+        }
+    }
+
+
+    ArrayList<String> getMyIPs() {
+        return myIPs;
+    }
+
+
+    private ArrayList<String> getMyIpAdresses() {
         ArrayList<String> myIPs = new ArrayList<>();
         try {
             Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
@@ -30,9 +71,6 @@ public class Network {
         return myIPs;
     }
 
-    public static void startUDPServer() {
-        UDPServer.getInstance().run();
-    }
 
     // TODO Methode, der man eine Adresse übergibt und die dann prüft, ob die Adresse via Ping erreichbar ist
 

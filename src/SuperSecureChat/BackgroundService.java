@@ -16,7 +16,8 @@ public class BackgroundService implements Runnable {
     @Override
     public void run() {
         startSystemTray();
-        Network.startUDPServer();
+        Network network = Network.getInstance();
+        network.initUDP();
 
     }
 

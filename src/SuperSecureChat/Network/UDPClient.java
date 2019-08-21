@@ -11,18 +11,27 @@ public class UDPClient implements Runnable {
     // Find the server using UDP broadcast
     private DatagramSocket c;
 
+    private static final UDPClient INSTANCE = new UDPClient();
+
+    private Network network;
+
     public static void main(String[] args) {
         UDPClient ct = new UDPClient();
         ct.run();
     }
 
+    public static UDPClient getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void run() {
+        network = Network.getInstance();
         try {
             while (true) {
                 c = new DatagramSocket();
                 c.setBroadcast(true);
-                ArrayList<String> myIPs = Network.getMyIpAdresses();
+                ArrayList<String> myIPs = network.getMyIPs();
 
                 byte[] sendData = "DISCOVER_SUPERSECURECHAT_REQUEST".getBytes();
 
@@ -77,8 +86,9 @@ public class UDPClient implements Runnable {
                             String message = new String(receivePacket.getData()).trim();
                             if (message.equals("DISCOVER_SUPERSECURECHAT_RESPONSE")) {
                                 //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                                System.out.println("IP Adresse: " + receivePacket.getAddress());
-                                new TCPClient(receivePacket.getAddress()).init();
+                                network.addIP(receivePacket.getAddress().getHostAddress());
+
+                                //new TCPClient(receivePacket.getAddress().getHostAddress()).init();
 
                                 //Controller_Base.setServerIp(receivePacket.getAddress());
                             }

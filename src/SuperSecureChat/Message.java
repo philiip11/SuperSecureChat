@@ -1,6 +1,7 @@
 package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
+import org.json.simple.JSONObject;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
 public class Message {
 
     private String id;                  // Eindeutige ID der Nachricht, bestehend aus Nutzername des Senders und seinem lokalen Counter
-    private String referencId;          // Referenz auf andere Nachricht, bspw. für Antwort oder Korrektur
+    private String referenceId;          // Referenz auf andere Nachricht, bspw. für Antwort oder Korrektur
     private Contact sender;             // Absender
     private Contact reciever;           // Empfänger
     private String text;                // Nachrichttext
@@ -18,9 +19,9 @@ public class Message {
     private int read;                   // Nachricht gelesen?  1 = ja, 0 = nein
     private int received;               // Nachricht beim Empfänger angekommen?
 
-    public Message(String id, String referencId, Contact sender, Contact reciever, String text, Byte[] data, String trace, Date created, int read, int received) {
+    public Message(String id, String referenceId, Contact sender, Contact reciever, String text, Byte[] data, String trace, Date created, int read, int received) {
         this.id = id;
-        this.referencId = referencId;
+        this.referenceId = referenceId;
         this.sender = sender;
         this.reciever = reciever;
         this.text = text;
@@ -35,7 +36,7 @@ public class Message {
     public String toString() {
         return "Message{" +
                 "id='" + id + '\'' +
-                ", referencId='" + referencId + '\'' +
+                ", referenceId='" + referenceId + '\'' +
                 ", sender=" + sender +
                 ", reciever=" + reciever +
                 ", text='" + text + '\'' +
@@ -47,6 +48,27 @@ public class Message {
                 '}';
     }
 
+    public String toJSONString() {
+        return toJSON().toJSONString();
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJSON() {
+        JSONObject jsonMessage = new JSONObject();
+        jsonMessage.put("id", id);
+        jsonMessage.put("referenceID", referenceId);
+        jsonMessage.put("sender", sender.toJSON());
+        jsonMessage.put("reciever", reciever.toJSON());
+        jsonMessage.put("text", text);
+        jsonMessage.put("data", data);
+        jsonMessage.put("trace", trace);
+        jsonMessage.put("created", created);
+        jsonMessage.put("read", read);
+        jsonMessage.put("received", received);
+        return jsonMessage;
+    }
+
     public String getId() {
         return id;
     }
@@ -56,11 +78,11 @@ public class Message {
     }
 
     public String getReferencId() {
-        return referencId;
+        return referenceId;
     }
 
     public void setReferencId(String referencId) {
-        this.referencId = referencId;
+        this.referenceId = referencId;
     }
 
     public Contact getSender() {
