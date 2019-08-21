@@ -5,6 +5,7 @@ import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +24,7 @@ public class UDPServer implements Runnable {
     @Override
     public void run() {
         try {
+            ArrayList<String> myIPs = Network.getMyIpAdresses();
             //Keep a socket open to listen to all the UDP trafic that is destined for this port
             DatagramSocket socket = new DatagramSocket(40, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
@@ -35,22 +37,29 @@ public class UDPServer implements Runnable {
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
                 socket.receive(packet);
 
-                //Packet received
-                System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
 
-                //See if the packet holds the right command (message)
-                String message = new String(packet.getData()).trim();
-                if (message.equals("DISCOVER_SUPERSECURECHAT_REQUEST")) {
-                    byte[] sendData = "DISCOVER_SUPERSECURECHAT_RESPONSE".getBytes();
+                if (myIPs.contains(packet.getAddress().getHostAddress())) {
+                    System.out.println(getClass().getName() + ">>>Discovery packet received from: myself (" + packet.getAddress().getHostAddress() + ")");
+                    System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
 
-                    TCPServer tcpServer = new TCPServer();
-                    tcpServer.run();
-                    //Send a response
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
-                    socket.send(sendPacket);
+                } else {
+                    //Packet received
+                    System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
+                    System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
 
-                    System.out.println(getClass().getName() + ">>>Sent packet to                : " + sendPacket.getAddress().getHostAddress());
+                    //See if the packet holds the right command (message)
+                    String message = new String(packet.getData()).trim();
+                    if (message.equals("DISCOVER_SUPERSECURECHAT_REQUEST")) {
+                        byte[] sendData = "DISCOVER_SUPERSECURECHAT_RESPONSE".getBytes();
+
+                        TCPServer tcpServer = new TCPServer();
+                        tcpServer.run();
+                        //Send a response
+                        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
+                        socket.send(sendPacket);
+
+                        System.out.println(getClass().getName() + ">>>Sent packet to                : " + sendPacket.getAddress().getHostAddress());
+                    }
                 }
             }
         } catch (BindException ex) {

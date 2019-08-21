@@ -21,7 +21,7 @@ public class UDPClient implements Runnable {
         try {
             c = new DatagramSocket();
             c.setBroadcast(true);
-            ArrayList<String> myIPs = new ArrayList<>();
+            ArrayList<String> myIPs = Network.getMyIpAdresses();
 
             byte[] sendData = "DISCOVER_SUPERSECURECHAT_REQUEST".getBytes();
 
@@ -36,14 +36,7 @@ public class UDPClient implements Runnable {
             Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
-                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
 
-                while (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    if (addr instanceof Inet4Address && !addr.isLoopbackAddress()) {
-                        myIPs.add(addr.getHostAddress());
-                    }
-                }
 
                 if (networkInterface.isLoopback() || !networkInterface.isUp()) {
                     continue; // Don't want to broadcast to the loopback interface
