@@ -2,21 +2,51 @@ package SuperSecureChat.Contacts;
 
 import javafx.scene.image.Image;
 
+import java.util.Date;
+
 public class Contact {
 
-    private String vorname;
-    private String nachname;
-    private String url;
-    private Image image;
 
+    private String id;
+    private String firstname;
+    private String lastname;
+    private String url;
+    private Date lastOnline;
+    private Image image;
     private int notifications;
 
-    public Contact(String vorname, String nachname, String url, Image image, int notifications) {
-        this.vorname = vorname;
-        this.nachname = nachname;
+    public Contact(String id, String firstname, String lastname, String url, Date lastOnline, Image image, int notifications) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.url = url;
+        this.lastOnline = lastOnline;
+        this.image = image;
+        this.notifications = notifications;
+    }
+
+    public Contact(String firstname, String lastname, String url, Image image, int notifications) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.url = url;
         this.image = image;
         this.notifications = notifications;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Date getLastOnline() {
+        return lastOnline;
+    }
+
+    public void setLastOnline(Date lastOnline) {
+        this.lastOnline = lastOnline;
     }
 
     public int getNotifications() {
@@ -27,20 +57,20 @@ public class Contact {
         this.notifications = notifications;
     }
 
-    public String getVorname() {
-        return vorname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setVorname(String vorname) {
-        this.vorname = vorname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getNachname() {
-        return nachname;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setNachname(String nachname) {
-        this.nachname = nachname;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getUrl() {
@@ -60,12 +90,18 @@ public class Contact {
     }
 
     public String getName() {
-        return vorname + " " + nachname;
+        return firstname + " " + lastname;
     }
 
     @Override
     public String toString() {
-        return getName();
+        return "Contact{" +
+                "vorname='" + firstname + '\'' +
+                ", nachname='" + lastname + '\'' +
+                ", url='" + url + '\'' +
+                ", image=" + image +
+                ", notifications=" + notifications +
+                '}';
     }
 
 }
