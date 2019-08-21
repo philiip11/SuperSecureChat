@@ -13,9 +13,13 @@ public class TCPClient {
     private Socket socket;
     private Scanner scanner;
 
-    private TCPClient(String serverAddress, int serverPort) throws Exception {
-        this.socket = new Socket(serverAddress, serverPort);
-        this.scanner = new Scanner(System.in);
+    public TCPClient(String serverAddress, int serverPort) {
+        try {
+            this.socket = new Socket(serverAddress, serverPort);
+            this.scanner = new Scanner(System.in);
+        } catch (IOException ignored) {
+
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -50,5 +54,10 @@ public class TCPClient {
     public void sendMessage(Message message) {
 
         sendText(message.toJSONString());
+    }
+
+    public void sendContact(Contact contact) {
+
+        sendText(contact.toJSONString());
     }
 }

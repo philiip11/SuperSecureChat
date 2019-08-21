@@ -15,7 +15,22 @@ public class Contact {
     private Date lastOnline;
     private Image image;
     private int notifications;
+    private static final Contact me = new Contact();
 
+
+    public Contact() {
+
+    }
+
+    public static Contact getMyContact() {
+        return me;
+    }
+
+    public static void setMyName(String username, String firstname, String lastname) {
+        me.setId(username);
+        me.setFirstname(firstname);
+        me.setLastname(lastname);
+    }
 
     public String toJSONString() {
         return toJSON().toJSONString();
@@ -51,6 +66,10 @@ public class Contact {
         this.url = url;
         this.image = image;
         this.notifications = notifications;
+    }
+
+    public static void setMyIP(String ip) {
+        me.setUrl(ip);
     }
 
     public String getId() {

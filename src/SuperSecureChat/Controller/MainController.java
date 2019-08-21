@@ -1,5 +1,6 @@
 package SuperSecureChat.Controller;
 
+import SuperSecureChat.Contacts.Contact;
 import com.jfoenix.controls.JFXDecorator;
 import com.sun.jna.platform.win32.Secur32;
 import com.sun.jna.ptr.IntByReference;
@@ -55,6 +56,8 @@ public class MainController {
         Platform.runLater(() -> {
             usernameLabel.setText(vorname);
         });
+        username = new com.sun.security.auth.module.NTSystem().getName();
+        Contact.setMyName(username, vorname, nachname);
         /*try (OutputStream output = new FileOutputStream("config.properties")) {
             Properties prop = new Properties();
             username = new com.sun.security.auth.module.NTSystem().getName(); // Nutzername

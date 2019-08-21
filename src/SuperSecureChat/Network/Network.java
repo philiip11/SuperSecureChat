@@ -1,5 +1,7 @@
 package SuperSecureChat.Network;
 
+import SuperSecureChat.Contacts.Contact;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -42,6 +44,10 @@ public class Network {
         if (!otherIPs.contains(ip)) {
             otherIPs.add(ip);
             System.out.println("Neue IP: " + ip);
+            TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
+            Contact me = Contact.getMyContact();
+            tcpClient.sendContact(me);
+
         }
     }
 
