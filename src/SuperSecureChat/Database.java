@@ -73,6 +73,8 @@ public class Database {
                 stmt.executeUpdate("DROP TABLE IF EXISTS messages;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
+
+                stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT);");
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT, image BLOB);");
                 stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, reciever TEXT, text TEXT, data BLOB, trace TEXT, read INTEGER, created TEXT, received INTEGER," +
                         "UNIQUE(id, sender) ,FOREIGN KEY(sender) REFERENCES contacts (id),FOREIGN KEY(reciever) REFERENCES contacts (id));");
