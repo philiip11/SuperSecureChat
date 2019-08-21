@@ -19,11 +19,12 @@ public class UDPClient implements Runnable {
     @Override
     public void run() {
         try {
-            c = new DatagramSocket();
-            c.setBroadcast(true);
-            ArrayList<String> myIPs = Network.getMyIpAdresses();
+            while (true) {
+                c = new DatagramSocket();
+                c.setBroadcast(true);
+                ArrayList<String> myIPs = Network.getMyIpAdresses();
 
-            byte[] sendData = "DISCOVER_SUPERSECURECHAT_REQUEST".getBytes();
+                byte[] sendData = "DISCOVER_SUPERSECURECHAT_REQUEST".getBytes();
 
 //            try {
 //                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 40);
@@ -32,59 +33,64 @@ public class UDPClient implements Runnable {
 //            }
 
 
-            // Broadcast the message over all the network interfaces
-            Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
+                // Broadcast the message over all the network interfaces
+                Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
+                while (interfaces.hasMoreElements()) {
+                    NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
 
 
-                if (networkInterface.isLoopback() || !networkInterface.isUp()) {
-                    continue; // Don't want to broadcast to the loopback interface
-                }
-
-                for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-                    InetAddress broadcast = interfaceAddress.getBroadcast();
-                    if (broadcast == null) {
-                        continue;
-                    }
-                    try {
-                        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, 40);
-                        c.send(sendPacket);
-                    } catch (Exception e) {
+                    if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+                        continue; // Don't want to broadcast to the loopback interface
                     }
 
-                    System.out.println(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
+                    for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+                        InetAddress broadcast = interfaceAddress.getBroadcast();
+                        if (broadcast == null) {
+                            continue;
+                        }
+                        try {
+                            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, 40);
+                            c.send(sendPacket);
+                        } catch (Exception e) {
+                        }
+
+                        System.out.println(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
+                    }
                 }
+
+                System.out.println(getClass().getName() + ">>> Done looping over all network interfaces. Now waiting for a reply!");
+
+                //Wait for a response
+                byte[] recvBuf = new byte[15000];
+                try {
+                    while (true) {
+                        DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
+                        c.setSoTimeout(10000);
+                        c.receive(receivePacket);
+
+                        if (myIPs.contains(receivePacket.getAddress().getHostAddress())) {
+                            System.out.println(getClass().getName() + ">>> Broadcast response from myself: " + receivePacket.getAddress().getHostAddress());
+                        } else {
+                            //We have a response
+                            System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+                            //Check if the message is correct
+                            String message = new String(receivePacket.getData()).trim();
+                            if (message.equals("DISCOVER_SUPERSECURECHAT_RESPONSE")) {
+                                //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
+                                System.out.println("IP Adresse: " + receivePacket.getAddress());
+                                new TCPClient(receivePacket.getAddress()).init();
+
+                                //Controller_Base.setServerIp(receivePacket.getAddress());
+                            }
+                        }
+
+                    }
+                } catch (SocketTimeoutException ignored) {
+
+                }
+
+                c.close();
             }
-
-            System.out.println(getClass().getName() + ">>> Done looping over all network interfaces. Now waiting for a reply!");
-
-            //Wait for a response
-            byte[] recvBuf = new byte[15000];
-            while (true) {
-                DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
-                c.receive(receivePacket);
-
-                if (myIPs.contains(receivePacket.getAddress().getHostAddress())) {
-                    System.out.println(getClass().getName() + ">>> Broadcast response from myself: " + receivePacket.getAddress().getHostAddress());
-                } else {
-                    //We have a response
-                    System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
-                    //Check if the message is correct
-                    String message = new String(receivePacket.getData()).trim();
-                    if (message.equals("DISCOVER_SUPERSECURECHAT_RESPONSE")) {
-                        //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                        System.out.println("IP Adresse: " + receivePacket.getAddress());
-                        new TCPClient(receivePacket.getAddress()).init();
-
-                        //Controller_Base.setServerIp(receivePacket.getAddress());
-                    }
-                }
-
-            }
-
-            //Close the port!
-            //c.close();
         } catch (
                 IOException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
