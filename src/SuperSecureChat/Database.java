@@ -76,9 +76,9 @@ public class Database {
 
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT);");
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT, image BLOB);");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, reciever TEXT, text TEXT, data BLOB, trace TEXT, read INTEGER, created TEXT, received INTEGER," +
-                        "UNIQUE(id, sender) ,FOREIGN KEY(sender) REFERENCES contacts (id),FOREIGN KEY(reciever) REFERENCES contacts (id));");
-                stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, firstname TEXT, lastname TEXT, url TEXT);");
+                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, reciever TEXT, text TEXT, data BLOB, trace TEXT,  created TEXT, received INTEGER, read INTEGER," +
+                        "UNIQUE(id, sender), FOREIGN KEY(sender) REFERENCES contacts (id), FOREIGN KEY(reciever) REFERENCES contacts (id));");
+                stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, firstname TEXT, lastname TEXT, url TEXT, key TEXT);");
                 stmt.close();
 
             }
