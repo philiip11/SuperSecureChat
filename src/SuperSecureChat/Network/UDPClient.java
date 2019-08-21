@@ -6,29 +6,26 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ClientTest {
+public class UDPClient implements Runnable {
     // Find the server using UDP broadcast
-    DatagramSocket c;
+    private DatagramSocket c;
 
     public static void main(String[] args) {
-        ClientTest ct = new ClientTest();
+        UDPClient ct = new UDPClient();
         ct.run();
     }
 
-    private void run() {
+    @Override
+    public void run() {
         try {
-
-            //Open a random port to send the package
             c = new DatagramSocket();
             c.setBroadcast(true);
 
             byte[] sendData = "DISCOVER_SUPERSECURECHAT_REQUEST".getBytes();
 
-            //Try the 255.255.255.255 first
             try {
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 8888);
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 40);
                 c.send(sendPacket);
-                System.out.println(getClass().getName() + ">>> Request packet sent to: 255.255.255.255 (DEFAULT)");
             } catch (Exception e) {
             }
 
@@ -46,8 +43,6 @@ public class ClientTest {
                     if (broadcast == null) {
                         continue;
                     }
-
-                    // Send the broadcast package!
                     try {
                         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, 8888);
                         c.send(sendPacket);
@@ -74,7 +69,8 @@ public class ClientTest {
                 if (message.equals("DISCOVER_SUPERSECURECHAT_RESPONSE")) {
                     //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
                     System.out.println("IP Adresse: " + receivePacket.getAddress());
-                    System.out.println("getHostName: " + receivePacket.getAddress().getHostName());
+                    new TCPClient(receivePacket.getAddress()).init();
+
                     //Controller_Base.setServerIp(receivePacket.getAddress());
                 }
             }
@@ -83,7 +79,7 @@ public class ClientTest {
             //c.close();
         } catch (
                 IOException ex) {
-            Logger.getLogger(ClientTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

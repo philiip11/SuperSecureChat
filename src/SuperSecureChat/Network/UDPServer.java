@@ -7,15 +7,15 @@ import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServerTest implements Runnable {
-    private static final ServerTest INSTANCE = new ServerTest();
+public class UDPServer implements Runnable {
+    private static final UDPServer INSTANCE = new UDPServer();
 
     public static void main(String[] args) {
-        ServerTest st = new ServerTest();
+        UDPServer st = new UDPServer();
         st.run();
     }
 
-    public static ServerTest getInstance() {
+    public static UDPServer getInstance() {
         return INSTANCE;
     }
 
@@ -23,7 +23,7 @@ public class ServerTest implements Runnable {
     public void run() {
         try {
             //Keep a socket open to listen to all the UDP trafic that is destined for this port
-            DatagramSocket socket = new DatagramSocket(8888, InetAddress.getByName("0.0.0.0"));
+            DatagramSocket socket = new DatagramSocket(40, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
 
             while (true) {
@@ -36,7 +36,6 @@ public class ServerTest implements Runnable {
 
                 //Packet received
                 System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                System.out.println(getClass().getName() + ">>>Discovery packet Hostname     : " + packet.getAddress().getHostName());
                 System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
 
                 //See if the packet holds the right command (message)
@@ -44,6 +43,8 @@ public class ServerTest implements Runnable {
                 if (message.equals("DISCOVER_SUPERSECURECHAT_REQUEST")) {
                     byte[] sendData = "DISCOVER_SUPERSECURECHAT_RESPONSE".getBytes();
 
+                    TCPServer tcpServer = new TCPServer();
+                    tcpServer.run();
                     //Send a response
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                     socket.send(sendPacket);
@@ -52,7 +53,7 @@ public class ServerTest implements Runnable {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
