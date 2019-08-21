@@ -11,13 +11,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 public class Main extends Application {
 
     //TODO Change Icon
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("SuperSecureChat");
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon256.png")));
@@ -32,10 +34,10 @@ public class Main extends Application {
                 getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
                 getClass().getResource("/css/super-secure-chat.css").toExternalForm());
 
-        SystemTrayIcon systemTrayIcon = new SystemTrayIcon();
-        systemTrayIcon.displayTray();                                 //Displays the message in the notificaton corner
-
-
+        new Thread(() -> {
+            BackgroundService backgroundService = BackgroundService.getInstance();
+            backgroundService.run();
+        }).start();
         primaryStage.setScene(scene);
         primaryStage.show();
 

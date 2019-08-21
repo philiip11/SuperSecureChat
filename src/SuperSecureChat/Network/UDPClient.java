@@ -2,6 +2,7 @@ package SuperSecureChat.Network;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,19 +21,29 @@ public class UDPClient implements Runnable {
         try {
             c = new DatagramSocket();
             c.setBroadcast(true);
+            ArrayList<String> myIPs = new ArrayList<>();
 
             byte[] sendData = "DISCOVER_SUPERSECURECHAT_REQUEST".getBytes();
 
-            try {
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 40);
-                c.send(sendPacket);
-            } catch (Exception e) {
-            }
+//            try {
+//                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 40);
+//                c.send(sendPacket);
+//            } catch (Exception e) {
+//            }
+
 
             // Broadcast the message over all the network interfaces
             Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
+                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (addr instanceof Inet4Address && !addr.isLoopbackAddress()) {
+                        myIPs.add(addr.getHostAddress());
+                    }
+                }
 
                 if (networkInterface.isLoopback() || !networkInterface.isUp()) {
                     continue; // Don't want to broadcast to the loopback interface
@@ -44,7 +55,7 @@ public class UDPClient implements Runnable {
                         continue;
                     }
                     try {
-                        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, 8888);
+                        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, 40);
                         c.send(sendPacket);
                     } catch (Exception e) {
                     }
@@ -61,18 +72,22 @@ public class UDPClient implements Runnable {
                 DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
                 c.receive(receivePacket);
 
-                //We have a response
-                System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+                if (myIPs.contains(receivePacket.getAddress().getHostAddress())) {
+                    System.out.println(getClass().getName() + ">>> Broadcast response from myself: " + receivePacket.getAddress().getHostAddress());
+                } else {
+                    //We have a response
+                    System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+                    //Check if the message is correct
+                    String message = new String(receivePacket.getData()).trim();
+                    if (message.equals("DISCOVER_SUPERSECURECHAT_RESPONSE")) {
+                        //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
+                        System.out.println("IP Adresse: " + receivePacket.getAddress());
+                        new TCPClient(receivePacket.getAddress()).init();
 
-                //Check if the message is correct
-                String message = new String(receivePacket.getData()).trim();
-                if (message.equals("DISCOVER_SUPERSECURECHAT_RESPONSE")) {
-                    //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                    System.out.println("IP Adresse: " + receivePacket.getAddress());
-                    new TCPClient(receivePacket.getAddress()).init();
-
-                    //Controller_Base.setServerIp(receivePacket.getAddress());
+                        //Controller_Base.setServerIp(receivePacket.getAddress());
+                    }
                 }
+
             }
 
             //Close the port!

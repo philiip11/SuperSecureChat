@@ -1,6 +1,7 @@
 package SuperSecureChat.Network;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -52,6 +53,8 @@ public class UDPServer implements Runnable {
                     System.out.println(getClass().getName() + ">>>Sent packet to                : " + sendPacket.getAddress().getHostAddress());
                 }
             }
+        } catch (BindException ex) {
+            System.out.println("SuperSecureChat läuft bereits!");
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
