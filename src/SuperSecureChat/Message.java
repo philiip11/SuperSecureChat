@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+@SuppressWarnings("unused")
 public class Message {
 
     private String id;                  // Eindeutige ID der Nachricht, bestehend aus Nutzername des Senders und seinem lokalen Counter
@@ -15,10 +16,10 @@ public class Message {
     private String data;                // ggf. Datei
     private String trace;               // Spur, über welche PCs ist die Nachricht geschickt (Nutzername des PCs, Uhrzeit, IP?)
     private long created;               // Erstelldatum
-    private int read;                   // Nachricht gelesen?  1 = ja, 0 = nein
-    private int received;               // Nachricht beim Empfänger angekommen?
+    private long read;                   // Nachricht gelesen?  1 = ja, 0 = nein
+    private long received;               // Nachricht beim Empfänger angekommen?
 
-    public Message(String id, String referenceId, Contact sender, Contact receiver, String text, String base64data, String trace, long created, int read, int received) {
+    public Message(String id, String referenceId, Contact sender, Contact receiver, String text, String base64data, String trace, long created, long read, long received) {
         this.id = id;
         this.referenceId = referenceId;
         this.sender = sender;
@@ -47,8 +48,8 @@ public class Message {
             message.setData(jsonObject.get("data").toString());
             message.setTrace(jsonObject.get("trace").toString());
             message.setCreated((long) jsonObject.get("created"));
-            message.setRead((int) jsonObject.get("read"));
-            message.setReceived((int) jsonObject.get("recieved"));
+            message.setRead((long) jsonObject.get("read"));
+            message.setReceived((long) jsonObject.get("recieved"));
             message.setId(jsonObject.get("id").toString());
         } catch (ParseException e) {
             e.printStackTrace();
@@ -158,19 +159,19 @@ public class Message {
         this.created = created;
     }
 
-    public int getRead() {
+    public long getRead() {
         return read;
     }
 
-    private void setRead(int read) {
+    private void setRead(long read) {
         this.read = read;
     }
 
-    public int getReceived() {
+    public long getReceived() {
         return received;
     }
 
-    private void setReceived(int received) {
+    private void setReceived(long received) {
         this.received = received;
     }
 }
