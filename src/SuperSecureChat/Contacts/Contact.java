@@ -62,7 +62,7 @@ public class Contact {
                 contact.setLastOnline(Instant.now().getEpochSecond());
             }
             if (jsonObject.get("image") != null) {
-                Image i = new Image(new ByteArrayInputStream(Base64.getDecoder().decode((byte[]) jsonObject.get("image"))));
+                Image i = new Image(new ByteArrayInputStream(Base64.getDecoder().decode(jsonObject.get("image").toString())));
                 contact.setImage(i);
             } else {
                 contact.setImage(null);
