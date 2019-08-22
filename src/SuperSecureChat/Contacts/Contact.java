@@ -2,8 +2,10 @@ package SuperSecureChat.Contacts;
 
 import javafx.scene.image.Image;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class Contact {
 
@@ -12,13 +14,13 @@ public class Contact {
     private String firstname;
     private String lastname;
     private String url;
-    private Date lastOnline;
+    private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0);
     private Image image;
     private int notifications;
-    private static final Contact me = new Contact();
+    private String lastOnline;
 
 
-    public Contact() {
+    public Contact(String id, String philip, String schneider, String url, long epochSecond, Object image, int notifications) {
 
     }
 
@@ -30,6 +32,16 @@ public class Contact {
         me.setId(username);
         me.setFirstname(firstname);
         me.setLastname(lastname);
+    }
+
+    public Contact(String id, String firstname, String lastname, String url, String lastOnline, Image image, int notifications) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.url = url;
+        this.lastOnline = lastOnline;
+        this.image = image;
+        this.notifications = notifications;
     }
 
     public String toJSONString() {
@@ -50,14 +62,22 @@ public class Contact {
         return jsonMessage;
     }
 
-    public Contact(String id, String firstname, String lastname, String url, Date lastOnline, Image image, int notifications) {
-        this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.url = url;
-        this.lastOnline = lastOnline;
-        this.image = image;
-        this.notifications = notifications;
+    public static Contact fromJSON(String json) {
+        try {
+            Contact contact = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0);
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(json);
+            contact.setId(jsonObject.get("id").toString());
+            contact.setFirstname(jsonObject.get("firstname").toString());
+            contact.setLastname(jsonObject.get("lastname").toString());
+            contact.setUrl(jsonObject.get("url").toString());
+            contact.setLastOnline(jsonObject.get("lastOnline").toString());
+            contact.setImage((Image) jsonObject.get("image"));  // TODO
+            contact.setNotifications((int) jsonObject.get("notifications"));
+            return contact;
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     public Contact(String firstname, String lastname, String url, Image image, int notifications) {
@@ -80,11 +100,11 @@ public class Contact {
         this.id = id;
     }
 
-    public Date getLastOnline() {
+    public String getLastOnline() {
         return lastOnline;
     }
 
-    public void setLastOnline(Date lastOnline) {
+    public void setLastOnline(String lastOnline) {
         this.lastOnline = lastOnline;
     }
 

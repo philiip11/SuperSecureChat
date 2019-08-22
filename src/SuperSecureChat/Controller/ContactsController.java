@@ -1,11 +1,11 @@
 package SuperSecureChat.Controller;
 
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Contacts.ContactListViewCell;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +18,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class ContactsController {
 
@@ -29,6 +32,7 @@ public class ContactsController {
     @FXML
     Label nameLabel;
     private ObservableList<Contact> contacts;
+    private ContactList contactList = ContactList.getInstance();
 
     public void initialize() {
         //TODO Set KeyCombos
@@ -51,13 +55,20 @@ public class ContactsController {
 
         loadContacts();
         Platform.runLater(this::showContacts);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> showContacts());
+            }
+        }, 5000);
 
 
     }
 
     private void loadContacts() {
         //TODO Load Real Contacts from Database
-        contacts = FXCollections.observableArrayList();
+        contacts = contactList.getAllContacts();
         contacts.addAll(
                 new Contact("Max", "Mustermann", null, new Image(getClass().getResourceAsStream("/icon.png")), 4),
                 new Contact("John", "Smith", null, null, 0),

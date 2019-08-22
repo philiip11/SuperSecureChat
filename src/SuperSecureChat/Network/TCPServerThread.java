@@ -1,5 +1,8 @@
 package SuperSecureChat.Network;
 
+import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Contacts.ContactList;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
@@ -26,15 +29,26 @@ public class TCPServerThread extends Thread {
         while (true) {
             try {
                 line = brinp.readLine();
-                if ((line == null) || line.equalsIgnoreCase("QUIT")) {
-                    socket.close();
-                    return;
-                } else {
+                if ((line != null) && line.length() > 8) {
+                    String command = line.substring(0, 7);
+                    String json = line.substring(8);
+                    switch (command) {
+                        case "MESSAGE:":
+                            System.out.println("Neue Nachricht empfangen!");
+                            //TODO Mach was mit der Nachricht
+                            break;
+                        case "CONTACT:":
+                            System.out.println("Kontakt empfangen!");
+                            ContactList.getInstance().addContact(Contact.fromJSON(json));
+                            //TODO Mach was mit dem Kontakt
+                            break;
+                    }
 
                     out.writeBytes(line + "\n\r");
                     System.out.println(line);
                     out.flush();
                 }
+
             } catch (SocketException ignored) {
 
             } catch (IOException e) {

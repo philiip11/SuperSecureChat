@@ -6,8 +6,10 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 public class Network {
 
@@ -17,9 +19,10 @@ public class Network {
     private ArrayList<TCPClient> tcpClients = new ArrayList<>();
     private ArrayList<String> myIPs;
     private ArrayList<String> otherIPs = new ArrayList<>();
+    private HashMap<String, Long> otherIPsLastPing = new HashMap<>();
 
     public Network() {
-        myIPs = getMyIpAdresses();
+        myIPs = getMyIpAddresses();
         for (String ip : myIPs) {
             TCPServer tcpServer = new TCPServer(ip);
             if (!tcpServer.isError()) {
@@ -40,7 +43,7 @@ public class Network {
         new Thread(() -> UDPClient.getInstance().run()).start();
     }
 
-    public void addIP(String ip) {
+    void addIP(String ip) {
         if (!otherIPs.contains(ip)) {
             otherIPs.add(ip);
             System.out.println("Neue IP: " + ip);
@@ -49,6 +52,7 @@ public class Network {
             tcpClient.sendContact(me);
 
         }
+        otherIPsLastPing.put(ip, Instant.now().getEpochSecond());
     }
 
 
@@ -57,7 +61,7 @@ public class Network {
     }
 
 
-    private ArrayList<String> getMyIpAdresses() {
+    private ArrayList<String> getMyIpAddresses() {
         ArrayList<String> myIPs = new ArrayList<>();
         try {
             Enumeration interfaces = NetworkInterface.getNetworkInterfaces();

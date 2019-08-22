@@ -2,9 +2,9 @@ package SuperSecureChat.Controller;
 
 import SuperSecureChat.Contacts.Contact;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -16,7 +16,7 @@ public class ChatController {
     @FXML
     JFXTextField txtMessage;
     @FXML
-    ListView showMessage;
+    JFXListView showMessage;
 
 
     private Contact contact;
