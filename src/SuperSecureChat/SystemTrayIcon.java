@@ -1,7 +1,6 @@
 package SuperSecureChat;
 
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,32 +27,27 @@ public class SystemTrayIcon {
     public void displayTray() throws AWTException {
 
         final PopupMenu popup = new PopupMenu();
-        final FXMLLoader mLLoader;
 
         SystemTray tray = SystemTray.getSystemTray();
 
-
         TrayIcon trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area
         trayIcon.setImageAutoSize(true);
-        tray.add(trayIcon);                                    //displays the icon + notification
+        tray.add(trayIcon);                                                                                          //displays the icon + notification
         trayIcon.displayMessage("SuperSecureChat", "application started", TrayIcon.MessageType.NONE); //popup text in the sidebar (on the right)
 
-//Creating some stuff --> still under construction
+        // Creating some stuff --> still under construction
+
         MenuItem aboutItem = new MenuItem("Info");
         Menu displayMenu = new Menu("Settings");
         MenuItem startapp = new MenuItem("start");
         MenuItem closeapp = new MenuItem("close");
-        //CheckboxMenuItem cbmi2 = new CheckboxMenuItem("test_2");
-        //CheckboxMenuItem cbmi1 = new CheckboxMenuItem("Test");
 
-        //popup.add(cbmi1);
-        //popup.add(cbmi2);
         popup.add(startapp);
-        popup.add(closeapp);
         popup.addSeparator();
         popup.add(displayMenu);
-        popup.addSeparator();
         displayMenu.add(aboutItem);
+        popup.addSeparator();
+        popup.add(closeapp);
         trayIcon.setPopupMenu(popup);
 
 
@@ -70,7 +64,7 @@ public class SystemTrayIcon {
             }
         });
 
-        closeapp.addActionListener(new ActionListener() {           //DONE schließt das Programm über den Menupoint "Close"
+        closeapp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //SystemTray.getSystemTray().remove(trayIcon);
                 System.exit(0);
@@ -80,6 +74,7 @@ public class SystemTrayIcon {
         startapp.addActionListener(new ActionListener() {       //TODO soll Anwendung starten *thinking*
             @Override
             public void actionPerformed(ActionEvent e) {
+                trayIcon.displayMessage("Starting Application", "loading assets", TrayIcon.MessageType.NONE);
 
 
             }
