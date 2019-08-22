@@ -49,7 +49,7 @@ public class Message {
             message.setTrace(jsonObject.get("trace").toString());
             message.setCreated((long) jsonObject.get("created"));
             message.setRead((long) jsonObject.get("read"));
-            message.setReceived((long) jsonObject.get("recieved"));
+            message.setReceived((long) jsonObject.get("received"));
             message.setId(jsonObject.get("id").toString());
         } catch (ParseException e) {
             e.printStackTrace();
