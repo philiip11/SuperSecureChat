@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -9,8 +8,9 @@
     <children>
         <StackPane layoutX="6.0" layoutY="6.0">
             <children>
-                <Label fx:id="label2" layoutX="50.0" layoutY="16.0" text="Label"/>
+                <Label fx:id="labelMessage" layoutX="50.0" layoutY="16.0" text="Label"/>
             </children>
         </StackPane>
+        <Label fx:id="labelTime" layoutX="48.0" layoutY="6.0" text="Label"/>
     </children>
 </AnchorPane>
