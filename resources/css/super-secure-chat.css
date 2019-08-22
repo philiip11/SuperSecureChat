@@ -20,6 +20,15 @@ JFXListView {
 
 }
 
+.chatListView {
+    -fx-text-fill: white;
+
+}
+
+.chatListView Label {
+    -fx-text-fill: white;
+}
+
 .chatSendButton {
     -jfx-button-type: RAISED;
     -fx-background-color: #5555ff;

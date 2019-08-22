@@ -14,7 +14,7 @@ public class ContactList {
     }
 
     public void addContact(Contact contact) {
-        removeContact(contact.getId());
+        Platform.runLater(() -> removeContact(contact.getId()));
         Platform.runLater(() -> contacts.add(contact));
 
     }
