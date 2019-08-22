@@ -21,12 +21,23 @@ public class SystemTrayIcon {
     }
 
     public void displayTray() throws AWTException {
+
         SystemTray tray = SystemTray.getSystemTray();
 
         TrayIcon trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area
         trayIcon.setImageAutoSize(true);
         tray.add(trayIcon);                                                                                         //displays the icon + notification
         trayIcon.displayMessage("SuperSecureChat", "application started", TrayIcon.MessageType.NONE); //popup text in the sidebar (on the right)
+
+
+        PopupMenu popmenu = new PopupMenu("Edit");
+        javafx.scene.control.MenuItem startapp = new javafx.scene.control.MenuItem("start");
+        startapp.setOnAction(event -> trayIcon.setPopupMenu(popmenu));
+
+
+
+
+
 
 
     }
