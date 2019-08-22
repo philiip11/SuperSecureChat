@@ -1,9 +1,13 @@
 package SuperSecureChat;
 
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class SystemTrayIcon {
@@ -24,6 +28,7 @@ public class SystemTrayIcon {
     public void displayTray() throws AWTException {
 
         final PopupMenu popup = new PopupMenu();
+        final FXMLLoader mLLoader;
 
 
         SystemTray tray = SystemTray.getSystemTray();
@@ -36,36 +41,48 @@ public class SystemTrayIcon {
 
 //Creating some stuff --> still under construction
         MenuItem aboutItem = new MenuItem("Info");
-        CheckboxMenuItem cb1 = new CheckboxMenuItem("Test");
-        CheckboxMenuItem cb2 = new CheckboxMenuItem("test_2");
         Menu displayMenu = new Menu("Settings");
         MenuItem startapp = new MenuItem("start");
         MenuItem closeapp = new MenuItem("close");
+        //CheckboxMenuItem cbmi2 = new CheckboxMenuItem("test_2");
+        //CheckboxMenuItem cbmi1 = new CheckboxMenuItem("Test");
 
-        popup.add(aboutItem);
-        popup.addSeparator();
-        popup.add(cb1);
-        popup.add(cb2);
+        //popup.add(cbmi1);
+        //popup.add(cbmi2);
+        popup.add(startapp);
+        popup.add(closeapp);
         popup.addSeparator();
         popup.add(displayMenu);
-        displayMenu.add(startapp);
-        displayMenu.add(closeapp);
-        //popup.add(closeapp);
-
+        popup.addSeparator();
+        displayMenu.add(aboutItem);
         trayIcon.setPopupMenu(popup);
 
 
-//        PopupMenu popmenu = new PopupMenu("Edit");
-//        javafx.scene.control.MenuItem startapp = new javafx.scene.control.MenuItem("start");
-//        trayIcon.setPopupMenu(popmenu);
-//
-//        MenuItem startapp = new MenuItem("start");
-//        startapp.setOnAction(event -> {
-//
-//        });
-//        trayIcon.setPopupMenu(popmenu);
+        trayIcon.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,
+                        "Double Click on Icon performs this action");
+            }
+        });
+        aboutItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,
+                        "This dialog box is run from the Info menu item");
+            }
+        });
 
+        closeapp.addActionListener(new ActionListener() {           //schließt das Programm über den Menupoint "Close"
+            public void actionPerformed(ActionEvent e) {
+                System.exit(1);
+            }
+        });
 
+        startapp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
 
