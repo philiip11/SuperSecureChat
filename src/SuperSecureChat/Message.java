@@ -49,11 +49,10 @@ public class Message {
     }
 
     public String toJSONString() {
-        return toJSON().toJSONString();
+        return toJSON().toString();
 
     }
 
-    @SuppressWarnings("unchecked")
     public JSONObject toJSON() {
         JSONObject jsonMessage = new JSONObject();
         jsonMessage.put("id", id);

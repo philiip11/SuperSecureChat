@@ -39,12 +39,34 @@ public class Contact {
         this.notifications = notifications;
     }
 
-    public String toJSONString() {
-        return toJSON().toJSONString();
+    public Contact() {
 
     }
 
-    @SuppressWarnings("unchecked")
+    public static Contact fromJSON(String json) {
+        Contact contact = new Contact();
+        try {
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+            contact.setId(jsonObject.get("id").toString());
+            contact.setFirstname(jsonObject.get("firstname").toString());
+            contact.setLastname(jsonObject.get("lastname").toString());
+            contact.setUrl((String) jsonObject.get("url"));
+            if (jsonObject.get("lastOnline") != null) {
+                contact.setLastOnline((long) jsonObject.get("lastOnline"));
+            } else {
+                contact.setLastOnline(Instant.now().getEpochSecond());
+            }
+            if (jsonObject.get("image") != null) {
+                contact.setImage((Image) jsonObject.get("image"));
+            } else {
+                contact.setImage(null);
+            }
+            contact.setNotifications((long) jsonObject.get("notifications"));
+        } catch (ParseException ex) {
+        }
+        return contact;
+    }
+
     public JSONObject toJSON() {
         JSONObject jsonMessage = new JSONObject();
         jsonMessage.put("id", id);
@@ -66,26 +88,9 @@ public class Contact {
         this.notifications = notifications;
     }
 
-    public static Contact fromJSON(String json) {
-        try {
-            Contact contact = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0);
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(json);
-            contact.setId(jsonObject.get("id").toString());
-            contact.setFirstname(jsonObject.get("firstname").toString());
-            contact.setLastname(jsonObject.get("lastname").toString());
-            contact.setUrl((String) jsonObject.get("url"));
-            if (jsonObject.get("lastOnline") != null) {
-                contact.setLastOnline((long) jsonObject.get("lastOnline"));
-            } else {
-                contact.setLastOnline(Instant.now().getEpochSecond());
-            }
-            contact.setImage((Image) jsonObject.get("image"));  // TODO
-            contact.setNotifications((long) jsonObject.get("notifications"));
-            return contact;
-        } catch (ParseException e) {
-            return null;
-        }
+    public String toJSONString() {
+        return toJSON().toString();
+
     }
 
     public static void setMyIP(String ip) {

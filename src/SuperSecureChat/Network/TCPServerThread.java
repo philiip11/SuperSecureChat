@@ -45,7 +45,8 @@ public class TCPServerThread extends Thread {
                             //TODO Mach was mit dem Kontakt
                             break;
                         case "GETCONTA":
-                            TCPClient client = new TCPClient(socket.getInetAddress().toString(), TCPServer.PORT);
+                            System.out.println(socket.getInetAddress().getHostAddress());
+                            TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             client.sendContact(Contact.getMyContact());
                             break;
                     }

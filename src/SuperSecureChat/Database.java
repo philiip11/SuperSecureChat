@@ -100,7 +100,7 @@ public class Database {
 
     public int countUnreadMessagesByContact(Contact contact) {
         //TODO
-        return 42;
+        return 0;
     }
 
 }
