@@ -4,11 +4,12 @@ import SuperSecureChat.Contacts.Contact;
 
 import java.sql.*;
 
+@SuppressWarnings("unused")
 public class Database {
 
     private static final Database database = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 0;
     private static Connection connection;
 
     static {
@@ -21,6 +22,8 @@ public class Database {
     }
 
     private Database() {
+        initDBConnection();
+        handleDB();
     }
 
     public static Database getInstance() {
@@ -75,14 +78,13 @@ public class Database {
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
 
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT, image BLOB);");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created TEXT, received INTEGER, 'read' INTEGER," +
+                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER," +
                         "UNIQUE(id, sender), FOREIGN KEY(sender) REFERENCES contacts (id), FOREIGN KEY(receiver) REFERENCES contacts (id));");
                 stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, firstname TEXT, lastname TEXT, url TEXT, 'key' TEXT);");
                 stmt.close();
 
             }
             rs.close();
-            connection.close();
         } catch (SQLException e) {
             System.err.println("Couldn't handle DB-Query");
             e.printStackTrace();
@@ -91,7 +93,17 @@ public class Database {
 
     public void newMessage(Message message) {
         try {
-            PreparedStatement ps = connection.prepareStatement("");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO messages VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            ps.setString(1, message.getId());
+            ps.setString(2, message.getSender().getId());
+            ps.setString(3, message.getReceiver().getId());
+            ps.setString(4, message.getText());
+            ps.setString(5, message.getData());
+            ps.setString(6, message.getTrace());
+            ps.setLong(7, message.getRead());
+            ps.setLong(8, message.getCreated());
+            ps.setLong(9, message.getReceived());
+            ps.execute();
             //TODO
 
         } catch (SQLException e) {

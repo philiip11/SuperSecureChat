@@ -3,6 +3,7 @@ package SuperSecureChat.Network;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
+import SuperSecureChat.Database;
 import SuperSecureChat.Message;
 
 import java.io.*;
@@ -37,8 +38,10 @@ public class TCPServerThread extends Thread {
                     switch (command) {
                         case "MESSAGE:":
                             System.out.println("Neue Nachricht empfangen!");
-                            System.out.println(Message.fromJSON(json).getText());
-                            ClassConnector.getInstance().sendMessageToAllChatControllers(Message.fromJSON(json));
+                            Message message = Message.fromJSON(json);
+                            System.out.println(message.getText());
+                            ClassConnector.getInstance().sendMessageToAllChatControllers(message);
+                            Database.getInstance().newMessage(message);
                             //TODO schreibe Nachricht in die Datenbank
                             break;
                         case "CONTACT:":

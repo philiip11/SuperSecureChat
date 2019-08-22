@@ -54,12 +54,10 @@ public class TCPClient {
     }
 
     void sendMessage(Message message) {
-
         sendText("MESSAGE:" + message.toJSONString());
     }
 
     void sendContact(Contact contact) {
-
         sendText("CONTACT:" + contact.toJSONString());
     }
 

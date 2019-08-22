@@ -3,6 +3,7 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.Chat.ChatListViewCell;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Database;
 import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXButton;
@@ -54,6 +55,7 @@ public class ChatController {
         messages.add(message);
         updateListView();
         network.sendMessage(message);
+        Database.getInstance().newMessage(message);
 
         txtMessage.clear();
 

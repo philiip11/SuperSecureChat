@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class SystemTrayIcon {
 
-    public static final String PATH_TO_TRAY_ICON = "/messengericon.jpg";
+    public static final String PATH_TO_TRAY_ICON = "/icon16.png";
 
     public static void systemtraysupport() throws AWTException {
         if (SystemTray.isSupported()) {                                                     //frägt ab, ob SystemTray vom System unterstützt wird

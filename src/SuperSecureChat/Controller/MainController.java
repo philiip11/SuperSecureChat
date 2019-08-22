@@ -100,11 +100,11 @@ public class MainController {
             contactsController.setData(username, vorname, nachname);
             Stage stage = new Stage();
             stage.setTitle("SSC - Kontakte");
-            stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon256.png")));
+            stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
             stage.setX(Screen.getPrimary().getVisualBounds().getMaxX() - width);
             JFXDecorator decorator = new JFXDecorator(stage, root);
             decorator.setCustomMaximize(false);
-            decorator.setGraphic(new ImageView(this.getClass().getResource("/icon32.png").toExternalForm()));
+            decorator.setGraphic(new ImageView(this.getClass().getResource("/icon16.png").toExternalForm()));
             Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
 
             final ObservableList<String> stylesheets = scene.getStylesheets();

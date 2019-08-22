@@ -22,10 +22,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("SuperSecureChat");
-        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon256.png")));
+        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
         JFXDecorator decorator = new JFXDecorator(primaryStage, root);
         decorator.setCustomMaximize(false);
-        decorator.setGraphic(new ImageView(this.getClass().getResource("/icon32.png").toExternalForm()));
+        decorator.setGraphic(new ImageView(this.getClass().getResource("/icon16.png").toExternalForm()));
         Scene scene = new Scene(decorator, 600, 800, true, SceneAntialiasing.BALANCED);
         final ObservableList<String> stylesheets = scene.getStylesheets();
         stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),

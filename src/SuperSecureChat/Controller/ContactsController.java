@@ -101,10 +101,10 @@ public class ContactsController {
             chatController.setContact(contact);
             Stage stage = new Stage();
             stage.setTitle(contact.getName());
-            stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon256.png")));
+            stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
             JFXDecorator decorator = new JFXDecorator(stage, root);
             decorator.setCustomMaximize(false);
-            decorator.setGraphic(new ImageView(this.getClass().getResource("/icon32.png").toExternalForm()));
+            decorator.setGraphic(new ImageView(this.getClass().getResource("/icon16.png").toExternalForm()));
             Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
             final ObservableList<String> stylesheets = scene.getStylesheets();
             stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
