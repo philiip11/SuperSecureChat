@@ -53,8 +53,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 }
 
             }
-            //labelMessage.setText(message.getText());
-            labelMessage.setStyle("-fx-text-fill: white");
+            labelMessage.setText(message.getText());
             labelTime.setText(simpleDateFormat.format(new Date(message.getCreated() * 1000L)));
             //contactImage.setImage(contact.getJavaFXImage());
             //int notifications = db.countUnreadMessagesByContact(contact);
