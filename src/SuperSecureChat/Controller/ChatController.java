@@ -1,12 +1,14 @@
 package SuperSecureChat.Controller;
 
 import SuperSecureChat.Chat.ChatListViewCell;
+import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,6 +40,7 @@ public class ChatController {
     }
 
     public void initialize() {
+        ClassConnector.getInstance().addChatController(this);
         //Code
     }
 
@@ -77,8 +80,8 @@ public class ChatController {
 
     public void newMessage(Message message) {
         if (message.getReceiver().getId().equals(me.getId())) {
-            messages.add(message);
-            updateListView();
+            Platform.runLater(() -> messages.add(message));
+            Platform.runLater(this::updateListView);
         }
     }
 }

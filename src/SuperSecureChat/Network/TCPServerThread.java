@@ -1,5 +1,6 @@
 package SuperSecureChat.Network;
 
+import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Message;
@@ -37,7 +38,8 @@ public class TCPServerThread extends Thread {
                         case "MESSAGE:":
                             System.out.println("Neue Nachricht empfangen!");
                             System.out.println(Message.fromJSON(json).getText());
-                            //TODO Mach was mit der Nachricht
+                            ClassConnector.getInstance().sendMessageToAllChatControllers(Message.fromJSON(json));
+                            //TODO schreibe Nachricht in die Datenbank
                             break;
                         case "CONTACT:":
                             System.out.println("Kontakt empfangen!");
