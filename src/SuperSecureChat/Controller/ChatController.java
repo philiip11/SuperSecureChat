@@ -33,20 +33,10 @@ public class ChatController {
         if (txtMessage.getText() == null || txtMessage.getText().equals("")) {
             txtMessage.setText("Keine leeren Eingaben");
         }
-        showMessage.getItems().add(txtMessage.getText());                                      //set Text from the Textfield to the Label
+        showMessage.getItems().add(txtMessage.getText());                                      //set Text from the Textfield to the ListView
         txtMessage.clear();
-        //addToHistory();
-
 
     }
-
-//    private void addToHistory(){
-//
-//        history.getItems().add(showMessage);
-//
-//        //history.getItems().add(0,new Label(text));  //showMessage Label einbinden?
-//        //history.setExpanded(true);
-//    }
 
 
     public void txtOnKeyReleased(KeyEvent keyEvent) {
