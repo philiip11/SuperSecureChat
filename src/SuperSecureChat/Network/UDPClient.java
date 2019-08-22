@@ -79,10 +79,10 @@ public class UDPClient implements Runnable {
                         c.receive(receivePacket);
 
                         if (myIPs.contains(receivePacket.getAddress().getHostAddress())) {
-                            System.out.println(getClass().getName() + ">>> Broadcast response from myself: " + receivePacket.getAddress().getHostAddress());
+                            //System.out.println(getClass().getName() + ">>> Broadcast response from myself: " + receivePacket.getAddress().getHostAddress());
                         } else {
                             //We have a response
-                            System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+                            //System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
                             //Check if the message is correct
                             String message = new String(receivePacket.getData()).trim();
                             if (message.equals("DISCOVER_SUPERSECURECHAT_RESPONSE")) {

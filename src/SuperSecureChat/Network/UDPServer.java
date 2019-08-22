@@ -44,8 +44,8 @@ public class UDPServer implements Runnable {
 
                 } else {
                     //Packet received
-                    System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                    System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
+                    //System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
+                    //System.out.println(getClass().getName() + ">>>Packet received; data         : " + new String(packet.getData()));
 
                     //See if the packet holds the right command (message)
                     String message = new String(packet.getData()).trim();
@@ -56,7 +56,7 @@ public class UDPServer implements Runnable {
                         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                         socket.send(sendPacket);
 
-                        System.out.println(getClass().getName() + ">>>Sent packet to                : " + sendPacket.getAddress().getHostAddress());
+                        //System.out.println(getClass().getName() + ">>>Sent packet to                : " + sendPacket.getAddress().getHostAddress());
                     }
                 }
             }
