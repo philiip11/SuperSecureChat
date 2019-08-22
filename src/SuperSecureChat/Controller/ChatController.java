@@ -66,6 +66,7 @@ public class ChatController {
     public void txtOnKeyReleased(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
             buttonClick();
+            txtMessage.clear();
         }
     }
 
