@@ -30,7 +30,6 @@ public class SystemTrayIcon {
         final PopupMenu popup = new PopupMenu();
         final FXMLLoader mLLoader;
 
-
         SystemTray tray = SystemTray.getSystemTray();
 
 
@@ -58,32 +57,36 @@ public class SystemTrayIcon {
         trayIcon.setPopupMenu(popup);
 
 
-        trayIcon.addActionListener(new ActionListener() {
+        trayIcon.addActionListener(new ActionListener() {               //TODO soll Anwendung maximieren //doppelclick *thinking*
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,
-                        "Double Click on Icon performs this action");
+                        "[Open Application] Hopefully coming soon ;)");
             }
         });
         aboutItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,
-                        "This dialog box is run from the Info menu item");
+                        "Creators of the JavaFX application SuperSecureChat");
             }
         });
 
-        closeapp.addActionListener(new ActionListener() {           //schließt das Programm über den Menupoint "Close"
+        closeapp.addActionListener(new ActionListener() {           //DONE schließt das Programm über den Menupoint "Close"
             public void actionPerformed(ActionEvent e) {
-                System.exit(1);
+                //SystemTray.getSystemTray().remove(trayIcon);
+                System.exit(0);
             }
         });
 
-        startapp.addActionListener(new ActionListener() {
+        startapp.addActionListener(new ActionListener() {       //TODO soll Anwendung starten *thinking*
             @Override
             public void actionPerformed(ActionEvent e) {
 
+
             }
         });
+
     }
+
 
 
     //TODO Methode um Benachrichtigungen anzuzeigen
