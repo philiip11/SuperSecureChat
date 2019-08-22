@@ -2,22 +2,23 @@ package SuperSecureChat.Network;
 
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
+import SuperSecureChat.Message;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 
 public class TCPServerThread extends Thread {
-    protected Socket socket;
+    private Socket socket;
 
-    public TCPServerThread(Socket clientSocket) {
+    TCPServerThread(Socket clientSocket) {
         this.socket = clientSocket;
     }
 
     public void run() {
-        InputStream inp = null;
-        BufferedReader brinp = null;
-        DataOutputStream out = null;
+        InputStream inp;
+        BufferedReader brinp;
+        DataOutputStream out;
         try {
             inp = socket.getInputStream();
             brinp = new BufferedReader(new InputStreamReader(inp));
@@ -35,6 +36,7 @@ public class TCPServerThread extends Thread {
                     switch (command) {
                         case "MESSAGE:":
                             System.out.println("Neue Nachricht empfangen!");
+                            System.out.println(Message.fromJSON(json).getText());
                             //TODO Mach was mit der Nachricht
                             break;
                         case "CONTACT:":

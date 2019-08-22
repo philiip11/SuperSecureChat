@@ -2,6 +2,8 @@ package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Message {
 
@@ -27,6 +29,10 @@ public class Message {
         this.created = created;
         this.read = read;
         this.received = received;
+    }
+
+    private Message() {
+
     }
 
     @Override
@@ -66,6 +72,28 @@ public class Message {
         return jsonMessage;
     }
 
+    public static Message fromJSON(String json) {
+        Message message = new Message();
+        try {
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+            message.setId(jsonObject.get("id").toString());
+            message.setReferencId(jsonObject.get("referenceID").toString());
+            message.setSender(Contact.fromJSON(jsonObject.get("sender").toString()));
+            message.setReciever(Contact.fromJSON(jsonObject.get("receiver").toString()));
+            message.setText(jsonObject.get("text").toString());
+            message.setData(jsonObject.get("data").toString());
+            message.setTrace(jsonObject.get("trace").toString());
+            message.setCreated((long) jsonObject.get("created"));
+            message.setRead((int) jsonObject.get("read"));
+            message.setReceived((int) jsonObject.get("received"));
+            message.setId(jsonObject.get("id").toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+    }
+
     public String getId() {
         return id;
     }
@@ -78,7 +106,7 @@ public class Message {
         return referenceId;
     }
 
-    public void setReferencId(String referencId) {
+    private void setReferencId(String referencId) {
         this.referenceId = referencId;
     }
 
@@ -86,7 +114,7 @@ public class Message {
         return sender;
     }
 
-    public void setSender(Contact sender) {
+    private void setSender(Contact sender) {
         this.sender = sender;
     }
 
@@ -94,7 +122,7 @@ public class Message {
         return reciever;
     }
 
-    public void setReciever(Contact reciever) {
+    private void setReciever(Contact reciever) {
         this.reciever = reciever;
     }
 
@@ -110,7 +138,7 @@ public class Message {
         return data;
     }
 
-    public void setData(String data) {
+    private void setData(String data) {
         this.data = data;
     }
 
@@ -118,7 +146,7 @@ public class Message {
         return trace;
     }
 
-    public void setTrace(String trace) {
+    private void setTrace(String trace) {
         this.trace = trace;
     }
 
@@ -126,7 +154,7 @@ public class Message {
         return created;
     }
 
-    public void setCreated(long created) {
+    private void setCreated(long created) {
         this.created = created;
     }
 
@@ -134,7 +162,7 @@ public class Message {
         return read;
     }
 
-    public void setRead(int read) {
+    private void setRead(int read) {
         this.read = read;
     }
 
@@ -142,7 +170,7 @@ public class Message {
         return received;
     }
 
-    public void setReceived(int received) {
+    private void setReceived(int received) {
         this.received = received;
     }
 }

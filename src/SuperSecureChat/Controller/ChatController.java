@@ -3,6 +3,7 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.Chat.ChatListViewCell;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Message;
+import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
@@ -24,6 +25,8 @@ public class ChatController {
     JFXButton sendMessage;
     @FXML
     JFXTextField txtMessage;
+
+    private Network network = Network.getInstance();
     private ObservableList<Message> messages = FXCollections.observableArrayList();
 
 
@@ -50,6 +53,7 @@ public class ChatController {
         messagesListView.setCellFactory(chatListView -> new ChatListViewCell());
         messagesListView.setOnMouseClicked(this::onMessageClicked);
         messagesListView.setExpanded(true);
+        network.sendMessage(m);
 
         txtMessage.clear();
 

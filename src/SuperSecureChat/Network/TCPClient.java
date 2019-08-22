@@ -13,7 +13,7 @@ public class TCPClient {
     private Socket socket;
     private Scanner scanner;
 
-    public TCPClient(String serverAddress, int serverPort) {
+    TCPClient(String serverAddress, int serverPort) {
         try {
             this.socket = new Socket(serverAddress, serverPort);
             this.scanner = new Scanner(System.in);
@@ -22,7 +22,7 @@ public class TCPClient {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         TCPClient client = new TCPClient("172.17.41.214", TCPServer.PORT);
 
         System.out.println("\r\nConnected to Server: " + client.socket.getInetAddress());
@@ -40,7 +40,7 @@ public class TCPClient {
         }
     }
 
-    public void sendText(String input) {
+    void sendText(String input) {
         System.out.println("Sende: " + input.substring(0, Math.min(input.length() - 1, 64)) + "...");
         try {
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
@@ -51,14 +51,21 @@ public class TCPClient {
         }
     }
 
-    public void sendMessage(Message message) {
+    void sendMessage(Message message) {
 
         sendText("MESSAGE:" + message.toJSONString());
     }
 
-    public void sendContact(Contact contact) {
+    void sendContact(Contact contact) {
 
         sendText("CONTACT:" + contact.toJSONString());
     }
 
+    public void close() {
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

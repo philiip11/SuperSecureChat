@@ -1,6 +1,7 @@
 package SuperSecureChat.Network;
 
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Message;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -41,6 +42,15 @@ public class Network {
         System.out.println("Start UDP...");
         new Thread(() -> UDPServer.getInstance().run()).start();
         new Thread(() -> UDPClient.getInstance().run()).start();
+    }
+
+    public void sendMessage(Message m) {
+        for (String ip : otherIPs) {
+            TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
+            tcpClient.sendMessage(m);
+            tcpClient.close();
+        }
+
     }
 
     void addIP(String ip) {
