@@ -3,9 +3,6 @@ package SuperSecureChat;
 import SuperSecureChat.Contacts.Contact;
 import org.json.simple.JSONObject;
 
-import java.util.Arrays;
-import java.util.Date;
-
 public class Message {
 
     private String id;                  // Eindeutige ID der Nachricht, bestehend aus Nutzername des Senders und seinem lokalen Counter
@@ -13,19 +10,19 @@ public class Message {
     private Contact sender;             // Absender
     private Contact reciever;           // Empfänger
     private String text;                // Nachrichttext
-    private Byte[] data;                // ggf. Datei
+    private String data;                // ggf. Datei
     private String trace;               // Spur, über welche PCs ist die Nachricht geschickt (Nutzername des PCs, Uhrzeit, IP?)
-    private Date created;               // Erstelldatum
+    private long created;               // Erstelldatum
     private int read;                   // Nachricht gelesen?  1 = ja, 0 = nein
     private int received;               // Nachricht beim Empfänger angekommen?
 
-    public Message(String id, String referenceId, Contact sender, Contact reciever, String text, Byte[] data, String trace, Date created, int read, int received) {
+    public Message(String id, String referenceId, Contact sender, Contact reciever, String text, String base64data, String trace, long created, int read, int received) {
         this.id = id;
         this.referenceId = referenceId;
         this.sender = sender;
         this.reciever = reciever;
         this.text = text;
-        this.data = data;
+        this.data = base64data;
         this.trace = trace;
         this.created = created;
         this.read = read;
@@ -40,7 +37,7 @@ public class Message {
                 ", sender=" + sender +
                 ", reciever=" + reciever +
                 ", text='" + text + '\'' +
-                ", data=" + Arrays.toString(data) +
+                ", data=" + data +
                 ", trace='" + trace + '\'' +
                 ", created=" + created +
                 ", read=" + read +
@@ -53,6 +50,7 @@ public class Message {
 
     }
 
+    @SuppressWarnings({"unchecked", "WeakerAccess"})
     public JSONObject toJSON() {
         JSONObject jsonMessage = new JSONObject();
         jsonMessage.put("id", id);
@@ -108,11 +106,11 @@ public class Message {
         this.text = text;
     }
 
-    public Byte[] getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Byte[] data) {
+    public void setData(String data) {
         this.data = data;
     }
 
@@ -124,11 +122,11 @@ public class Message {
         this.trace = trace;
     }
 
-    public Date getCreated() {
+    public long getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(long created) {
         this.created = created;
     }
 

@@ -81,7 +81,6 @@ public class Contact {
     public static String encoder(String filePath) {
         String base64File = null;
         try {
-            System.out.println(filePath);
             File file = new File(filePath);
             FileInputStream imageInFile = new FileInputStream(file);
             // Reading a file from file system

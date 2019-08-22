@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Scanner;
 
 public class TCPClient {
@@ -30,7 +29,7 @@ public class TCPClient {
         new Thread(client::start).start();
         client.sendMessage(new Message("1234", "", new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0),
                 new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0),
-                "Hallo, dies ist eine Testnachricht! :-)", null, "", new Date(), 0, 0));
+                "Hallo, dies ist eine Testnachricht! :-)", null, "", Instant.now().getEpochSecond(), 0, 0));
     }
 
     private void start() {

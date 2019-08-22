@@ -2,9 +2,6 @@ package SuperSecureChat.Network;
 
 import SuperSecureChat.Contacts.Contact;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -57,18 +54,6 @@ public class Network {
 
         }
         otherIPsLastPing.put(ip, Instant.now().getEpochSecond());
-    }
-
-    public static boolean file_put_contents(String filename, String data) {
-        try {
-            FileWriter fstream = new FileWriter(filename, true);
-            BufferedWriter out = new BufferedWriter(fstream);
-            out.write(data);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return (true);
     }
 
     ArrayList<String> getMyIPs() {
