@@ -1,8 +1,6 @@
 package SuperSecureChat;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,7 +9,6 @@ import java.io.IOException;
 public class SystemTrayIcon {
 
     public static final String PATH_TO_TRAY_ICON = "/messengericon.jpg";
-    private EventHandler<ActionEvent> onDismissedCallback, onShownCallback;
 
     public static void systemtraysupport() throws AWTException {
         if (SystemTray.isSupported()) {                                                     //frägt ab, ob SystemTray vom System unterstützt wird
@@ -24,24 +21,9 @@ public class SystemTrayIcon {
     }
 
 
-//    private void onShown(){
-//        if(onShownCallback!= null)
-//            onShownCallback.handle(new ActionEvent());
-//    }
-//
-//
-//    private void onDismissed(){
-//        if(onDismissedCallback!=null)
-//            onDismissedCallback.handle(new ActionEvent());
-//    }
-
-
-//---------------------------------------------
-
     public void displayTray() throws AWTException {
 
         SystemTray tray = SystemTray.getSystemTray();
-
 
 
         TrayIcon trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area
@@ -50,22 +32,10 @@ public class SystemTrayIcon {
         trayIcon.displayMessage("SuperSecureChat", "application started", TrayIcon.MessageType.NONE); //popup text in the sidebar (on the right)
 
 
-        //-------------------------------------
+        PopupMenu popmenu = new PopupMenu("Edit");
+        javafx.scene.control.MenuItem startapp = new javafx.scene.control.MenuItem("start");
 
-
-//        PopupMenu popmenu = new PopupMenu("Edit");
-//        javafx.scene.control.MenuItem startapp = new javafx.scene.control.MenuItem("start");
-//
-//        trayIcon.setPopupMenu(popmenu);
-
-
-        //startapp.setOnAction(event -> trayIcon.setPopupMenu(popmenu));
-
-
-
-
-
-
+        trayIcon.setPopupMenu(popmenu);
 
     }
 
