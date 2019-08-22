@@ -43,7 +43,7 @@ public class ChatController {
 
     public void buttonClick() {
         if (txtMessage.getText() == null || txtMessage.getText().equals("")) {
-            txtMessage.setText("Keine leeren Eingaben");
+            return;
         }
 
         Message m = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, txtMessage.getText(), "", "", Instant.now().getEpochSecond(), 0, 0);
