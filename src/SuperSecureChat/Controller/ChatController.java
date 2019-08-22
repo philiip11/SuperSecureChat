@@ -64,6 +64,7 @@ public class ChatController {
         messagesListView.setCellFactory(chatListView -> new ChatListViewCell());
         messagesListView.setOnMouseClicked(this::onMessageClicked);
         messagesListView.setExpanded(true);
+        messagesListView.scrollTo(messages.size() - 1);
     }
 
     private void onMessageClicked(MouseEvent mouseEvent) {
@@ -79,7 +80,11 @@ public class ChatController {
 
 
     public void newMessage(Message message) {
-        if (message.getReceiver().getId().equals(me.getId())) {
+        if ((message.getReceiver().getId().equals(me.getId()) &&            // Nachricht von Kontakt an mich
+                message.getSender().getId().equals(contact.getId())) ||
+                (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
+                        message.getSender().getId().equals(me.getId()))) {
+
             Platform.runLater(() -> messages.add(message));
             Platform.runLater(this::updateListView);
         }

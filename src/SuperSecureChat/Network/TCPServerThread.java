@@ -46,7 +46,7 @@ public class TCPServerThread extends Thread {
                             ContactList.getInstance().addContact(Contact.fromJSON(json));
                             //TODO Mach was mit dem Kontakt
                             break;
-                        case "GETCONTA":
+                        case "GETCONTA"://CT
                             System.out.println("Kontaktanfrage empfangen!");
                             TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             client.sendContact(Contact.getMyContact());
