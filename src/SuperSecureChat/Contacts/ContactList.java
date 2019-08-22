@@ -1,5 +1,6 @@
 package SuperSecureChat.Contacts;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,7 +15,8 @@ public class ContactList {
 
     public void addContact(Contact contact) {
         removeContact(contact.getId());
-        contacts.add(contact);
+        Platform.runLater(() -> contacts.add(contact));
+
     }
 
     private void removeContact(String id) {

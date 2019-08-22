@@ -14,15 +14,10 @@ public class Contact {
     private String firstname;
     private String lastname;
     private String url;
-    private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0);
     private Image image;
-    private int notifications;
-    private String lastOnline;
-
-
-    public Contact(String id, String philip, String schneider, String url, long epochSecond, Object image, int notifications) {
-
-    }
+    private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0);
+    private long notifications;
+    private long lastOnline;
 
     public static Contact getMyContact() {
         return me;
@@ -34,7 +29,7 @@ public class Contact {
         me.setLastname(lastname);
     }
 
-    public Contact(String id, String firstname, String lastname, String url, String lastOnline, Image image, int notifications) {
+    public Contact(String id, String firstname, String lastname, String url, long lastOnline, Image image, long notifications) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -62,6 +57,15 @@ public class Contact {
         return jsonMessage;
     }
 
+    public Contact(String firstname, String lastname, String url, Image image, int notifications) {
+        this.id = "test";
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.url = url;
+        this.image = image;
+        this.notifications = notifications;
+    }
+
     public static Contact fromJSON(String json) {
         try {
             Contact contact = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0);
@@ -70,22 +74,18 @@ public class Contact {
             contact.setId(jsonObject.get("id").toString());
             contact.setFirstname(jsonObject.get("firstname").toString());
             contact.setLastname(jsonObject.get("lastname").toString());
-            contact.setUrl(jsonObject.get("url").toString());
-            contact.setLastOnline(jsonObject.get("lastOnline").toString());
+            contact.setUrl((String) jsonObject.get("url"));
+            if (jsonObject.get("lastOnline") != null) {
+                contact.setLastOnline((long) jsonObject.get("lastOnline"));
+            } else {
+                contact.setLastOnline(Instant.now().getEpochSecond());
+            }
             contact.setImage((Image) jsonObject.get("image"));  // TODO
-            contact.setNotifications((int) jsonObject.get("notifications"));
+            contact.setNotifications((long) jsonObject.get("notifications"));
             return contact;
         } catch (ParseException e) {
             return null;
         }
-    }
-
-    public Contact(String firstname, String lastname, String url, Image image, int notifications) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.url = url;
-        this.image = image;
-        this.notifications = notifications;
     }
 
     public static void setMyIP(String ip) {
@@ -100,19 +100,19 @@ public class Contact {
         this.id = id;
     }
 
-    public String getLastOnline() {
+    public long getLastOnline() {
         return lastOnline;
     }
 
-    public void setLastOnline(String lastOnline) {
+    public void setLastOnline(long lastOnline) {
         this.lastOnline = lastOnline;
     }
 
-    public int getNotifications() {
+    public long getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(int notifications) {
+    public void setNotifications(long notifications) {
         this.notifications = notifications;
     }
 

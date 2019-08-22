@@ -30,6 +30,7 @@ public class TCPServerThread extends Thread {
             try {
                 line = brinp.readLine();
                 if ((line != null) && line.length() > 8) {
+                    System.out.println(line);
                     String command = line.substring(0, 8);
                     String json = line.substring(8);
                     System.out.println(command);
