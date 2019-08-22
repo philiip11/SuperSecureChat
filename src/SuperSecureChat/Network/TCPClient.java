@@ -41,7 +41,7 @@ public class TCPClient {
         }
     }
 
-    private void sendText(String input) {
+    public void sendText(String input) {
         System.out.println(input);
         try {
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
@@ -61,4 +61,5 @@ public class TCPClient {
 
         sendText("CONTACT:" + contact.toJSONString());
     }
+
 }

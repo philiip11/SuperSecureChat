@@ -44,6 +44,10 @@ public class TCPServerThread extends Thread {
                             ContactList.getInstance().addContact(Contact.fromJSON(json));
                             //TODO Mach was mit dem Kontakt
                             break;
+                        case "GETCONTA":
+                            TCPClient client = new TCPClient(socket.getInetAddress().toString(), TCPServer.PORT);
+                            client.sendContact(Contact.getMyContact());
+                            break;
                     }
 
                     out.writeBytes(line + "\n\r");

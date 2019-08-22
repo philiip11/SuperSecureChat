@@ -20,11 +20,7 @@ public class ContactList {
     }
 
     private void removeContact(String id) {
-        for (Contact c : contacts) {
-            if (c.getId().equals(id)) {
-                contacts.remove(c);
-            }
-        }
+        contacts.removeIf(c -> c.getId().equals(id));
     }
 
     public ObservableList<Contact> getAllContacts() {

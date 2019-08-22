@@ -50,6 +50,7 @@ public class Network {
             TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
             Contact me = Contact.getMyContact();
             tcpClient.sendContact(me);
+            tcpClient.sendText("GETCONTACT");
 
         }
         otherIPsLastPing.put(ip, Instant.now().getEpochSecond());
