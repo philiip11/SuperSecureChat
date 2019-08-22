@@ -119,7 +119,7 @@ public class Message {
         this.sender = sender;
     }
 
-    public Contact getreceiver() {
+    public Contact getReceiver() {
         return receiver;
     }
 

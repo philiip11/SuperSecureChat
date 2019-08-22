@@ -45,11 +45,13 @@ public class Network {
     }
 
     public void sendMessage(Message m) {
-        for (String ip : otherIPs) {
-            TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
-            tcpClient.sendMessage(m);
-            tcpClient.close();
-        }
+        new Thread(() -> {
+            for (String ip : otherIPs) {
+                TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
+                tcpClient.sendMessage(m);
+                tcpClient.close();
+            }
+        }).start();
 
     }
 

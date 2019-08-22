@@ -8,7 +8,7 @@ public class Database {
 
     private static final Database database = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 0;
+    private static final int DB_VERSION = 1;
     private static Connection connection;
 
     static {
@@ -74,7 +74,6 @@ public class Database {
                 stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
 
-                stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT);");
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT, image BLOB);");
                 stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created TEXT, received INTEGER, 'read' INTEGER," +
                         "UNIQUE(id, sender), FOREIGN KEY(sender) REFERENCES contacts (id), FOREIGN KEY(receiver) REFERENCES contacts (id));");
@@ -91,7 +90,13 @@ public class Database {
     }
 
     public void newMessage(Message message) {
-        //TODO
+        try {
+            PreparedStatement ps = connection.prepareStatement("");
+            //TODO
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void newContact(Contact contact) {

@@ -46,17 +46,21 @@ public class ChatController {
             return;
         }
 
-        Message m = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, txtMessage.getText(), "", "", Instant.now().getEpochSecond(), 0, 0);
+        Message message = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, txtMessage.getText(), "", "", Instant.now().getEpochSecond(), 0, 0);
 
-        messages.add(m);
-        messagesListView.getItems().add(m);
-        messagesListView.setCellFactory(chatListView -> new ChatListViewCell());
-        messagesListView.setOnMouseClicked(this::onMessageClicked);
-        messagesListView.setExpanded(true);
-        network.sendMessage(m);
+        messages.add(message);
+        updateListView();
+        network.sendMessage(message);
 
         txtMessage.clear();
 
+    }
+
+    private void updateListView() {
+        messagesListView.setItems(messages);
+        messagesListView.setCellFactory(chatListView -> new ChatListViewCell());
+        messagesListView.setOnMouseClicked(this::onMessageClicked);
+        messagesListView.setExpanded(true);
     }
 
     private void onMessageClicked(MouseEvent mouseEvent) {
@@ -70,4 +74,10 @@ public class ChatController {
     }
 
 
+    public void newMessage(Message message) {
+        if (message.getReceiver().getId().equals(me.getId())) {
+            messages.add(message);
+            updateListView();
+        }
+    }
 }
