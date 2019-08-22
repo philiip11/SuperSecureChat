@@ -33,7 +33,7 @@ public class ChatController {
         if (txtMessage.getText() == null || txtMessage.getText().equals("")) {
             txtMessage.setText("Keine leeren Eingaben");
         }
-        showMessage.getItems().add(txtMessage.getText());                                      //set Text from the Textfield to the ListView
+        showMessage.getItems().add(txtMessage.getText());                                      //add Text from the Textfield to the ListView
         txtMessage.clear();
 
     }
