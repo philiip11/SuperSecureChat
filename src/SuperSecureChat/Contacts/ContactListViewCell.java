@@ -48,7 +48,7 @@ public class ContactListViewCell extends JFXListCell<Contact> {
 
             }
             label1.setText(contact.getFirstname() + " " + contact.getLastname());
-            contactImage.setImage(contact.getImage());
+            contactImage.setImage(contact.getJavaFXImage());
             int notifications = db.countUnreadMessagesByContact(contact);
             badge.setEnabled(notifications > 0);
             badge.setText(String.valueOf(notifications));

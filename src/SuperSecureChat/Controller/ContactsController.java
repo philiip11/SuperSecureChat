@@ -74,7 +74,7 @@ public class ContactsController {
                         "Max",
                         "Mustermann",
                         null,
-                        new Image(getClass().getResourceAsStream("/icon.png")),
+                        Contact.encoder(getClass().getResource("/icon.png").getFile()),
                         4)
         );
     }

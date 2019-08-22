@@ -1,14 +1,11 @@
 package SuperSecureChat.Contacts;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelFormat;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
+import java.io.*;
 import java.time.Instant;
 import java.util.Base64;
 
@@ -19,8 +16,8 @@ public class Contact {
     private String firstname;
     private String lastname;
     private String url;
-    private Image image;
-    private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), new Image(Contact.class.getResourceAsStream("/icon.png")), 0);
+    private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), encoder(Contact.class.getResource("/icon.png").getFile()), 0);
+    private String image;
     private long notifications;
     private long lastOnline;
 
@@ -34,7 +31,7 @@ public class Contact {
         me.setLastname(lastname);
     }
 
-    public Contact(String id, String firstname, String lastname, String url, long lastOnline, Image image, long notifications) {
+    public Contact(String id, String firstname, String lastname, String url, long lastOnline, String image, long notifications) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -46,6 +43,15 @@ public class Contact {
 
     public Contact() {
 
+    }
+
+    public Contact(String firstname, String lastname, String url, String image, int notifications) {
+        this.id = "test";
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.url = url;
+        this.image = image;
+        this.notifications = notifications;
     }
 
     public static Contact fromJSON(String json) {
@@ -62,52 +68,33 @@ public class Contact {
                 contact.setLastOnline(Instant.now().getEpochSecond());
             }
             if (jsonObject.get("image") != null) {
-                Image i = new Image(new ByteArrayInputStream(Base64.getDecoder().decode(jsonObject.get("image").toString())));
-                contact.setImage(i);
+                contact.setImage(jsonObject.get("image").toString());
             } else {
                 contact.setImage(null);
             }
             contact.setNotifications((long) jsonObject.get("notifications"));
         } catch (ParseException ignored) {
         }
-        return contact;
+        return contact; //TODO Base64 of Image File
     }
 
-    @SuppressWarnings("unchecked")
-    public JSONObject toJSON() {
-        JSONObject jsonMessage = new JSONObject();
-        jsonMessage.put("id", id);
-        jsonMessage.put("firstname", firstname);
-        jsonMessage.put("lastname", lastname);
-        jsonMessage.put("url", url);
-        jsonMessage.put("lastOnline", lastOnline);
-        if (image != null) {
-            ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+    public static String encoder(String filePath) {
+        String base64File = null;
+        try {
+            System.out.println(filePath);
+            File file = new File(filePath);
+            FileInputStream imageInFile = new FileInputStream(file);
+            // Reading a file from file system
+            byte[] fileData = new byte[(int) file.length()];
+            imageInFile.read(fileData);
+            base64File = Base64.getEncoder().encodeToString(fileData);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found" + e);
+        } catch (IOException ioe) {
+            System.out.println("Exception while reading the file " + ioe);
 
-            int w = (int) image.getWidth();
-            int h = (int) image.getHeight();
-
-            ByteBuffer buf = ByteBuffer.allocate(w * h * 4);
-            //byte[] buf = new byte[w * h * 4];
-            image.getPixelReader().getPixels(0, 0, w, h, PixelFormat.getByteBgraInstance(), buf, w * 4);
-            byte[] bytes = new byte[buf.remaining()];
-            buf.get(bytes);
-
-            jsonMessage.put("image", Base64.getEncoder().encodeToString(bytes));
-        } else {
-            jsonMessage.put("image", null);
         }
-        jsonMessage.put("notifications", notifications);
-        return jsonMessage;
-    }
-
-    public Contact(String firstname, String lastname, String url, Image image, int notifications) {
-        this.id = "test";
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.url = url;
-        this.image = image;
-        this.notifications = notifications;
+        return base64File;
     }
 
     public String toJSONString() {
@@ -167,12 +154,30 @@ public class Contact {
         this.url = url;
     }
 
-    public Image getImage() {
-        return image;
+    public static Image imageDecoder(String base64Image) {
+        byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
+        return new Image(new ByteArrayInputStream(imageByteArray));
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    @SuppressWarnings("unchecked")
+    public JSONObject toJSON() {
+        JSONObject jsonMessage = new JSONObject();
+        jsonMessage.put("id", id);
+        jsonMessage.put("firstname", firstname);
+        jsonMessage.put("lastname", lastname);
+        jsonMessage.put("url", url);
+        jsonMessage.put("lastOnline", lastOnline);
+        if (image != null) {
+            jsonMessage.put("image", image);
+        } else {
+            jsonMessage.put("image", null);
+        }
+        jsonMessage.put("notifications", notifications);
+        return jsonMessage;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public String getName() {
@@ -190,4 +195,11 @@ public class Contact {
                 '}';
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Image getJavaFXImage() {
+        return imageDecoder(getImage());
+    }
 }
