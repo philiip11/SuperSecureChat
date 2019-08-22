@@ -23,19 +23,48 @@ public class SystemTrayIcon {
 
     public void displayTray() throws AWTException {
 
+        final PopupMenu popup = new PopupMenu();
+
+
         SystemTray tray = SystemTray.getSystemTray();
 
 
         TrayIcon trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area
         trayIcon.setImageAutoSize(true);
-        tray.add(trayIcon);                                                                                         //displays the icon + notification
+        tray.add(trayIcon);                                    //displays the icon + notification
         trayIcon.displayMessage("SuperSecureChat", "application started", TrayIcon.MessageType.NONE); //popup text in the sidebar (on the right)
 
+//Creating some stuff --> still under construction
+        MenuItem aboutItem = new MenuItem("Info");
+        CheckboxMenuItem cb1 = new CheckboxMenuItem("Test");
+        CheckboxMenuItem cb2 = new CheckboxMenuItem("test_2");
+        Menu displayMenu = new Menu("Settings");
+        MenuItem startapp = new MenuItem("start");
+        MenuItem closeapp = new MenuItem("close");
 
-        PopupMenu popmenu = new PopupMenu("Edit");
-        javafx.scene.control.MenuItem startapp = new javafx.scene.control.MenuItem("start");
+        popup.add(aboutItem);
+        popup.addSeparator();
+        popup.add(cb1);
+        popup.add(cb2);
+        popup.addSeparator();
+        popup.add(displayMenu);
+        displayMenu.add(startapp);
+        displayMenu.add(closeapp);
+        //popup.add(closeapp);
 
-        trayIcon.setPopupMenu(popmenu);
+        trayIcon.setPopupMenu(popup);
+
+
+//        PopupMenu popmenu = new PopupMenu("Edit");
+//        javafx.scene.control.MenuItem startapp = new javafx.scene.control.MenuItem("start");
+//        trayIcon.setPopupMenu(popmenu);
+//
+//        MenuItem startapp = new MenuItem("start");
+//        startapp.setOnAction(event -> {
+//
+//        });
+//        trayIcon.setPopupMenu(popmenu);
+
 
     }
 
