@@ -30,10 +30,8 @@ public class TCPServerThread extends Thread {
             try {
                 line = brinp.readLine();
                 if ((line != null) && line.length() > 8) {
-                    System.out.println(line);
                     String command = line.substring(0, 8);
                     String json = line.substring(8);
-                    System.out.println(command);
                     switch (command) {
                         case "MESSAGE:":
                             System.out.println("Neue Nachricht empfangen!");
@@ -45,14 +43,13 @@ public class TCPServerThread extends Thread {
                             //TODO Mach was mit dem Kontakt
                             break;
                         case "GETCONTA":
-                            System.out.println(socket.getInetAddress().getHostAddress());
+                            System.out.println("Kontaktanfrage empfangen!");
                             TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             client.sendContact(Contact.getMyContact());
                             break;
                     }
 
                     out.writeBytes(line + "\n\r");
-                    System.out.println(line);
                     out.flush();
                 }
 

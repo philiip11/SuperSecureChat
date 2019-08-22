@@ -42,7 +42,7 @@ public class TCPClient {
     }
 
     public void sendText(String input) {
-        System.out.println(input);
+        System.out.println("Sende: " + input.substring(0, Math.min(input.length() - 1, 64)) + "...");
         try {
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
             out.println(input);
