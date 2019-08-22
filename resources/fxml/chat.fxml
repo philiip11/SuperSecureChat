@@ -13,6 +13,8 @@
         <JFXTextField fx:id="txtMessage" layoutX="14.0" layoutY="378.0" onKeyReleased="#txtOnKeyReleased"
                       prefHeight="25.0" prefWidth="554.0" styleClass="chatTextField" unFocusColor="BLACK"
                       AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="69.0"/>
-        <ListView fx:id="showMessage" layoutX="16.0" layoutY="14.0" prefHeight="359.0" prefWidth="544.0"/>
+        <ListView fx:id="showMessage" layoutX="16.0" layoutY="14.0" prefHeight="359.0" prefWidth="544.0"
+                  AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="69.0"
+                  AnchorPane.topAnchor="14.0"/>
     </children>
 </AnchorPane>
