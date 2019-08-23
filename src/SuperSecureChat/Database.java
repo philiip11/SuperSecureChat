@@ -92,8 +92,8 @@ public class Database {
     }
 
     public void newMessage(Message message) {
-        updateContact(message.getSender());
-        updateContact(message.getReceiver());
+        newContact(message.getSender());
+        newContact(message.getReceiver());
         try {
             PreparedStatement ps = connection.prepareStatement("REPLACE INTO messages (id, sender, receiver, text, data, trace, created, received, 'read') VALUES (?,?,?,?,?,?,?,?,?)");
             ps.setString(1, message.getId());
@@ -113,7 +113,7 @@ public class Database {
         }
     }
 
-    public void updateContact(Contact contact) {
+    public void newContact(Contact contact) {
         try {
 
 

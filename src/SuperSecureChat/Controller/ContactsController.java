@@ -69,13 +69,12 @@ public class ContactsController {
 
     private void loadContacts() {
         //TODO Load Real Contacts from Database
-        contacts = contactList.getAllContacts();
-        contacts.addAll(Database.getInstance().getContacts());
+        contactList.addAll(Database.getInstance().getContacts());
 
     }
 
     private void showContacts() {
-        contactJFXListView.setItems(contacts);
+        contactJFXListView.setItems(contactList.getAllContacts());
         contactJFXListView.setCellFactory(contactListView -> new ContactListViewCell());
         contactJFXListView.setOnMouseClicked(this::onContactClicked);
         contactJFXListView.setExpanded(true);

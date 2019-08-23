@@ -3,6 +3,8 @@ package SuperSecureChat.Network;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Message;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -22,6 +24,7 @@ public class Network {
     private ArrayList<String> myIPs;
     private ArrayList<String> otherIPs = new ArrayList<>();
     private HashMap<String, Long> otherIPsLastPing = new HashMap<>();
+    private ObservableList<String> relayedMessages = FXCollections.observableArrayList();
 
     public Network() {
         myIPs = getMyIpAddresses();
@@ -53,7 +56,6 @@ public class Network {
                 tcpClient.close();
             }
         }).start();
-
     }
 
     void addIP(String ip) {
@@ -94,6 +96,13 @@ public class Network {
             e.printStackTrace();
         }
         return myIPs;
+    }
+
+    public void relayMessage(Message message) {
+        if (!relayedMessages.contains(message.getId())) {
+            sendMessage(message);
+        }
+
     }
 
 

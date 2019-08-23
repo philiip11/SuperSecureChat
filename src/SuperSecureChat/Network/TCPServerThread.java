@@ -41,10 +41,11 @@ public class TCPServerThread extends Thread {
                             System.out.println("Neue Nachricht empfangen!");
                             Message message = Message.fromJSON(json);
                             message.setReceived(Instant.now().getEpochSecond());
+                            message.setTrace(message.getTrace() + "");
                             System.out.println(message.getText());
                             ClassConnector.getInstance().sendMessageToAllChatControllers(message);
                             Database.getInstance().newMessage(message);
-                            //TODO schreibe Nachricht in die Datenbank
+                            Network.getInstance().relayMessage(message);
                             break;
                         case "CONTACT:":
                             System.out.println("Kontakt empfangen!");
@@ -54,7 +55,7 @@ public class TCPServerThread extends Thread {
                             String ip = url.substring(1).split(":")[0];
                             contact.setUrl(ip);
                             ContactList.getInstance().addContact(contact);
-                            //TODO Mach was mit dem Kontakt
+                            Database.getInstance().newContact(contact);
                             break;
                         case "GETCONTA"://CT
                             System.out.println("Kontaktanfrage empfangen!");

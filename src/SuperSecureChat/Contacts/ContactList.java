@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.Instant;
+import java.util.ArrayList;
 
 public class ContactList {
 
@@ -31,12 +32,22 @@ public class ContactList {
 
 
     public void setOnlineByIp(String ip) {
+        boolean noIpFoundException = true;
         for (Contact contact : contacts) {
             if (contact.getUrl() != null) {
                 if (contact.getUrl().equals(ip)) {
                     contact.setLastOnline(Instant.now().getEpochSecond());
+                    System.out.println("IP " + ip + " gehört " + contact.getId());
+                    noIpFoundException = false;
                 }
             }
         }
+        if (noIpFoundException) {
+            System.out.println("IP " + ip + " nicht gefunden!");
+        }
+    }
+
+    public void addAll(ArrayList<Contact> contacts) {
+        this.contacts.addAll(contacts);
     }
 }
