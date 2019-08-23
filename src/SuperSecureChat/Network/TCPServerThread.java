@@ -64,9 +64,10 @@ public class TCPServerThread extends Thread {
                         case "GETMYMM:"://GETMessagesWithID
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
-                            TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             for (Message m : messages) {
+                                TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                                 tcpClient.sendMessage(m);
+                                tcpClient.close();
                             }
                             break;
                     }

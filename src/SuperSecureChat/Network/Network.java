@@ -65,8 +65,13 @@ public class Network {
             TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
             Contact me = Contact.getMyContact();
             tcpClient.sendContact(me);
+            tcpClient.close();
+            tcpClient = new TCPClient(ip, TCPServer.PORT);
             tcpClient.sendText("GETCONTACT");
+            tcpClient.close();
+            tcpClient = new TCPClient(ip, TCPServer.PORT);
             tcpClient.sendText("GETMYMM:" + me.getId()); //GetMyMessages
+            tcpClient.close();
 
         }
         otherIPsLastPing.put(ip, Instant.now().getEpochSecond());
