@@ -11,7 +11,7 @@
         <AnchorPane minWidth="100.0" prefHeight="40.0" styleClass="speechBubble" AnchorPane.bottomAnchor="0.0"
                     AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Text fx:id="labelMessage" text="NACHRICHT" textAlignment="JUSTIFY" wrappingWidth="300"
+                <Text fx:id="labelMessage" text="NACHRICHT" fill="WHITE" textAlignment="JUSTIFY" wrappingWidth="300"
                       AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="10.0">
                     <font>
                         <Font name="Roboto" size="18.0"/>
