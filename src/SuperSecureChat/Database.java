@@ -10,7 +10,7 @@ public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private Connection connection;
 
     static {
@@ -79,7 +79,7 @@ public class Database {
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
 
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB);");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER);");
+                stmt.executeUpdate("CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);");
                 stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, 'key' TEXT);");
                 stmt.close();
 
@@ -95,16 +95,17 @@ public class Database {
         newContact(message.getSender());
         newContact(message.getReceiver());
         try {
-            PreparedStatement ps = connection.prepareStatement("REPLACE INTO messages (id, sender, receiver, text, data, trace, created, received, 'read') VALUES (?,?,?,?,?,?,?,?,?)");
+            PreparedStatement ps = connection.prepareStatement("REPLACE INTO messages (id, sender, receiver, text, data, trace, created, received, 'read', reference) VALUES (?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, message.getId());
             ps.setString(2, message.getSender().getId());
             ps.setString(3, message.getReceiver().getId());
             ps.setString(4, message.getText());
             ps.setString(5, message.getData());
             ps.setString(6, message.getTrace());
-            ps.setLong(8, message.getCreated());
-            ps.setLong(9, message.getReceived());
-            ps.setLong(7, message.getRead());
+            ps.setLong(7, message.getCreated());
+            ps.setLong(8, message.getReceived());
+            ps.setLong(9, message.getRead());
+            ps.setLong(10, message.getRead());
             ps.executeUpdate();
             //TODO
 
@@ -218,6 +219,7 @@ public class Database {
             m.setCreated(resultSet.getLong(7));
             m.setReceived(resultSet.getLong(8));
             m.setRead(resultSet.getLong(9));
+            m.setReferencId(resultSet.getString(10));
             result.add(m);
         }
     }
