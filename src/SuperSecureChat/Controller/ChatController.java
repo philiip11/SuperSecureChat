@@ -90,6 +90,11 @@ public class ChatController {
                 (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
                         message.getSender().getId().equals(me.getId()))) {
 
+            for (Message m : messages) {
+                if (m.getId().equals(message.getId())) {
+                    return;
+                }
+            }
             Platform.runLater(() -> messages.add(message));
             Platform.runLater(this::updateListView);
         }
