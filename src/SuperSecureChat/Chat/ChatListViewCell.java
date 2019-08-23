@@ -43,22 +43,23 @@ public class ChatListViewCell extends JFXListCell<Message> {
             setGraphic(null);
 
         } else {
-            if (mLLoader == null) {
-                String fxmlResource = "/fxml/chatCell.fxml";
-                if (message.getSender().getId().equals(Contact.getMyContact().getId())) {
-                    fxmlResource = "/fxml/chatCellMe.fxml";
+            String fxmlResource = "/fxml/chatCell.fxml";
+            if (message.getSender().getId().equals(Contact.getMyContact().getId())) {
+                fxmlResource = "/fxml/chatCellMe.fxml";
+                System.out.println(message.getSender().getId() + " == " + Contact.getMyContact().getId());
 
-                }
-                mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
-                mLLoader.setController(this);
-
-                try {
-                    mLLoader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            } else {
+                System.out.println(message.getSender().getId() + " != " + Contact.getMyContact().getId());
             }
+            mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
+            mLLoader.setController(this);
+
+            try {
+                mLLoader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             labelMessage.setText(message.getText());
             labelTime.setText(simpleDateFormat.format(new Date(message.getCreated() * 1000L)));
             //contactImage.setImage(contact.getJavaFXImage());

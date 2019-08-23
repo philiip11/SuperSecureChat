@@ -92,7 +92,7 @@ public class Database {
     }
 
     public void newMessage(Message message) {
-        try {
+        /*try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO messages VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?);");
             ps.setString(1, message.getId());
             ps.setString(2, message.getSender().getId());
@@ -108,7 +108,7 @@ public class Database {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void newContact(Contact contact) {

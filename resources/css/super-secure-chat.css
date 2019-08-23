@@ -38,6 +38,15 @@ JFXListView {
     -fx-text-fill: white;
 }
 
+.speechBubbleMe {
+    -fx-background-color: #5555ff;
+    -fx-background-radius: 25;
+}
+
+.speechBubble {
+    -fx-background-color: #3c4043;
+    -fx-background-radius: 25px;
+}
 
 .numberButton {
     -fx-background-color: #111111;
@@ -116,4 +125,7 @@ JFXListView {
     -fx-background-color: #111111;
     -fx-alignment: center-right;
 
+}
+
+.chatItem {
 }

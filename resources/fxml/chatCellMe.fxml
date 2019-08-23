@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="anchorPane" prefHeight="40.0" prefWidth="200.0"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="anchorPane" minWidth="0.0" prefHeight="40.0" prefWidth="200.0"
             styleClass="chatItem" xmlns="http://javafx.com/javafx/8.0.192">
     <children>
-        <Label fx:id="labelMessage" layoutX="14.0" layoutY="10.0" text="NACHRICHT" AnchorPane.rightAnchor="14.0"
-               AnchorPane.topAnchor="10.0"/>
-        <Label fx:id="labelTime" layoutX="358.0" layoutY="18.0" AnchorPane.bottomAnchor="2.0"
-               AnchorPane.rightAnchor="2.0"/>
+        <AnchorPane minWidth="100.0" prefHeight="40.0" styleClass="speechBubbleMe" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label fx:id="labelMessage" maxWidth="300.0" text="NACHRICHT" textAlignment="JUSTIFY" wrapText="true"
+                       AnchorPane.bottomAnchor="13.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0"/>
+                <Label fx:id="labelTime" style="-fx-font-size: 12px" text="Zeit" AnchorPane.bottomAnchor="2.0"
+                       AnchorPane.rightAnchor="14.0"/>
+            </children>
+            <padding>
+                <Insets left="12.0"/>
+            </padding>
+        </AnchorPane>
     </children>
 </AnchorPane>
