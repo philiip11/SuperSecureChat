@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.time.Instant;
+import java.util.Comparator;
 
 public class ChatController {
 
@@ -70,6 +71,7 @@ public class ChatController {
         messagesListView.setOnMouseClicked(this::onMessageClicked);
         messagesListView.setExpanded(true);
         messagesListView.scrollTo(messages.size() - 1);
+        messagesListView.getItems().sort(Comparator.comparingLong(Message::getCreated));
     }
 
     private void onMessageClicked(MouseEvent mouseEvent) {
