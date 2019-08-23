@@ -133,12 +133,14 @@ public class Database {
         }
     }
 
-    public ArrayList<Message> getMessagesByContact(Contact contact) {
+    public ArrayList<Message> getMessagesByContacts(Contact contact1, Contact contact2) {
         ArrayList<Message> result = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? OR receiver = ?)");
-            ps.setString(1, contact.getId());
-            ps.setString(2, contact.getId());
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? OR receiver = ?) and (sender = ? OR receiver = ?)");
+            ps.setString(1, contact1.getId());
+            ps.setString(2, contact2.getId());
+            ps.setString(3, contact2.getId());
+            ps.setString(4, contact1.getId());
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 Message m = new Message();

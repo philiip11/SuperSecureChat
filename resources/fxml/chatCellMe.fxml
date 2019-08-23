@@ -15,7 +15,7 @@
                       textAlignment="JUSTIFY" wrappingWidth="300" AnchorPane.bottomAnchor="13.0"
                       AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
                     <font>
-                        <Font name="Roboto" size="18.0"/>
+                        <Font name="Roboto" size="14.0"/>
                     </font>
                 </Text>
                 <Label fx:id="labelTime" style="-fx-font-size: 12px" text="Zeit" AnchorPane.bottomAnchor="2.0"

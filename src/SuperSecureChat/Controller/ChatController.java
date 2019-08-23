@@ -39,7 +39,7 @@ public class ChatController {
 
     public void setContact(Contact contact) {
         this.contact = contact;
-        messages.addAll(database.getMessagesByContact(contact));
+        messages.addAll(database.getMessagesByContacts(contact, me));
         Platform.runLater(this::updateListView);
     }
 
