@@ -24,7 +24,6 @@ public class TCPServer {
                         System.out.println("I/O error: " + e);
                     }
                     // new thread for a client
-                    System.out.println("new Server Thread");
                     new TCPServerThread(socket).start();
                 }
             }).start();

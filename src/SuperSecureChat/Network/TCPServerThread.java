@@ -82,10 +82,8 @@ public class TCPServerThread extends Thread {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println("stop Server Thread");
                 return;
             }
-        System.out.println("stop Server Thread");
         //}
     }
 
