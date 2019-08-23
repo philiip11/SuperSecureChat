@@ -113,7 +113,7 @@ public class SystemTrayIcon {
 
     public void showMessage(Message message) {
 //
-        trayIcon.displayMessage("new message from" + message.getSender().getName(), message.getText(), TrayIcon.MessageType.NONE);
+        trayIcon.displayMessage(message.getSender().getName(), message.getText(), TrayIcon.MessageType.NONE);
 
     }
 
