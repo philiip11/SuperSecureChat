@@ -66,19 +66,22 @@ public class TCPServerThread extends Thread {
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             for (Message m : messages) {
-                                tcpClient.sendMessage(m);
+                                //tcpClient.sendMessage(m);
                             }
                             break;
                     }
 
-                    out.writeBytes(line + "\n\r");
+                    //out.writeBytes(line + "\n\r");
+                    out.writeBytes("200 OK" + "\n\r");
                     out.flush();
                 }
 
-            } catch (SocketException ignored) {
+            } catch (SocketException e) {
+                return;
 
             } catch (IOException e) {
                 e.printStackTrace();
+                Thread.currentThread().stop();
                 return;
             }
         }
