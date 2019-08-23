@@ -4,18 +4,22 @@
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="419.0" prefWidth="629.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="SuperSecureChat.Controller.ChatController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="419.0" prefWidth="629.0"
+            xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.ChatController">
     <children>
-        <JFXButton fx:id="sendMessage" buttonType="RAISED" layoutX="537.0" layoutY="378.0" mnemonicParsing="false"
-                   onAction="#buttonClick" styleClass="chatSendButton" text="Send" AnchorPane.bottomAnchor="16.0"
-                   AnchorPane.rightAnchor="16.0"/>
-        <JFXTextField fx:id="txtMessage" layoutX="14.0" layoutY="378.0" onKeyReleased="#txtOnKeyReleased"
-                      prefHeight="25.0" prefWidth="554.0" styleClass="chatTextField" unFocusColor="BLACK"
-                      AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="69.0"/>
-        <JFXListView fx:id="messagesListView" styleClass="chatListView" layoutX="16.0" layoutY="14.0" prefHeight="359.0"
-                     prefWidth="544.0"
-                     AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="69.0"
+        <JFXListView fx:id="messagesListView" prefHeight="359.0" prefWidth="544.0" styleClass="chatListView"
+                     AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0"
                      AnchorPane.topAnchor="14.0"/>
+        <AnchorPane prefHeight="40.0" prefWidth="200.0" styleClass="speechBubbleMe" AnchorPane.bottomAnchor="4.0"
+                    AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0">
+            <children>
+                <JFXTextField fx:id="txtMessage" onKeyReleased="#txtOnKeyReleased" prefHeight="25.0" prefWidth="554.0"
+                              styleClass="chatTextField" unFocusColor="BLACK" AnchorPane.bottomAnchor="8.0"
+                              AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="65.0"/>
+                <JFXButton fx:id="sendMessage" buttonType="RAISED" mnemonicParsing="false" onAction="#buttonClick"
+                           styleClass="chatSendButton" text="Send" AnchorPane.bottomAnchor="6.0"
+                           AnchorPane.rightAnchor="12.0"/>
+            </children>
+        </AnchorPane>
     </children>
 </AnchorPane>

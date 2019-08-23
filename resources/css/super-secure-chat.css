@@ -32,6 +32,7 @@ JFXListView {
 .chatSendButton {
     -jfx-button-type: RAISED;
     -fx-background-color: #5555ff;
+    -fx-background-radius: 25;
 }
 
 .chatTextField {
@@ -46,6 +47,10 @@ JFXListView {
 .speechBubble {
     -fx-background-color: #3c4043;
     -fx-background-radius: 25px;
+}
+
+.wrapper {
+    -fx-word-wrap: break-word;
 }
 
 .numberButton {

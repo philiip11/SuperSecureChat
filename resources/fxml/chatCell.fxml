@@ -3,14 +3,20 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="anchorPane" minWidth="0.0" prefHeight="40.0" prefWidth="200.0"
             styleClass="chatItem" xmlns="http://javafx.com/javafx/8.0.192">
     <children>
         <AnchorPane minWidth="100.0" prefHeight="40.0" styleClass="speechBubble" AnchorPane.bottomAnchor="0.0"
                     AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Label fx:id="labelMessage" maxWidth="300.0" text="NACHRICHT" textAlignment="JUSTIFY" wrapText="true"
-                       AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="10.0"/>
+                <Text fx:id="labelMessage" text="NACHRICHT" textAlignment="JUSTIFY" wrappingWidth="300"
+                      AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="10.0">
+                    <font>
+                        <Font name="Roboto" size="18.0"/>
+                    </font>
+                </Text>
                 <Label fx:id="labelTime" style="-fx-font-size: 12px" text="Zeit" AnchorPane.bottomAnchor="2.0"
                        AnchorPane.rightAnchor="14.0"/>
             </children>
