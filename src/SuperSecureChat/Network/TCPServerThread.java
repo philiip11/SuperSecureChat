@@ -38,11 +38,9 @@ public class TCPServerThread extends Thread {
                     String json = line.substring(8);
                     switch (command) {
                         case "MESSAGE:":
-                            System.out.println("Neue Nachricht empfangen!");
                             Message message = Message.fromJSON(json);
                             message.setReceived(Instant.now().getEpochSecond());
                             message.setTrace(message.getTrace() + "");
-                            System.out.println(message.getText());
                             ClassConnector.getInstance().sendMessageToAllChatControllers(message);
                             Database.getInstance().newMessage(message);
                             Network.getInstance().relayMessage(message);

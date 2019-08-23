@@ -27,9 +27,6 @@ public class ContactsController {
 
     @FXML
     JFXListView<Contact> contactJFXListView;
-    private String vorname;
-    private String nachname;
-    private String username;
     @FXML
     Label nameLabel;
     private ObservableList<Contact> contacts;
@@ -55,14 +52,13 @@ public class ContactsController {
 
 
         loadContacts();
-        Platform.runLater(this::showContacts);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> showContacts());
             }
-        }, 5000);
+        }, 0, 5000);
 
 
     }
@@ -75,10 +71,12 @@ public class ContactsController {
     }
 
     private void showContacts() {
+        contactJFXListView.refresh();
         contactJFXListView.setItems(contactList.getAllContacts());
         contactJFXListView.setCellFactory(contactListView -> new ContactListViewCell());
         contactJFXListView.setOnMouseClicked(this::onContactClicked);
         contactJFXListView.setExpanded(true);
+
     }
 
     private void onContactClicked(MouseEvent mouseEvent) {
@@ -118,9 +116,6 @@ public class ContactsController {
 
 
     public void setData(String username, String vorname, String nachname) {
-        this.username = username;
-        this.vorname = vorname;
-        this.nachname = nachname;
         nameLabel.setText(vorname + " " + nachname);
     }
 }

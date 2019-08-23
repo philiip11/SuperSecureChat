@@ -50,32 +50,29 @@ public class ContactListViewCell extends JFXListCell<Contact> {
             }
             label1.setText(contact.getFirstname() + " " + contact.getLastname());
             contactImage.setImage(contact.getJavaFXImage());
-            int notifications = db.countUnreadMessagesByContact(contact);
-            badge.setEnabled(true);
-            if (notifications > 0) {
-                badge.setText(String.valueOf(notifications));
-            } else {
-                badge.setText("");
-            }
-
-            if (contact.getLastOnline() > Instant.now().getEpochSecond() - 15) {
-                int i = badge.getStyleClass().indexOf("offline");
-                if (i != -1) {
-                    badge.getStyleClass().remove(i);
-                }
-                badge.getStyleClass().add("online");
-            } else {
-                int i = badge.getStyleClass().indexOf("online");
-                if (i != -1) {
-                    badge.getStyleClass().remove(i);
-                }
-                badge.getStyleClass().add("offline");
-            }
-
+            updateBadge(contact);
             setText(null);
             setGraphic(anchorPane);
+
         }
 
+    }
+
+    private void updateBadge(Contact contact) {
+        int notifications = db.countUnreadMessagesByContact(contact);
+        badge.setEnabled(true);
+        if (notifications > 0) {
+            badge.setText(String.valueOf(notifications));
+        } else {
+            badge.setText("");
+        }
+
+        badge.getStyleClass().clear();
+        if (contact.getLastOnline() > Instant.now().getEpochSecond() - 15) {
+            badge.getStyleClass().add("online");
+        } else {
+            badge.getStyleClass().add("offline");
+        }
     }
 
 }

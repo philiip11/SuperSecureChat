@@ -47,10 +47,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
             String fxmlResource = "/fxml/chatCell.fxml";
             if (message.getSender().getId().equals(Contact.getMyContact().getId())) {
                 fxmlResource = "/fxml/chatCellMe.fxml";
-                System.out.println(message.getSender().getId() + " == " + Contact.getMyContact().getId());
 
-            } else {
-                System.out.println(message.getSender().getId() + " != " + Contact.getMyContact().getId());
             }
             mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
             mLLoader.setController(this);
