@@ -70,6 +70,7 @@ public class ContactsController {
     private void loadContacts() {
         //TODO Load Real Contacts from Database
         contactList.addAll(Database.getInstance().getContacts());
+        contactList.remove(Contact.getMyContact());
 
     }
 

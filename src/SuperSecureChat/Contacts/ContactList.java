@@ -50,4 +50,13 @@ public class ContactList {
     public void addAll(ArrayList<Contact> contacts) {
         this.contacts.addAll(contacts);
     }
+
+    public void remove(Contact contact) {
+        for (Contact c : contacts) {
+            if (c.getId().equals(contact.getId())) {
+                contacts.remove(c);
+                return;
+            }
+        }
+    }
 }
