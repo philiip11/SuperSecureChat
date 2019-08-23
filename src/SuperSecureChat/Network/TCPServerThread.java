@@ -31,7 +31,7 @@ public class TCPServerThread extends Thread {
             return;
         }
         String line;
-        while (true) {
+        //while (true) {
             try {
                 line = brinp.readLine();
                 if ((line != null) && line.length() > 8) {
@@ -66,7 +66,7 @@ public class TCPServerThread extends Thread {
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             for (Message m : messages) {
-                                //tcpClient.sendMessage(m);
+                                tcpClient.sendMessage(m);
                             }
                             break;
                     }
@@ -81,10 +81,11 @@ public class TCPServerThread extends Thread {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                Thread.currentThread().stop();
+                System.out.println("stop Server Thread");
                 return;
             }
-        }
+        System.out.println("stop Server Thread");
+        //}
     }
 
 }

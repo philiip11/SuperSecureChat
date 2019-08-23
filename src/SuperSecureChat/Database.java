@@ -5,7 +5,6 @@ import SuperSecureChat.Contacts.Contact;
 import java.sql.*;
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
 public class Database {
 
     private static final Database INSTANCE = new Database();
@@ -32,7 +31,7 @@ public class Database {
     }
 
     public static void main(String[] args) {
-        Database dbc = Database.getInstance();
+        Database dbc = getInstance();
         dbc.initDBConnection();
         dbc.handleDB();
     }
