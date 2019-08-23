@@ -56,7 +56,8 @@ public class SystemTrayIcon {
         trayIcon.addActionListener(new ActionListener() {               //TODO soll Anwendung maximieren //doppelclick *thinking*
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,
-                        "[Open Application] Hopefully coming soon ;)");
+                        "[Open Application] Hopefully coming soon");
+
             }
         });
         aboutItem.addActionListener(new ActionListener() {
@@ -80,7 +81,12 @@ public class SystemTrayIcon {
 
 
             }
-        });
+        });     //ActionListener zu ende  // Klammern *grrr*
+
+
+        ClassConnector.getInstance().addSystemTrayIcon(this);
+
+
 
     }
 
@@ -90,7 +96,10 @@ public class SystemTrayIcon {
 
     public void showNotification(Image image, String title, String message, Runnable onClick) {
         trayIcon.displayMessage(title, message, TrayIcon.MessageType.NONE);
+
+
     }
+
 
 
     private Image getTrayIcon() {
@@ -101,4 +110,13 @@ public class SystemTrayIcon {
         }
         return null;
     }
+
+    public void showMessage(Message message) {
+//
+        trayIcon.displayMessage("new message from" + message.getSender().getName(), message.getText(), TrayIcon.MessageType.NONE);
+
+    }
+
 }
+
+
