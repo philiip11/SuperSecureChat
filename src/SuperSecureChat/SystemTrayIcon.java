@@ -1,5 +1,6 @@
 package SuperSecureChat;
 
+import SuperSecureChat.Contacts.Contact;
 import javafx.application.Platform;
 
 import javax.imageio.ImageIO;
@@ -87,9 +88,7 @@ public class SystemTrayIcon {
         ClassConnector.getInstance().addSystemTrayIcon(this);
 
 
-
     }
-
 
 
     //TODO Methode um Benachrichtigungen anzuzeigen
@@ -99,7 +98,6 @@ public class SystemTrayIcon {
 
 
     }
-
 
 
     private Image getTrayIcon() {
@@ -113,7 +111,9 @@ public class SystemTrayIcon {
 
     public void showMessage(Message message) {
 //
-        trayIcon.displayMessage(message.getSender().getName(), message.getText(), TrayIcon.MessageType.NONE);
+        if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
+            trayIcon.displayMessage(message.getSender().getName(), message.getText(), TrayIcon.MessageType.NONE);
+        }
 
     }
 
