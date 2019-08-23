@@ -100,6 +100,7 @@ public class Network {
 
     public void relayMessage(Message message) {
         if (!relayedMessages.contains(message.getId())) {
+            relayedMessages.add(message.getId());
             sendMessage(message);
         }
 

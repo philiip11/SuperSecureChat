@@ -57,11 +57,18 @@ public class ContactListViewCell extends JFXListCell<Contact> {
             } else {
                 badge.setText("");
             }
+
             if (contact.getLastOnline() > Instant.now().getEpochSecond() - 15) {
-                badge.getStyleClass().clear();
+                int i = badge.getStyleClass().indexOf("offline");
+                if (i != -1) {
+                    badge.getStyleClass().remove(i);
+                }
                 badge.getStyleClass().add("online");
             } else {
-                badge.getStyleClass().clear();
+                int i = badge.getStyleClass().indexOf("online");
+                if (i != -1) {
+                    badge.getStyleClass().remove(i);
+                }
                 badge.getStyleClass().add("offline");
             }
 
