@@ -136,7 +136,7 @@ public class Database {
     public ArrayList<Message> getMessagesByContacts(Contact contact1, Contact contact2) {
         ArrayList<Message> result = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? OR receiver = ?) and (sender = ? OR receiver = ?)");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?)");
             ps.setString(1, contact1.getId());
             ps.setString(2, contact2.getId());
             ps.setString(3, contact2.getId());
@@ -163,20 +163,39 @@ public class Database {
     }
 
     public Contact getContactById(String id) {
-        Contact c = new Contact();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM contacts WHERE (id = ?)");
             ps.setString(1, id);
             ResultSet resultSet = ps.executeQuery();
-            c.setId(resultSet.getString(1));
-            c.setFirstname(resultSet.getString(2));
-            c.setLastname(resultSet.getString(3));
-            c.setUrl(resultSet.getString(4));
-            c.setLastOnline(resultSet.getLong(5));
-            c.setImage(resultSet.getString(6));
+            return getContactFromResultSet(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public ArrayList<Contact> getContacts() {
+        ArrayList<Contact> result = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts");
+            while (resultSet.next()) {
+                result.add(getContactFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private Contact getContactFromResultSet(ResultSet resultSet) throws SQLException {
+        Contact c = new Contact();
+        c.setId(resultSet.getString(1));
+        c.setFirstname(resultSet.getString(2));
+        c.setLastname(resultSet.getString(3));
+        c.setUrl(resultSet.getString(4));
+        c.setLastOnline(resultSet.getLong(5));
+        c.setImage(resultSet.getString(6));
         return c;
     }
 

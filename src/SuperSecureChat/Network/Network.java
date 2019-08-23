@@ -1,6 +1,7 @@
 package SuperSecureChat.Network;
 
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Message;
 
 import java.net.Inet4Address;
@@ -66,6 +67,7 @@ public class Network {
 
         }
         otherIPsLastPing.put(ip, Instant.now().getEpochSecond());
+        ContactList.getInstance().setOnlineByIp(ip);
     }
 
     ArrayList<String> getMyIPs() {

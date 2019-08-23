@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.time.Instant;
 
 public class ContactListViewCell extends JFXListCell<Contact> {
 
@@ -50,9 +51,19 @@ public class ContactListViewCell extends JFXListCell<Contact> {
             label1.setText(contact.getFirstname() + " " + contact.getLastname());
             contactImage.setImage(contact.getJavaFXImage());
             int notifications = db.countUnreadMessagesByContact(contact);
-            badge.setEnabled(notifications > 0);
-            badge.setText(String.valueOf(notifications));
-
+            badge.setEnabled(true);
+            if (notifications > 0) {
+                badge.setText(String.valueOf(notifications));
+            } else {
+                badge.setText("");
+            }
+            if (contact.getLastOnline() > Instant.now().getEpochSecond() - 15) {
+                badge.getStyleClass().clear();
+                badge.getStyleClass().add("online");
+            } else {
+                badge.getStyleClass().clear();
+                badge.getStyleClass().add("offline");
+            }
 
             setText(null);
             setGraphic(anchorPane);

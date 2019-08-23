@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.time.Instant;
+
 public class ContactList {
 
     private static final ContactList INSTANCE = new ContactList();
@@ -28,4 +30,13 @@ public class ContactList {
     }
 
 
+    public void setOnlineByIp(String ip) {
+        for (Contact contact : contacts) {
+            if (contact.getUrl() != null) {
+                if (contact.getUrl().equals(ip)) {
+                    contact.setLastOnline(Instant.now().getEpochSecond());
+                }
+            }
+        }
+    }
 }

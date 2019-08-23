@@ -9,6 +9,7 @@ import SuperSecureChat.Message;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.time.Instant;
 
 public class TCPServerThread extends Thread {
     private Socket socket;
@@ -39,6 +40,7 @@ public class TCPServerThread extends Thread {
                         case "MESSAGE:":
                             System.out.println("Neue Nachricht empfangen!");
                             Message message = Message.fromJSON(json);
+                            message.setReceived(Instant.now().getEpochSecond());
                             System.out.println(message.getText());
                             ClassConnector.getInstance().sendMessageToAllChatControllers(message);
                             Database.getInstance().newMessage(message);
@@ -46,7 +48,12 @@ public class TCPServerThread extends Thread {
                             break;
                         case "CONTACT:":
                             System.out.println("Kontakt empfangen!");
-                            ContactList.getInstance().addContact(Contact.fromJSON(json));
+                            Contact contact = Contact.fromJSON(json);
+                            System.out.println(contact.getId());
+                            String url = socket.getRemoteSocketAddress().toString();
+                            String ip = url.substring(1).split(":")[0];
+                            contact.setUrl(ip);
+                            ContactList.getInstance().addContact(contact);
                             //TODO Mach was mit dem Kontakt
                             break;
                         case "GETCONTA"://CT

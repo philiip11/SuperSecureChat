@@ -3,6 +3,7 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Contacts.ContactListViewCell;
+import SuperSecureChat.Database;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -69,14 +70,8 @@ public class ContactsController {
     private void loadContacts() {
         //TODO Load Real Contacts from Database
         contacts = contactList.getAllContacts();
-        contacts.add(
-                new Contact(
-                        "Max",
-                        "Mustermann",
-                        null,
-                        Contact.encoder(getClass().getResource("/icon.png").getFile()),
-                        4)
-        );
+        contacts.addAll(Database.getInstance().getContacts());
+
     }
 
     private void showContacts() {

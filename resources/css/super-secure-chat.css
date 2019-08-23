@@ -33,6 +33,7 @@ JFXListView {
     -jfx-button-type: RAISED;
     -fx-background-color: #5555ff;
     -fx-background-radius: 25;
+    -fx-text-fill: white;
 }
 
 .chatTextField {
@@ -52,6 +53,23 @@ JFXListView {
 .wrapper {
     -fx-word-wrap: break-word;
 }
+
+
+.online .badge-pane {
+    -fx-background-color: lime;
+}
+
+.offline .badge-pane {
+    -fx-background-color: red;
+}
+
+
+
+
+
+
+
+
 
 .numberButton {
     -fx-background-color: #111111;
