@@ -32,7 +32,7 @@ public class Message {
         this.received = received;
     }
 
-    private Message() {
+    public Message() {
 
     }
 
@@ -43,7 +43,7 @@ public class Message {
             message.setId(jsonObject.get("id").toString());
             message.setReferencId(jsonObject.get("referenceID").toString());
             message.setSender(Contact.fromJSON(jsonObject.get("sender").toString()));
-            message.setreceiver(Contact.fromJSON(jsonObject.get("receiver").toString()));
+            message.setReceiver(Contact.fromJSON(jsonObject.get("receiver").toString()));
             message.setText(jsonObject.get("text").toString());
             message.setData(jsonObject.get("data").toString());
             message.setTrace(jsonObject.get("trace").toString());
@@ -107,7 +107,7 @@ public class Message {
         return referenceId;
     }
 
-    private void setReferencId(String referencId) {
+    public void setReferencId(String referencId) {
         this.referenceId = referencId;
     }
 
@@ -115,7 +115,7 @@ public class Message {
         return sender;
     }
 
-    private void setSender(Contact sender) {
+    public void setSender(Contact sender) {
         this.sender = sender;
     }
 
@@ -123,7 +123,7 @@ public class Message {
         return receiver;
     }
 
-    private void setreceiver(Contact receiver) {
+    public void setReceiver(Contact receiver) {
         this.receiver = receiver;
     }
 
@@ -139,7 +139,7 @@ public class Message {
         return data;
     }
 
-    private void setData(String data) {
+    public void setData(String data) {
         this.data = data;
     }
 
@@ -147,7 +147,7 @@ public class Message {
         return trace;
     }
 
-    private void setTrace(String trace) {
+    public void setTrace(String trace) {
         this.trace = trace;
     }
 
@@ -155,7 +155,7 @@ public class Message {
         return created;
     }
 
-    private void setCreated(long created) {
+    public void setCreated(long created) {
         this.created = created;
     }
 
@@ -163,7 +163,7 @@ public class Message {
         return read;
     }
 
-    private void setRead(long read) {
+    public void setRead(long read) {
         this.read = read;
     }
 
@@ -171,7 +171,7 @@ public class Message {
         return received;
     }
 
-    private void setReceived(long received) {
+    public void setReceived(long received) {
         this.received = received;
     }
 }

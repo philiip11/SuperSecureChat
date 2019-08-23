@@ -3,14 +3,15 @@ package SuperSecureChat;
 import SuperSecureChat.Contacts.Contact;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class Database {
 
-    private static final Database database = new Database();
+    private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 1;
-    private static Connection connection;
+    private static final int DB_VERSION = 0;
+    private Connection connection;
 
     static {
         try {
@@ -27,7 +28,7 @@ public class Database {
     }
 
     public static Database getInstance() {
-        return database;
+        return INSTANCE;
     }
 
     public static void main(String[] args) {
@@ -77,9 +78,8 @@ public class Database {
                 stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
 
-                stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline TEXT, image BLOB);");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER," +
-                        "UNIQUE(id, sender), FOREIGN KEY(sender) REFERENCES contacts (id), FOREIGN KEY(receiver) REFERENCES contacts (id));");
+                stmt.executeUpdate("CREATE TABLE contacts (id TEXT, firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB);");
+                stmt.executeUpdate("CREATE TABLE messages (id TEXT, sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER);");
                 stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, firstname TEXT, lastname TEXT, url TEXT, 'key' TEXT);");
                 stmt.close();
 
@@ -92,27 +92,90 @@ public class Database {
     }
 
     public void newMessage(Message message) {
-        /*try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO messages VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+        updateContact(message.getSender());
+        updateContact(message.getReceiver());
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO messages (id, sender, receiver, text, data, trace, created, received, 'read') VALUES (?,?,?,?,?,?,?,?,?)");
             ps.setString(1, message.getId());
             ps.setString(2, message.getSender().getId());
             ps.setString(3, message.getReceiver().getId());
             ps.setString(4, message.getText());
             ps.setString(5, message.getData());
             ps.setString(6, message.getTrace());
-            ps.setLong(7, message.getRead());
             ps.setLong(8, message.getCreated());
             ps.setLong(9, message.getReceived());
-            ps.execute();
+            ps.setLong(7, message.getRead());
+            ps.executeUpdate();
             //TODO
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
-    public void newContact(Contact contact) {
-        //TODO
+    public void updateContact(Contact contact) {
+        try {
+
+
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO contacts (id, firstname, lastname, url, lastOnline, image) VALUES (?,?,?,?,?,?)");
+
+
+            ps.setString(1, contact.getId());
+            ps.setString(2, contact.getFirstname());
+            ps.setString(3, contact.getLastname());
+            ps.setString(4, contact.getUrl());
+            ps.setLong(5, contact.getLastOnline());
+            ps.setString(6, contact.getImage());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Message> getMessagesByContact(Contact contact) {
+        ArrayList<Message> result = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? OR receiver = ?)");
+            ps.setString(1, contact.getId());
+            ps.setString(2, contact.getId());
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                Message m = new Message();
+                m.setId(resultSet.getString(1));
+                m.setSender(getContactById(resultSet.getString(2)));
+                m.setReceiver(getContactById(resultSet.getString(3)));
+                m.setText(resultSet.getString(4));
+                m.setData(resultSet.getString(5));
+                m.setTrace(resultSet.getString(6));
+                m.setCreated(resultSet.getLong(7));
+                m.setReceived(resultSet.getLong(8));
+                m.setRead(resultSet.getLong(9));
+                result.add(m);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Contact getContactById(String id) {
+        Contact c = new Contact();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM contacts WHERE (id = ?)");
+            ps.setString(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            c.setId(resultSet.getString(1));
+            c.setFirstname(resultSet.getString(2));
+            c.setLastname(resultSet.getString(3));
+            c.setUrl(resultSet.getString(4));
+            c.setLastOnline(resultSet.getLong(5));
+            c.setImage(resultSet.getString(6));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 
     public int countUnreadMessagesByContact(Contact contact) {

@@ -12,7 +12,7 @@
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Text fx:id="labelMessage" boundsType="VISUAL" fill="WHITE" styleClass="wrapper" text="NACHRICHT"
-                      textAlignment="CENTER" wrappingWidth="300" AnchorPane.bottomAnchor="13.0"
+                      textAlignment="JUSTIFY" wrappingWidth="300" AnchorPane.bottomAnchor="13.0"
                       AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
                     <font>
                         <Font name="Roboto" size="18.0"/>

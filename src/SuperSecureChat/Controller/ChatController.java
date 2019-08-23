@@ -35,9 +35,12 @@ public class ChatController {
 
     private Contact contact;
     private Contact me = Contact.getMyContact();
+    private Database database = Database.getInstance();
 
     public void setContact(Contact contact) {
         this.contact = contact;
+        messages.addAll(database.getMessagesByContact(contact));
+        Platform.runLater(this::updateListView);
     }
 
     public void initialize() {
