@@ -66,6 +66,7 @@ public class Network {
             Contact me = Contact.getMyContact();
             tcpClient.sendContact(me);
             tcpClient.sendText("GETCONTACT");
+            tcpClient.sendText("GETMYMM:" + me.getId()); //GetMyMessages
 
         }
         otherIPsLastPing.put(ip, Instant.now().getEpochSecond());

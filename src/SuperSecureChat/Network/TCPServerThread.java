@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.time.Instant;
+import java.util.ArrayList;
 
 public class TCPServerThread extends Thread {
     private Socket socket;
@@ -59,6 +60,14 @@ public class TCPServerThread extends Thread {
                             System.out.println("Kontaktanfrage empfangen!");
                             TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             client.sendContact(Contact.getMyContact());
+                            break;
+                        case "GETMYMM:"://GETMessagesWithID
+                            System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
+                            ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
+                            TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
+                            for (Message m : messages) {
+                                tcpClient.sendMessage(m);
+                            }
                             break;
                     }
 

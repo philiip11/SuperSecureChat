@@ -141,20 +141,7 @@ public class Database {
             ps.setString(2, contact2.getId());
             ps.setString(3, contact2.getId());
             ps.setString(4, contact1.getId());
-            ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
-                Message m = new Message();
-                m.setId(resultSet.getString(1));
-                m.setSender(getContactById(resultSet.getString(2)));
-                m.setReceiver(getContactById(resultSet.getString(3)));
-                m.setText(resultSet.getString(4));
-                m.setData(resultSet.getString(5));
-                m.setTrace(resultSet.getString(6));
-                m.setCreated(resultSet.getLong(7));
-                m.setReceived(resultSet.getLong(8));
-                m.setRead(resultSet.getLong(9));
-                result.add(m);
-            }
+            parseMessages(result, ps);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -204,4 +191,34 @@ public class Database {
         return 0;
     }
 
+    public ArrayList<Message> getMessagesWithId(String id) {
+        ArrayList<Message> result = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE sender = ? OR receiver = ?");
+            ps.setString(1, id);
+            ps.setString(2, id);
+            parseMessages(result, ps);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private void parseMessages(ArrayList<Message> result, PreparedStatement ps) throws SQLException {
+        ResultSet resultSet = ps.executeQuery();
+        while (resultSet.next()) {
+            Message m = new Message();
+            m.setId(resultSet.getString(1));
+            m.setSender(getContactById(resultSet.getString(2)));
+            m.setReceiver(getContactById(resultSet.getString(3)));
+            m.setText(resultSet.getString(4));
+            m.setData(resultSet.getString(5));
+            m.setTrace(resultSet.getString(6));
+            m.setCreated(resultSet.getLong(7));
+            m.setReceived(resultSet.getLong(8));
+            m.setRead(resultSet.getLong(9));
+            result.add(m);
+        }
+    }
 }
