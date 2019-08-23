@@ -9,7 +9,7 @@ public class Database {
 
     private static final Database database = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 0;
+    private static final int DB_VERSION = 1;
     private static Connection connection;
 
     static {

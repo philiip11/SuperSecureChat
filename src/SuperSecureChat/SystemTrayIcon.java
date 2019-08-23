@@ -13,6 +13,8 @@ public class SystemTrayIcon {
 
     public static final String PATH_TO_TRAY_ICON = "/icon16.png";
 
+    private TrayIcon trayIcon;
+
     public static void systemtraysupport() throws AWTException {
         if (SystemTray.isSupported()) {                                                     //frägt ab, ob SystemTray vom System unterstützt wird
             SystemTrayIcon sti = new SystemTrayIcon();
@@ -30,7 +32,7 @@ public class SystemTrayIcon {
 
         SystemTray tray = SystemTray.getSystemTray();
 
-        TrayIcon trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area
+        trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area
         trayIcon.setImageAutoSize(true);
         tray.add(trayIcon);                                                                                          //displays the icon + notification
         trayIcon.displayMessage("SuperSecureChat", "application started", TrayIcon.MessageType.NONE); //popup text in the sidebar (on the right)
@@ -87,7 +89,7 @@ public class SystemTrayIcon {
     //TODO Methode um Benachrichtigungen anzuzeigen
 
     public void showNotification(Image image, String title, String message, Runnable onClick) {
-        //TODO
+        trayIcon.displayMessage(title, message, TrayIcon.MessageType.NONE);
     }
 
 

@@ -63,7 +63,9 @@ public class TCPClient {
 
     public void close() {
         try {
-            this.socket.close();
+            if (socket != null) {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

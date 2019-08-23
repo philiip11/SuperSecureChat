@@ -1,6 +1,7 @@
 package SuperSecureChat.Chat;
 
 
+import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Database;
 import SuperSecureChat.Message;
 import com.jfoenix.controls.JFXBadge;
@@ -43,7 +44,12 @@ public class ChatListViewCell extends JFXListCell<Message> {
 
         } else {
             if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("/fxml/chatCell.fxml"));
+                String fxmlResource = "/fxml/chatCell.fxml";
+                if (message.getSender().getId().equals(Contact.getMyContact().getId())) {
+                    fxmlResource = "/fxml/chatCellMe.fxml";
+
+                }
+                mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
                 mLLoader.setController(this);
 
                 try {
