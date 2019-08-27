@@ -60,6 +60,8 @@ public class TCPClient {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line = bufferedReader.readLine();
             if (line != null) {
+                System.out.println("TCPClient: RecievedMessage:");
+                System.out.println(line);
                 return line;
             }
         } catch (IOException e) {

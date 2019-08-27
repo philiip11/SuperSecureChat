@@ -32,6 +32,7 @@ public class TCPServerThread extends Thread {
         } catch (IOException e) {
             return;
         }
+        Crypto crypto = new Crypto();
         String line;
         //while (true) {
         try {
@@ -44,6 +45,7 @@ public class TCPServerThread extends Thread {
                         Message message = Message.fromJSON(json);
                         message.setReceived(Instant.now().getEpochSecond());
                         message.setTrace(message.getTrace() + "");
+
                         ClassConnector.getInstance().sendMessageToAllChatControllers(message);
                         Database.getInstance().newMessage(message);
                         Network.getInstance().relayMessage(message);
@@ -65,7 +67,6 @@ public class TCPServerThread extends Thread {
                         break;
                     case "KEYEXCH:"://CT
                         System.out.println("Schlüsselaustausch...");
-                        Crypto crypto = new Crypto();
                         crypto.generateKeys();
                         crypto.receivePublicKey(Base64.getDecoder().decode(json));
                         sendText("KEYPUBL:" + Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));

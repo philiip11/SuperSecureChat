@@ -2,6 +2,7 @@ package SuperSecureChat.Chat;
 
 
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
 import SuperSecureChat.Message;
 import com.jfoenix.controls.JFXBadge;
@@ -44,11 +45,17 @@ public class ChatListViewCell extends JFXListCell<Message> {
             setGraphic(null);
 
         } else {
-            String fxmlResource = "/fxml/chatCell.fxml";
+            Crypto crypto = new Crypto();
+            byte[] secretKey;
+            String fxmlResource;
             if (message.getSender().getId().equals(Contact.getMyContact().getId())) {
                 fxmlResource = "/fxml/chatCellMe.fxml";
-
+                secretKey = Database.getInstance().getSecretKeyByContact(message.getReceiver());
+            } else {
+                fxmlResource = "/fxml/chatCell.fxml";
+                secretKey = Database.getInstance().getSecretKeyByContact(message.getSender());
             }
+            crypto.setSecretKey(secretKey);
             mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
             mLLoader.setController(this);
 
@@ -57,8 +64,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            labelMessage.setText(message.getText());
+            labelMessage.setText(crypto.decrypt(message.getText()));
             labelTime.setText(simpleDateFormat.format(new Date(message.getCreated() * 1000L)));
             //contactImage.setImage(contact.getJavaFXImage());
             //int notifications = db.countUnreadMessagesByContact(contact);

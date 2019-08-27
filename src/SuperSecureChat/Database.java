@@ -251,7 +251,7 @@ public class Database {
         }
     }
 
-    private byte[] getSecretByContact(Contact contact) {
+    public byte[] getSecretKeyByContact(Contact contact) {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM cryptoKeys WHERE id = ?");
             ps.setString(1, contact.getId());

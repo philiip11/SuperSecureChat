@@ -6,6 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 
 public class Crypto {
@@ -40,6 +41,23 @@ public class Crypto {
         }
     }
 
+    public String encrypt(String text) {
+        try {
+
+            // You can use Blowfish or another symmetric algorithm but you must adjust the key size.
+            final SecretKeySpec keySpec = new SecretKeySpec(secretKey, "DES");
+            final Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+
+            final byte[] encryptedMessage = cipher.doFinal(text.getBytes());
+
+            return Base64.getEncoder().encodeToString(encryptedMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     //~ ----------------------------------------------------------------------------------------------------------------
 
@@ -101,6 +119,21 @@ public class Crypto {
         }
     }
 
+
+    public String decrypt(String text) {
+        try {
+
+            // You can use Blowfish or another symmetric algorithm but you must adjust the key size.
+            final SecretKeySpec keySpec = new SecretKeySpec(secretKey, "DES");
+            final Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+
+            cipher.init(Cipher.DECRYPT_MODE, keySpec);
+
+            return new String(cipher.doFinal(Base64.getDecoder().decode(text)));
+        } catch (Exception e) {
+            return text;
+        }
+    }
 
     //~ ----------------------------------------------------------------------------------------------------------------
 
@@ -172,4 +205,5 @@ public class Crypto {
     public void setSecretKey(byte[] secretKey) {
         this.secretKey = secretKey;
     }
+
 }

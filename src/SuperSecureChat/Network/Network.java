@@ -52,6 +52,9 @@ public class Network {
     }
 
     public void sendMessage(Message m) {
+        Crypto crypto = new Crypto();
+        crypto.setSecretKey(Database.getInstance().getSecretKeyByContact(m.getReceiver()));
+        m.setText(crypto.encrypt(m.getText()));
         new Thread(() -> {
             for (String ip : otherIPs) {
                 TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
