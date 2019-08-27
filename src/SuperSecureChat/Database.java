@@ -12,7 +12,7 @@ public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 6;
     private Connection connection;
 
     static {

@@ -122,6 +122,7 @@ public class Network {
 
     public byte[] getNewSecretKeyFrom(Contact contact) throws IOException {
         if (!secretBlockedIPs.contains(contact.getUrl())) {
+            secretBlockedIPs.add(contact.getUrl());
             Crypto crypto = new Crypto();
             crypto.generateKeys();
             TCPClient tcpClient = new TCPClient(contact.getUrl(), TCPServer.PORT);
