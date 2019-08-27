@@ -3,6 +3,7 @@ package SuperSecureChat;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Network.Network;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -11,7 +12,7 @@ public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 5;
     private Connection connection;
 
     static {
@@ -152,7 +153,7 @@ public class Database {
         return result;
     }
 
-    public Contact getContactById(String id) {
+    private Contact getContactById(String id) {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM contacts WHERE (id = ?)");
             ps.setString(1, id);
@@ -262,9 +263,13 @@ public class Database {
                 return Network.getInstance().getNewSecretKeyFrom(contact);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Network.getInstance().getNewSecretKeyFrom(contact);
+        } catch (SQLException | IOException e) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                return getSecretKeyByContact(contact);
+            }
+            return null;
         }
 
     }

@@ -8,6 +8,7 @@ import SuperSecureChat.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -26,6 +27,7 @@ public class Network {
     private ArrayList<TCPClient> tcpClients = new ArrayList<>();
     private ArrayList<String> myIPs;
     private ArrayList<String> otherIPs = new ArrayList<>();
+    private ArrayList<String> secretBlockedIPs = new ArrayList<>();
     private HashMap<String, Long> otherIPsLastPing = new HashMap<>();
     private ObservableList<String> relayedMessages = FXCollections.observableArrayList();
 
@@ -118,17 +120,21 @@ public class Network {
 
     }
 
-    public byte[] getNewSecretKeyFrom(Contact contact) {
-        Crypto crypto = new Crypto();
-        crypto.generateKeys();
-        TCPClient tcpClient = new TCPClient(contact.getUrl(), TCPServer.PORT);
-        String publicKey = tcpClient.exchangePublicKey(Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
-        tcpClient.close();
-        crypto.receivePublicKey(Base64.getDecoder().decode(publicKey));
-        crypto.generateCommonSecretKey();
-        byte[] secretKey = crypto.getSecretKey();
-        Database.getInstance().addSecretKey(contact, secretKey);
-        return secretKey;
+    public byte[] getNewSecretKeyFrom(Contact contact) throws IOException {
+        if (!secretBlockedIPs.contains(contact.getUrl())) {
+            Crypto crypto = new Crypto();
+            crypto.generateKeys();
+            TCPClient tcpClient = new TCPClient(contact.getUrl(), TCPServer.PORT);
+            String publicKey = tcpClient.exchangePublicKey(Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
+            tcpClient.close();
+            crypto.receivePublicKey(Base64.getDecoder().decode(publicKey));
+            crypto.generateCommonSecretKey();
+            byte[] secretKey = crypto.getSecretKey();
+            Database.getInstance().addSecretKey(contact, secretKey);
+            return secretKey;
+        } else {
+            throw new IOException("Only one SecretKey at a time!");
+        }
     }
 
 
