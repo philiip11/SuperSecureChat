@@ -2,6 +2,8 @@ package SuperSecureChat.Network;
 
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
+import SuperSecureChat.Crypto.Crypto;
+import SuperSecureChat.Database;
 import SuperSecureChat.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +14,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 
@@ -110,6 +113,19 @@ public class Network {
             sendMessage(message);
         }
 
+    }
+
+    public byte[] getNewSecretKeyFrom(Contact contact) {
+        Crypto crypto = new Crypto();
+        crypto.generateKeys();
+        TCPClient tcpClient = new TCPClient(contact.getUrl(), TCPServer.PORT);
+        String publicKey = tcpClient.exchangePublicKey(Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
+        tcpClient.close();
+        crypto.receivePublicKey(Base64.getDecoder().decode(publicKey));
+        crypto.generateCommonSecretKey();
+        byte[] secretKey = crypto.getSecretKey();
+        Database.getInstance().addSecretKey(contact, secretKey);
+        return secretKey;
     }
 
 

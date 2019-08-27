@@ -3,7 +3,9 @@ package SuperSecureChat.Network;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Message;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.Instant;
@@ -53,6 +55,19 @@ public class TCPClient {
         }
     }
 
+    String receiveText() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String line = bufferedReader.readLine();
+            if (line != null) {
+                return line;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     void sendMessage(Message message) {
         sendText("MESSAGE:" + message.toJSONString());
     }
@@ -68,6 +83,18 @@ public class TCPClient {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    String exchangePublicKey(String publicKey) {
+        sendText("KEYEXCH:" + publicKey);
+        while (true) {
+            String text = receiveText();
+            if (text.length() > 8) {
+                if (text.substring(0, 8).equals("KEYPUBL:")) {
+                    return text.substring(8);
+                }
+            }
         }
     }
 }

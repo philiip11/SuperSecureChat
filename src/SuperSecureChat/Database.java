@@ -1,15 +1,17 @@
 package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Network.Network;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     private Connection connection;
 
     static {
@@ -79,7 +81,7 @@ public class Database {
 
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB);");
                 stmt.executeUpdate("CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);");
-                stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, 'key' TEXT);");
+                stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT PRIMARY KEY, secretKey TEXT);");
                 stmt.close();
 
             }
@@ -93,6 +95,7 @@ public class Database {
     public void newMessage(Message message) {
         newContact(message.getSender());
         newContact(message.getReceiver());
+        //TODO Encrypt Message
         try {
             PreparedStatement ps = connection.prepareStatement("REPLACE INTO messages (id, sender, receiver, text, data, trace, created, received, 'read', reference) VALUES (?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, message.getId());
@@ -161,6 +164,30 @@ public class Database {
         return null;
     }
 
+    public Contact getPrivateKeyById(String id) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM contacts WHERE (id = ?)");
+            ps.setString(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            return getContactFromResultSet(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Contact getPublicKeyById(String id) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM contacts WHERE (id = ?)");
+            ps.setString(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            return getContactFromResultSet(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public ArrayList<Contact> getContacts() {
         ArrayList<Contact> result = new ArrayList<>();
         try {
@@ -207,6 +234,7 @@ public class Database {
 
     private void parseMessages(ArrayList<Message> result, PreparedStatement ps) throws SQLException {
         ResultSet resultSet = ps.executeQuery();
+        //TODO decrypt Message
         while (resultSet.next()) {
             Message m = new Message();
             m.setId(resultSet.getString(1));
@@ -221,5 +249,36 @@ public class Database {
             m.setReferencId(resultSet.getString(10));
             result.add(m);
         }
+    }
+
+    private byte[] getSecretByContact(Contact contact) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM cryptoKeys WHERE id = ?");
+            ps.setString(1, contact.getId());
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return Base64.getDecoder().decode(resultSet.getString("secretKey"));
+            } else {
+                return Network.getInstance().getNewSecretKeyFrom(contact);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Network.getInstance().getNewSecretKeyFrom(contact);
+        }
+
+    }
+
+    public void addSecretKey(Contact contact, byte[] secretKey) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("REPLACE INTO cryptoKeys (id, secretKey) VALUES (?,?)");
+            ps.setString(1, contact.getId());
+            ps.setString(2, Base64.getEncoder().encodeToString(secretKey));
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

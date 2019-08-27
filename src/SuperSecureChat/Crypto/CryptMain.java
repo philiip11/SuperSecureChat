@@ -21,8 +21,8 @@ public class CryptMain {
         // This is Alice and Bob
         // Alice and Bob want to chat securely. But how?
 
-        final Person alice = new Person();
-        final Person bob   = new Person();
+        final Crypto alice = new Crypto();
+        final Crypto bob = new Crypto();
 
         //    ?                                        ?
         //
