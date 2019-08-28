@@ -51,8 +51,7 @@ public class TCPServerThread extends Thread {
                             Message message = Message.fromJSON(json);
                             message.setReceived(Instant.now().getEpochSecond());
                             message.setTrace(message.getTrace() + "");
-
-                            ClassConnector.getInstance().sendMessageToAllChatControllers(message);
+                            ClassConnector.getInstance().sendMessageToAllChatControllers(message, !loop);
                             Database.getInstance().newMessage(message);
                             Network.getInstance().relayMessage(message);
                             break;

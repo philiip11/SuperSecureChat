@@ -114,7 +114,7 @@ public class ContactsController {
             stage.setTitle("Profilbild ändern");
             stage.getIcons().add(Contact.getMyContact().getJavaFXImage());
             profilePicture.setStage(stage);
-            openNewStage(root, stage, 500, 300);
+            openNewStage(root, stage, 500, 350);
         } catch (Exception ignored) {
 
         }

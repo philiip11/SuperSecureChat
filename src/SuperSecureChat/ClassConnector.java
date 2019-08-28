@@ -19,11 +19,13 @@ public class ClassConnector {
         chatControllers.add(chatController);
     }
 
-    public void sendMessageToAllChatControllers(Message message) {
+    public void sendMessageToAllChatControllers(Message message, boolean notification) {
         for (ChatController chatController : chatControllers) {
             chatController.newMessage(message);
         }
-        systemTrayIcon.showMessage(message);
+        if (notification) {
+            systemTrayIcon.showMessage(message);
+        }
     }
 
     public void addSystemTrayIcon(SystemTrayIcon systemTrayIcon) {

@@ -135,6 +135,16 @@ public class Network {
         }
     }
 
+    public void updateContact() {
+        new Thread(() -> {
+            for (String ip : otherIPs) {
+                TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
+                tcpClient.sendContact(Contact.getMyContact());
+                tcpClient.close();
+            }
+        }).start();
+    }
+
 
     // TODO Methode, der man eine Adresse übergibt und die dann prüft, ob die Adresse via Ping erreichbar ist
 

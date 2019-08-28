@@ -16,7 +16,11 @@ public class Contact {
     private String firstname;
     private String lastname;
     private String url;
-    private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), encoder(Contact.class.getResource("/icon.png").getFile()), 0);
+    private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), encoder(
+            new File(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png").exists() ?
+                    System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png"
+                    : Contact.class.getResource("/icon.png").getFile()
+    ), 0);
     private String image;
     private long notifications;
     private long lastOnline;
@@ -200,5 +204,9 @@ public class Contact {
 
     public Image getJavaFXImage() {
         return imageDecoder(getImage());
+    }
+
+    public void setImageFromFilePath(String path) {
+        encoder(path);
     }
 }
