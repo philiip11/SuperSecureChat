@@ -34,15 +34,18 @@ public class TCPServerThread extends Thread {
         }
         Crypto crypto = new Crypto();
         String line;
-        boolean loop = false;
+        boolean loop = true;
+        boolean firstrun = true;
         while (loop) {
+            if (firstrun) {
+                loop = false;
+                firstrun = false;
+            }
             try {
                 line = brinp.readLine();
                 if ((line != null) && line.length() > 8) {
                     String command = line.substring(0, 8);
                     String json = line.substring(8);
-                    System.out.println(command);
-                    System.out.println(json);
                     switch (command) {
                         case "MESSAGE:":
                             Message message = Message.fromJSON(json);

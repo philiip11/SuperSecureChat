@@ -52,7 +52,6 @@ public class Crypto {
 
             final byte[] encryptedMessage = cipher.doFinal(text.getBytes());
 
-            System.out.println("SecretKey is: " + Base64.getEncoder().encodeToString(secretKey));
             return Base64.getEncoder().encodeToString(encryptedMessage);
         } catch (Exception e) {
             e.printStackTrace();
