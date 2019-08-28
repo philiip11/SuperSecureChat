@@ -12,7 +12,7 @@ public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 8;
+    private static final int DB_VERSION = 9;
     private Connection connection;
 
     static {
@@ -276,6 +276,9 @@ public class Database {
 
     public void addSecretKey(Contact contact, byte[] secretKey) {
         try {
+            if (contact.getId().equals(Contact.getMyContact().getId())) {
+                new Exception("Adding own Secret Key").printStackTrace();
+            }
             PreparedStatement ps = connection.prepareStatement("INSERT INTO cryptoKeys (id, secretKey) VALUES (?,?)");
             ps.setString(1, contact.getId());
             ps.setString(2, Base64.getEncoder().encodeToString(secretKey));
