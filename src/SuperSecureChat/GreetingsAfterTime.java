@@ -14,7 +14,7 @@ public class GreetingsAfterTime {
             System.out.println("Good Afternoon");
         } else if (timeofday >= 16 && timeofday < 21) {
             System.out.println("Good Evening");
-        } else if (timeofday >= 21 && timeofday < 24) {
+        } else if (timeofday >= 21) {
             System.out.println("Good Night");
         }
     }
