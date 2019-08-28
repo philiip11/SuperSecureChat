@@ -3,6 +3,7 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.Chat.ChatListViewCell;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
 import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
@@ -56,6 +57,9 @@ public class ChatController {
 
         Message message = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, txtMessage.getText(), "", "", Instant.now().getEpochSecond(), 0, 0);
 
+        Crypto crypto = new Crypto();
+        crypto.setSecretKey(Database.getInstance().getSecretKeyByContact(message.getReceiver()));
+        message.setText(crypto.encrypt(message.getText()));
         network.sendMessage(message);
         messages.add(message);
         updateListView();
