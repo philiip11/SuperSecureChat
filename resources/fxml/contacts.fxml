@@ -4,13 +4,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="SuperSecureChat.Controller.ContactsController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.ContactsController">
    <children>
        <JFXListView fx:id="contactJFXListView" layoutX="200.0" layoutY="131.0" prefHeight="200.0" prefWidth="200.0"
                     AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
                     AnchorPane.topAnchor="100.0"/>
-      <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+       <ImageView fx:id="myProfilePicture" fitHeight="48.0" fitWidth="48.0" layoutX="25.0" layoutY="14.0"
+                  onMouseClicked="#editProfilePicture" pickOnBounds="true" preserveRatio="true"
+                  AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
       <Label fx:id="nameLabel" layoutX="84.0" layoutY="26.0" styleClass="contactsViewOwnName" text="Name" AnchorPane.leftAnchor="68.0" />
    </children>
 </AnchorPane>

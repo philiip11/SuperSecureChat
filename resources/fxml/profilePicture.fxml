@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="289.0" prefWidth="559.0"
+            xmlns="http://javafx.com/javafx/8.0.192"
+            fx:controller="SuperSecureChat.Controller.ProfilePictureController">
+    <children>
+        <ImageView fx:id="profilePictureImageView" fitHeight="256.0" fitWidth="256.0" layoutX="14.0" layoutY="14.0"
+                   onMouseClicked="#openFileDialog" pickOnBounds="true" preserveRatio="true"
+                   AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+            <viewport>
+                <Rectangle2D height="256.0" minX="256.0" minY="256.0" width="256.0"/>
+            </viewport>
+        </ImageView>
+        <JFXButton buttonType="RAISED" layoutX="300.0" layoutY="130.0" mnemonicParsing="false"
+                   onMouseClicked="#openFileDialog" styleClass="fileButton" text="Durchsuchen..."/>
+        <JFXButton buttonType="RAISED" layoutX="300.0" layoutY="188.0" mnemonicParsing="false"
+                   onMouseClicked="#saveProfilePicture" styleClass="saveButton" text="Speichern"/>
+    </children>
+</AnchorPane>

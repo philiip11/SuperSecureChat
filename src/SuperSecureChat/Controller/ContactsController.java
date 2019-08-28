@@ -93,22 +93,7 @@ public class ContactsController {
             Stage stage = new Stage();
             stage.setTitle(contact.getName());
             stage.getIcons().add(contact.getJavaFXImage());
-            JFXDecorator decorator = new JFXDecorator(stage, root);
-            decorator.setCustomMaximize(false);
-            ImageView imageView = new ImageView(contact.getJavaFXImage());
-            imageView.setFitHeight(32);
-            imageView.setFitWidth(32);
-            decorator.setGraphic(imageView);
-            Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
-            final ObservableList<String> stylesheets = scene.getStylesheets();
-            stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
-                    getClass().getResource("/css/jfoenix-design.css").toExternalForm(),
-                    getClass().getResource("/css/custom.css").toExternalForm(),
-                    getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
-                    getClass().getResource("/css/super-secure-chat.css").toExternalForm());
-
-            stage.setScene(scene);
-            stage.show();
+            openNewStage(root, stage, width, height);
         } catch (Exception ignored) {
 
         }
@@ -118,5 +103,39 @@ public class ContactsController {
 
     void setData(String vorname, String nachname) {
         nameLabel.setText(vorname + " " + nachname);
+    }
+
+    public void editProfilePicture(MouseEvent mouseEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/profilePicture.fxml"));
+            Parent root = loader.load();
+            ProfilePictureController profilePicture = loader.getController();
+            Stage stage = new Stage();
+            stage.setTitle("Profilbild ändern");
+            stage.getIcons().add(Contact.getMyContact().getJavaFXImage());
+            profilePicture.setStage(stage);
+            openNewStage(root, stage, 500, 300);
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    private void openNewStage(Parent root, Stage stage, int width, int height) {
+        JFXDecorator decorator = new JFXDecorator(stage, root);
+        decorator.setCustomMaximize(false);
+        ImageView imageView = new ImageView(Contact.getMyContact().getJavaFXImage());
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
+        decorator.setGraphic(imageView);
+        Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
+        final ObservableList<String> stylesheets = scene.getStylesheets();
+        stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
+                getClass().getResource("/css/jfoenix-design.css").toExternalForm(),
+                getClass().getResource("/css/custom.css").toExternalForm(),
+                getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
+                getClass().getResource("/css/super-secure-chat.css").toExternalForm());
+
+        stage.setScene(scene);
+        stage.show();
     }
 }
