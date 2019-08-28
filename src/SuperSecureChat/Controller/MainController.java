@@ -40,7 +40,6 @@ public class MainController {
 
     private String vorname;
     private String nachname;
-    private String username;
 
     public void initialize() {
         //TODO Set KeyCombos
@@ -53,10 +52,8 @@ public class MainController {
         String[] nameArr = fullName.split(",");
         vorname = nameArr[1].trim();
         nachname = nameArr[0].trim();
-        Platform.runLater(() -> {
-            usernameLabel.setText(vorname);
-        });
-        username = new com.sun.security.auth.module.NTSystem().getName();
+        Platform.runLater(() -> usernameLabel.setText(vorname));
+        String username = new com.sun.security.auth.module.NTSystem().getName();
         Contact.setMyName(username, vorname, nachname);
         /*try (OutputStream output = new FileOutputStream("config.properties")) {
             Properties prop = new Properties();
@@ -97,7 +94,7 @@ public class MainController {
 
             Parent root = loader.load();
             ContactsController contactsController = loader.getController();
-            contactsController.setData(username, vorname, nachname);
+            contactsController.setData(vorname, nachname);
             Stage stage = new Stage();
             stage.setTitle("SSC - Kontakte");
             stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
@@ -119,9 +116,6 @@ public class MainController {
         } catch (Exception ignored) {
 
         }
-    }
-
-    private void openNewStage(String fxml) {
     }
 
     private String getFullName() {

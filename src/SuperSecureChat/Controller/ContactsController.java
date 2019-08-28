@@ -28,7 +28,6 @@ public class ContactsController {
     JFXListView<Contact> contactJFXListView;
     @FXML
     Label nameLabel;
-    private ObservableList<Contact> contacts;
     private ContactList contactList = ContactList.getInstance();
 
     public void initialize() {
@@ -117,7 +116,7 @@ public class ContactsController {
     }
 
 
-    public void setData(String username, String vorname, String nachname) {
+    void setData(String vorname, String nachname) {
         nameLabel.setText(vorname + " " + nachname);
     }
 }
