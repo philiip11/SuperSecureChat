@@ -34,73 +34,82 @@ public class TCPServerThread extends Thread {
         }
         Crypto crypto = new Crypto();
         String line;
-        //while (true) {
-        try {
-            line = brinp.readLine();
-            if ((line != null) && line.length() > 8) {
-                String command = line.substring(0, 8);
-                String json = line.substring(8);
-                System.out.println(command);
-                System.out.println(json);
-                switch (command) {
-                    case "MESSAGE:":
-                        Message message = Message.fromJSON(json);
-                        message.setReceived(Instant.now().getEpochSecond());
-                        message.setTrace(message.getTrace() + "");
+        boolean loop = false;
+        while (loop) {
+            try {
+                line = brinp.readLine();
+                if ((line != null) && line.length() > 8) {
+                    String command = line.substring(0, 8);
+                    String json = line.substring(8);
+                    System.out.println(command);
+                    System.out.println(json);
+                    switch (command) {
+                        case "MESSAGE:":
+                            Message message = Message.fromJSON(json);
+                            message.setReceived(Instant.now().getEpochSecond());
+                            message.setTrace(message.getTrace() + "");
 
-                        ClassConnector.getInstance().sendMessageToAllChatControllers(message);
-                        Database.getInstance().newMessage(message);
-                        Network.getInstance().relayMessage(message);
-                        break;
-                    case "CONTACT:":
-                        System.out.println("Kontakt empfangen!");
-                        Contact contact = Contact.fromJSON(json);
-                        System.out.println(contact.getId());
-                        String url = socket.getRemoteSocketAddress().toString();
-                        String ip = url.substring(1).split(":")[0];
-                        contact.setUrl(ip);
-                        ContactList.getInstance().addContact(contact);
-                        Database.getInstance().newContact(contact);
-                        break;
-                    case "GETCONTA"://CT
-                        System.out.println("Kontaktanfrage empfangen!");
-                        TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                        client.sendContact(Contact.getMyContact());
-                        break;
-                    case "KEYEXCH:"://CT
-                        System.out.println("Schlüsselaustausch...");
-                        crypto.generateKeys();
-                        crypto.receivePublicKey(Base64.getDecoder().decode(json));
-                        sendText("KEYPUBL:" + Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
-                        crypto.generateCommonSecretKey();
-                        String urll = socket.getRemoteSocketAddress().toString();
-                        String ipp = urll.substring(1).split(":")[0];
-                        Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ipp), crypto.getSecretKey());
-                        crypto.getSecretKey();
-                        break;
-                    case "GETMYMM:"://GETMessagesWithID
-                        System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
-                        ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
-                        for (Message m : messages) { //TODO only one Thread
+                            ClassConnector.getInstance().sendMessageToAllChatControllers(message);
+                            Database.getInstance().newMessage(message);
+                            Network.getInstance().relayMessage(message);
+                            break;
+                        case "CONTACT:":
+                            System.out.println("Kontakt empfangen!");
+                            Contact contact = Contact.fromJSON(json);
+                            System.out.println(contact.getId());
+                            String url = socket.getRemoteSocketAddress().toString();
+                            String ip = url.substring(1).split(":")[0];
+                            contact.setUrl(ip);
+                            ContactList.getInstance().addContact(contact);
+                            Database.getInstance().newContact(contact);
+                            break;
+                        case "GETCONTA"://CT
+                            System.out.println("Kontaktanfrage empfangen!");
+                            TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
+                            client.sendContact(Contact.getMyContact());
+                            break;
+                        case "KEYEXCH:"://CT
+                            System.out.println("Schlüsselaustausch...");
+                            crypto.generateKeys();
+                            crypto.receivePublicKey(Base64.getDecoder().decode(json));
+                            sendText("KEYPUBL:" + Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
+                            crypto.generateCommonSecretKey();
+                            String urll = socket.getRemoteSocketAddress().toString();
+                            String ipp = urll.substring(1).split(":")[0];
+                            Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ipp), crypto.getSecretKey());
+                            crypto.getSecretKey();
+                            break;
+                        case "GETMYMM:"://GETMessagesWithID
+                            System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
+                            ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                            tcpClient.sendMessage(m);
+                            tcpClient.sendText("OPENTCP ");
+                            for (Message m : messages) {
+                                tcpClient.sendMessage(m);
+                            }
+                            tcpClient.sendText("CLOSETCP");
                             tcpClient.close();
-                        }
-                        break;
+                            break;
+                        case "OPENTCP ":
+                            loop = true;
+                            break;
+                        case "CLOSETCP":
+                            loop = false;
+                            break;
+                    }
+
+                    //out.writeBytes(line + "\n\r");
+                    sendText("200 OK");
                 }
 
-                //out.writeBytes(line + "\n\r");
-                sendText("200 OK");
+            } catch (SocketException e) {
+                return;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
             }
-
-        } catch (SocketException e) {
-            return;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
         }
-        //}
     }
 
     private void sendText(String text) {
