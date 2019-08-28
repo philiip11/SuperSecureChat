@@ -2,6 +2,7 @@ package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class SystemTrayIcon {
+
+    private FXMLLoader Loader;
 
     public static final String PATH_TO_TRAY_ICON = "/icon16.png";
 
@@ -29,6 +32,7 @@ public class SystemTrayIcon {
 
     public void displayTray() throws AWTException {
 
+        //systemtraysupport();
         final PopupMenu popup = new PopupMenu();
 
         SystemTray tray = SystemTray.getSystemTray();
@@ -79,17 +83,16 @@ public class SystemTrayIcon {
             @Override
             public void actionPerformed(ActionEvent e) {
                 trayIcon.displayMessage("Starting Application", "loading assets", TrayIcon.MessageType.NONE);
-
-
+                setonStart();
             }
         });     //ActionListener zu ende  // Klammern *grrr*
+
 
 
         ClassConnector.getInstance().addSystemTrayIcon(this);
 
 
     }
-
 
     //TODO Methode um Benachrichtigungen anzuzeigen
 
@@ -117,6 +120,16 @@ public class SystemTrayIcon {
 
     }
 
+    public void setonStart() {
+        Loader = new FXMLLoader(getClass().getResource("/fxml/contacts.fxml"));   //fx:controller="SuperSecureChat.Controller.ContactsController"
+        Loader.setController(this);
+        try {
+            Loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //fx:controller="SuperSecureChat.Controller.ContactsController"
+    }
 }
 
 

@@ -15,9 +15,11 @@ public class BackgroundService implements Runnable {
 
     @Override
     public void run() {
+        starttogetTime();
         startSystemTray();
         Network network = Network.getInstance();
         network.initUDP();
+
 
     }
 
@@ -28,6 +30,11 @@ public class BackgroundService implements Runnable {
         } catch (AWTException e) {
             e.printStackTrace();
         }
+    }
+
+    private void starttogetTime() {
+        GreetingsAfterTime greetingsAfterTime = new GreetingsAfterTime();
+        greetingsAfterTime.gettimebycalendar();
     }
 
 
