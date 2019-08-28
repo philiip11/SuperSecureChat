@@ -22,7 +22,7 @@ public class SystemTrayIcon {
             sti.displayTray();
         } else {
             System.err.println("System tray is not supported on the current system!");      //ansonsten wirft es eine exception
-            //Platform.exit();
+            Platform.exit();
         }
     }
 
@@ -30,9 +30,7 @@ public class SystemTrayIcon {
     public void displayTray() throws AWTException {
 
         final PopupMenu popup = new PopupMenu();
-        if (!SystemTray.isSupported()) {
-            return;
-        }
+
         SystemTray tray = SystemTray.getSystemTray();
 
         trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area

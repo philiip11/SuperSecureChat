@@ -16,10 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.SystemUtils;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class MainController {
 
@@ -60,31 +56,7 @@ public class MainController {
         Platform.runLater(() -> {
             usernameLabel.setText(vorname);
         });
-        String osName = System.getProperty("os.name").toLowerCase();
-        String className = null;
-        String methodName = "getUsername";
-
-        if (osName.contains("windows")) {
-            className = "com.sun.security.auth.module.NTSystem";
-            methodName = "getName";
-        } else if (osName.contains("linux")) {
-            className = "com.sun.security.auth.module.UnixSystem";
-        } else if (osName.contains("solaris") || osName.contains("sunos")) {
-            className = "com.sun.security.auth.module.SolarisSystem";
-        }
-
-        if (className != null) {
-            Class<?> c = null;
-            try {
-                c = Class.forName(className);
-                Method method = c.getDeclaredMethod(methodName);
-                Object o = c.newInstance();
-                username = String.valueOf(method.invoke(o));
-            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        //username = new com.sun.security.auth.module.NTSystem().getName();
+        username = new com.sun.security.auth.module.NTSystem().getName();
         Contact.setMyName(username, vorname, nachname);
         /*try (OutputStream output = new FileOutputStream("config.properties")) {
             Properties prop = new Properties();
@@ -153,17 +125,13 @@ public class MainController {
     }
 
     private String getFullName() {
-        if (SystemUtils.IS_OS_WINDOWS) {
-            char[] name = new char[256];
-            Secur32.INSTANCE.GetUserNameEx(
-                    Secur32.EXTENDED_NAME_FORMAT.NameDisplay,
-                    name,
-                    new IntByReference(name.length)
-            );
-            return new String(name).trim();
-        } else {
-            return "UBUNTU, LINUX";
-        }
+        char[] name = new char[256];
+        Secur32.INSTANCE.GetUserNameEx(
+                Secur32.EXTENDED_NAME_FORMAT.NameDisplay,
+                name,
+                new IntByReference(name.length)
+        );
+        return new String(name).trim();
     }
 
     //TODO Begrüßung nach Tageszeit
