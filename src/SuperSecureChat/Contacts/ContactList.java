@@ -59,4 +59,16 @@ public class ContactList {
             }
         }
     }
+
+    public Contact getContactByIP(String ip) {
+        for (Contact contact : contacts) {
+            if (contact.getUrl() != null) {
+                if (contact.getUrl().equals(ip)) {
+                    return contact;
+                }
+            }
+        }
+
+        return null;
+    }
 }

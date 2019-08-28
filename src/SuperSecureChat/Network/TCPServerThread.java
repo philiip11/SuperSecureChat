@@ -40,6 +40,8 @@ public class TCPServerThread extends Thread {
             if ((line != null) && line.length() > 8) {
                 String command = line.substring(0, 8);
                 String json = line.substring(8);
+                System.out.println(command);
+                System.out.println(json);
                 switch (command) {
                     case "MESSAGE:":
                         Message message = Message.fromJSON(json);
@@ -71,7 +73,10 @@ public class TCPServerThread extends Thread {
                         crypto.receivePublicKey(Base64.getDecoder().decode(json));
                         sendText("KEYPUBL:" + Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
                         crypto.generateCommonSecretKey();
-                        crypto.getSecretKey(); //TODO Do something with the Secret Key
+                        String urll = socket.getRemoteSocketAddress().toString();
+                        String ipp = urll.substring(1).split(":")[0];
+                        Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ipp), crypto.getSecretKey());
+                        crypto.getSecretKey();
                         break;
                     case "GETMYMM:"://GETMessagesWithID
                         System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
