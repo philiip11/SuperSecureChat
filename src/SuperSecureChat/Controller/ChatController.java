@@ -56,9 +56,9 @@ public class ChatController {
 
         Message message = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, txtMessage.getText(), "", "", Instant.now().getEpochSecond(), 0, 0);
 
+        network.sendMessage(message);
         messages.add(message);
         updateListView();
-        network.sendMessage(message);
         Database.getInstance().newMessage(message);
 
         txtMessage.clear();

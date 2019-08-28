@@ -12,7 +12,7 @@ public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 6;
+    private static final int DB_VERSION = 8;
     private Connection connection;
 
     static {
@@ -82,7 +82,7 @@ public class Database {
 
                 stmt.executeUpdate("CREATE TABLE contacts (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB);");
                 stmt.executeUpdate("CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);");
-                stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT PRIMARY KEY, secretKey TEXT);");
+                stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, secretKey TEXT, idd INTEGER AUTO_INCREMENT PRIMARY KEY);");
                 stmt.close();
 
             }
@@ -276,7 +276,7 @@ public class Database {
 
     public void addSecretKey(Contact contact, byte[] secretKey) {
         try {
-            PreparedStatement ps = connection.prepareStatement("REPLACE INTO cryptoKeys (id, secretKey) VALUES (?,?)");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO cryptoKeys (id, secretKey) VALUES (?,?)");
             ps.setString(1, contact.getId());
             ps.setString(2, Base64.getEncoder().encodeToString(secretKey));
             ps.executeUpdate();
