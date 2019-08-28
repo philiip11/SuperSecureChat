@@ -50,9 +50,11 @@ public class CryptMain {
         // 3. ------------------------------------------------------------------
         // Alice and Bob exchange public keys with each other.
 
-        alice.receivePublicKeyFrom(bob);
-        bob.receivePublicKeyFrom(alice);
+//        alice.receivePublicKeyFrom(bob);
+//        bob.receivePublicKeyFrom(alice);
 
+        alice.receivePublicKey(bob.getPublicKey().getEncoded());
+        bob.receivePublicKey(alice.getPublicKey().getEncoded());
         //
         //    O                                        O
         //   /|\                                      /|\
@@ -86,6 +88,8 @@ public class CryptMain {
         // Alice encrypts message using the secret key and sends to Bob
 
         alice.encryptAndSendMessage("Bob! Guess Who I am.", bob);
+        System.out.println(bob.decrypt(alice.encrypt("Lorem ipsum dolor sit amet")));
+        System.out.println(alice.decrypt(bob.encrypt("Lorem ipsum dolor sit amet")));
 
         //
         //    O                                        O

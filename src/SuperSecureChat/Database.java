@@ -80,7 +80,7 @@ public class Database {
                 stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
                 stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
 
-                stmt.executeUpdate("CREATE TABLE contacts (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB);");
+                stmt.executeUpdate("CREATE TABLE contacts (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB, publicKey BLOB);");
                 stmt.executeUpdate("CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);");
                 stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, secretKey TEXT, idd INTEGER AUTO_INCREMENT PRIMARY KEY);");
                 stmt.close();
