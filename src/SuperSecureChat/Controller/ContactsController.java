@@ -14,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -94,10 +93,13 @@ public class ContactsController {
             chatController.setContact(contact);
             Stage stage = new Stage();
             stage.setTitle(contact.getName());
-            stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
+            stage.getIcons().add(contact.getJavaFXImage());
             JFXDecorator decorator = new JFXDecorator(stage, root);
             decorator.setCustomMaximize(false);
-            decorator.setGraphic(new ImageView(this.getClass().getResource("/icon16.png").toExternalForm()));
+            ImageView imageView = new ImageView(contact.getJavaFXImage());
+            imageView.setFitHeight(32);
+            imageView.setFitWidth(32);
+            decorator.setGraphic(imageView);
             Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
             final ObservableList<String> stylesheets = scene.getStylesheets();
             stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
