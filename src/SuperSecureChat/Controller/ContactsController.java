@@ -28,12 +28,16 @@ public class ContactsController {
     JFXListView<Contact> contactJFXListView;
     @FXML
     Label nameLabel;
+    @FXML
+    ImageView myProfilePicture;
+
     private ContactList contactList = ContactList.getInstance();
 
     public void initialize() {
         //TODO Set KeyCombos
 
         new Thread(this::init).start();
+        myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());
     }
 
     private void init() {
@@ -114,6 +118,7 @@ public class ContactsController {
             stage.setTitle("Profilbild ändern");
             stage.getIcons().add(Contact.getMyContact().getJavaFXImage());
             profilePicture.setStage(stage);
+            profilePicture.setContactsController(this);
             openNewStage(root, stage, 500, 350);
         } catch (Exception ignored) {
 
@@ -137,5 +142,12 @@ public class ContactsController {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void updateProfilePicture() {
+        System.out.println("Updating ProfilePicture");
+        Platform.runLater(() -> myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage()));
+        //TODO Refresh Image somehow
+
     }
 }

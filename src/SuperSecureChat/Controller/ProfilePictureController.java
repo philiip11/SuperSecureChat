@@ -26,6 +26,7 @@ public class ProfilePictureController {
 
     private String filePath;
     private Stage stage;
+    private ContactsController contactsController;
 
     @FXML
     public void initialize() {
@@ -90,6 +91,11 @@ public class ProfilePictureController {
         }
         Contact.getMyContact().setImageFromFilePath(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png");
         Network.getInstance().updateContact();
+        contactsController.updateProfilePicture();
         stage.close();
+    }
+
+    public void setContactsController(ContactsController contactsController) {
+        this.contactsController = contactsController;
     }
 }
