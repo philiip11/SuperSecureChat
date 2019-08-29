@@ -1,6 +1,8 @@
 package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Controller.ContactsController;
+import SuperSecureChat.Crypto.Crypto;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 
@@ -62,6 +64,7 @@ public class SystemTrayIcon {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,
                         "[Open Application] Hopefully coming soon");
+                ContactsController.getInstance().show();
 
             }
         });
@@ -83,6 +86,12 @@ public class SystemTrayIcon {
             @Override
             public void actionPerformed(ActionEvent e) {
                 trayIcon.displayMessage("Starting Application", "loading assets", TrayIcon.MessageType.NONE);
+                trayIcon.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Hi there!");
+                    }
+                });
                 setonStart();
             }
         });     //ActionListener zu ende  // Klammern *grrr*
@@ -113,9 +122,11 @@ public class SystemTrayIcon {
     }
 
     public void showMessage(Message message) {
-//
         if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
-            trayIcon.displayMessage(message.getSender().getName(), message.getText(), TrayIcon.MessageType.NONE);
+            Crypto crypto = new Crypto();
+            crypto.setSecretKey(Database.getInstance().getSecretKeyByContact(message.getSender()));
+            String text = crypto.decrypt(message.getText());
+            trayIcon.displayMessage(message.getSender().getName(), text, TrayIcon.MessageType.NONE);
         }
 
     }

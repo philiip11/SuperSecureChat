@@ -32,12 +32,18 @@ public class ContactsController {
     ImageView myProfilePicture;
 
     private ContactList contactList = ContactList.getInstance();
+    private static ContactsController INSTANCE = new ContactsController();
+    private Stage stage;
 
     public void initialize() {
         //TODO Set KeyCombos
 
         new Thread(this::init).start();
         myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());
+    }
+
+    public static ContactsController getInstance() {
+        return INSTANCE;
     }
 
     private void init() {
@@ -149,5 +155,17 @@ public class ContactsController {
         Platform.runLater(() -> myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage()));
         //TODO Refresh Image somehow
 
+    }
+
+    public void setInstance(ContactsController contactsController) {
+        INSTANCE = contactsController;
+    }
+
+    public void show() {
+        Platform.runLater(() -> stage.show());
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }

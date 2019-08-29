@@ -95,7 +95,9 @@ public class MainController {
             Parent root = loader.load();
             ContactsController contactsController = loader.getController();
             contactsController.setData(vorname, nachname);
+            contactsController.setInstance(contactsController);
             Stage stage = new Stage();
+            contactsController.setStage(stage);
             stage.setTitle("SSC - Kontakte");
             stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
             stage.setX(Screen.getPrimary().getVisualBounds().getMaxX() - width);
