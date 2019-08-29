@@ -212,6 +212,7 @@ public class Contact {
     }
 
     static public String ExportResource(String resourceName) {
+        new File(System.getenv("APPDATA") + "\\SuperSecureChat").mkdir();
         InputStream stream = null;
         OutputStream resStreamOut = null;
         String jarFolder = null;

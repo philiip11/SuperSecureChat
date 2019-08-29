@@ -73,6 +73,7 @@ public class Database {
             System.out.println("Database-Version:" + rs.getInt(1));
             if (databaseVersion != DB_VERSION) {
                 switch (databaseVersion) { //Do not use break; here, please!
+                    case 0:
                     case 1:
                     case 2:
                     case 3:
