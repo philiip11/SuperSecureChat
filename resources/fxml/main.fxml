@@ -18,3 +18,5 @@
       <Label fx:id="usernameLabel" style="-fx-font-size: 42px;" GridPane.rowIndex="1" />
    </children>
 </GridPane>
+
+        <!--TODO some magix with controllers -->

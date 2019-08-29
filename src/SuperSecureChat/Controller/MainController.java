@@ -35,6 +35,7 @@ public class MainController {
 
     public void initialize() {
         //TODO Set KeyCombos
+        //TODO good morning einbinden
 
         new Thread(this::init).start(); // Daten asynchron laden
     }
