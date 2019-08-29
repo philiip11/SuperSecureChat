@@ -1,7 +1,6 @@
 package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
-import SuperSecureChat.Controller.ContactsController;
 import SuperSecureChat.Crypto.Crypto;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +16,7 @@ public class SystemTrayIcon {
 
     private FXMLLoader Loader;
 
-    public static final String PATH_TO_TRAY_ICON = "/icon16.png";
+    public static final String PATH_TO_TRAY_ICON = "/icon2048.png";
 
     private TrayIcon trayIcon;
 
@@ -62,9 +61,9 @@ public class SystemTrayIcon {
 
         trayIcon.addActionListener(new ActionListener() {               //TODO soll Anwendung maximieren //doppelclick *thinking*
             public void actionPerformed(ActionEvent e) {
+                ClassConnector.getInstance().openContacts();
                 JOptionPane.showMessageDialog(null,
                         "[Open Application] Hopefully coming soon");
-                ContactsController.getInstance().show();
 
             }
         });
@@ -103,7 +102,6 @@ public class SystemTrayIcon {
 
     }
 
-    //TODO Methode um Benachrichtigungen anzuzeigen
 
     public void showNotification(Image image, String title, String message, Runnable onClick) {
         trayIcon.displayMessage(title, message, TrayIcon.MessageType.NONE);
@@ -141,6 +139,8 @@ public class SystemTrayIcon {
         }
         //fx:controller="SuperSecureChat.Controller.ContactsController"
     }
+
+
 }
 
 

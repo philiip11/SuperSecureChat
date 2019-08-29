@@ -1,20 +1,12 @@
 package SuperSecureChat.Controller;
 
+import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
-import com.jfoenix.controls.JFXDecorator;
 import com.sun.jna.platform.win32.Secur32;
 import com.sun.jna.ptr.IntByReference;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MainController {
@@ -87,37 +79,7 @@ public class MainController {
     }
 
     private void openContacts() {
-        int width = 400;
-        int height = 800;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/contacts.fxml"));
-
-            Parent root = loader.load();
-            ContactsController contactsController = loader.getController();
-            contactsController.setData(vorname, nachname);
-            contactsController.setInstance(contactsController);
-            Stage stage = new Stage();
-            contactsController.setStage(stage);
-            stage.setTitle("SSC - Kontakte");
-            stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
-            stage.setX(Screen.getPrimary().getVisualBounds().getMaxX() - width);
-            JFXDecorator decorator = new JFXDecorator(stage, root);
-            decorator.setCustomMaximize(false);
-            decorator.setGraphic(new ImageView(this.getClass().getResource("/icon16.png").toExternalForm()));
-            Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
-
-            final ObservableList<String> stylesheets = scene.getStylesheets();
-            stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
-                    getClass().getResource("/css/jfoenix-design.css").toExternalForm(),
-                    getClass().getResource("/css/custom.css").toExternalForm(),
-                    getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
-                    getClass().getResource("/css/super-secure-chat.css").toExternalForm());
-
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception ignored) {
-
-        }
+        ClassConnector.getInstance().openContacts();
     }
 
     private String getFullName() {

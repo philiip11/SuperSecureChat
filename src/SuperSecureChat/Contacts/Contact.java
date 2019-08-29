@@ -207,6 +207,6 @@ public class Contact {
     }
 
     public void setImageFromFilePath(String path) {
-        encoder(path);
+        setImage(encoder(path));
     }
 }

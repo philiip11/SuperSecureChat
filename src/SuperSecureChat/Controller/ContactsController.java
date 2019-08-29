@@ -40,6 +40,7 @@ public class ContactsController {
 
         new Thread(this::init).start();
         myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());
+        setData(Contact.getMyContact().getFirstname(), Contact.getMyContact().getLastname());
     }
 
     public static ContactsController getInstance() {
@@ -111,7 +112,7 @@ public class ContactsController {
     }
 
 
-    void setData(String vorname, String nachname) {
+    public void setData(String vorname, String nachname) {
         nameLabel.setText(vorname + " " + nachname);
     }
 
@@ -151,8 +152,12 @@ public class ContactsController {
     }
 
     public void updateProfilePicture() {
-        System.out.println("Updating ProfilePicture");
-        Platform.runLater(() -> myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage()));
+        System.out.println("Updating ProfilePicture1");
+        Platform.runLater(() -> {
+            //myProfilePicture.setImage(new Image(new File(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png").toURI().toString()));
+            myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());
+            System.out.println("Updating ProfilePicture2");
+        });
         //TODO Refresh Image somehow
 
     }

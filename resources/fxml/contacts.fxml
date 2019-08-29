@@ -13,7 +13,7 @@
        <ImageView fx:id="myProfilePicture" fitHeight="128.0" fitWidth="128.0" layoutX="25.0" layoutY="14.0"
                   onMouseClicked="#editProfilePicture" pickOnBounds="true" preserveRatio="true"
                   AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
-       <Label fx:id="nameLabel" layoutX="84.0" layoutY="26.0" styleClass="contactsViewOwnName" text="Name"
-              AnchorPane.leftAnchor="142.0"/>
+       <Label fx:id="nameLabel" layoutX="147.0" layoutY="66.0" styleClass="contactsViewOwnName" text="Name"
+              AnchorPane.leftAnchor="147.0"/>
    </children>
 </AnchorPane>
