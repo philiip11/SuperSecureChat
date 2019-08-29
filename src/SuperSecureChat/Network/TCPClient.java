@@ -79,6 +79,7 @@ public class TCPClient {
     }
 
     public void relayContact(Contact contact) {
+        System.out.println("Relay contact " + contact.getId());
         sendText("CONTACR:" + contact.toJSONString());
     }
 

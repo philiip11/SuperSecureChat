@@ -59,17 +59,19 @@ public class TCPServerThread extends Thread {
                         case "CONTACR:":
                             relay = true;
                         case "CONTACT:":
-                            System.out.println("Kontakt empfangen!");
                             Contact contact = Contact.fromJSON(json);
-                            System.out.println(contact.getId());
-                            if (!relay) {
-                                String url = socket.getRemoteSocketAddress().toString();
-                                String ip = url.substring(1).split(":")[0];
-                                contact.setUrl(ip);
+                            if (!contact.getId().equals(Contact.getMyContact().getId())) {
+                                System.out.println("Kontakt empfangen!");
+                                System.out.println(contact.getId());
+                                if (!relay) {
+                                    String url = socket.getRemoteSocketAddress().toString();
+                                    String ip = url.substring(1).split(":")[0];
+                                    contact.setUrl(ip);
+                                }
+                                ContactList.getInstance().addContact(contact);
+                                Database.getInstance().newContact(contact);
+                                Network.getInstance().relayContact(contact);
                             }
-                            ContactList.getInstance().addContact(contact);
-                            Database.getInstance().newContact(contact);
-                            Network.getInstance().relayContact(contact);
                             break;
                         case "GETCONTA"://CT
                             System.out.println("Kontaktanfrage empfangen!");
@@ -92,6 +94,7 @@ public class TCPServerThread extends Thread {
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             tcpClient.sendText("OPENTCP ");
+                            tcpClient.sendText("TESTTEST");
                             for (Contact c : Database.getInstance().getContacts()) {
                                 if (!c.getId().equals(Contact.getMyContact().getId())) {
                                     tcpClient.relayContact(c);

@@ -33,17 +33,22 @@ public class ContactList {
 
     public void setOnlineByIp(String ip) {
         boolean noIpFoundException = true;
-        for (Contact contact : contacts) {
-            if (contact.getUrl() != null) {
-                if (contact.getUrl().equals(ip)) {
-                    contact.setLastOnline(Instant.now().getEpochSecond());
-                    System.out.println("IP " + ip + " gehört " + contact.getId());
-                    noIpFoundException = false;
+        while (noIpFoundException) {
+            for (Contact contact : contacts) {
+                if (contact.getUrl() != null) {
+                    if (contact.getUrl().equals(ip)) {
+                        contact.setLastOnline(Instant.now().getEpochSecond());
+                        System.out.println("IP " + ip + " gehört " + contact.getId());
+                        noIpFoundException = false;
+                    }
                 }
             }
-        }
-        if (noIpFoundException) {
-            System.out.println("IP " + ip + " nicht gefunden!");
+            try {
+                System.out.println("sleep");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

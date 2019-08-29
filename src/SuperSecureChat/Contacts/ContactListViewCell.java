@@ -88,7 +88,6 @@ public class ContactListViewCell extends JFXListCell<Contact> {
 
     public void onPictureClick(MouseEvent mouseEvent) {
         try {
-            System.out.println("Picture!");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/showPicture.fxml"));
             Parent root = loader.load();
             ShowPictureController showPictureController = loader.getController();
