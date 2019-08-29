@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--TODO some magix with controllers -->
+
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.192" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SuperSecureChat.Controller.MainController">
+<?import javafx.scene.text.Font?>
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.172-ea"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="SuperSecureChat.Controller.MainController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
+       <RowConstraints minHeight="10.0" prefHeight="30.0"/>
       <RowConstraints />
       <RowConstraints />
    </rowConstraints>
    <children>
-      <JFXSpinner GridPane.rowIndex="2" />
+       <JFXSpinner GridPane.rowIndex="3"/>
        <Label style="-fx-font-size: 42px;" text="Willkommen!"/>
-      <Label fx:id="usernameLabel" style="-fx-font-size: 42px;" GridPane.rowIndex="1" />
+       <Label fx:id="daytimeLabel" prefHeight="33.0" prefWidth="243.0" GridPane.rowIndex="1">
+           <font>
+               <Font name="System Bold Italic" size="28.0"/>
+           </font>
+       </Label>
+       <Label fx:id="usernameLabel" style="-fx-font-size: 42px;" GridPane.rowIndex="2"/>
    </children>
 </GridPane>
-
-        <!--TODO some magix with controllers -->
