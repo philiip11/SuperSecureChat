@@ -41,10 +41,13 @@ public class ProfilePictureController {
     public void openFileDialog() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Bilder (JPG/PNG)", "*.jpg", "*.jpeg", "*.jfif", "*.png")
+                new FileChooser.ExtensionFilter("Bilder (JPG/PNG/BMP/GIF)", "*.jpg", "*.jpeg", "*.jfif", "*.png", "*.bmp", "*.gif")
         );
 
         File file = fileChooser.showOpenDialog(stage);
+        if (file == null) {
+            return;
+        }
         Image image = new Image(file.toURI().toString());
         GraphicsContext gc = canvas.getGraphicsContext2D();
         double x = 0;
@@ -65,7 +68,7 @@ public class ProfilePictureController {
         }
         gc.clearRect(0, 0, 256, 256);
         gc.beginPath();
-        gc.moveTo(0,128);
+        gc.moveTo(0, 128);
         gc.arc(128, 128, 128, 128, 180, 360);
         gc.closePath();
         gc.clip();
