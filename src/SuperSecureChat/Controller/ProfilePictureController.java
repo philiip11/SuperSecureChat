@@ -63,6 +63,7 @@ public class ProfilePictureController {
             y = (image.getHeight() - height) / 2;
             x = 0;
         }
+        gc.clearRect(0, 0, 256, 256);
         gc.beginPath();
         gc.moveTo(0,128);
         gc.arc(128, 128, 128, 128, 180, 360);
