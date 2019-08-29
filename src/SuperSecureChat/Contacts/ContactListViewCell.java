@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -98,6 +99,7 @@ public class ContactListViewCell extends JFXListCell<Contact> {
             stage.setTitle(contacts.getFirstname() + " " + contacts.getLastname());
             stage.getIcons().add(getJavaFXImage());
             Scene scene = new Scene(root, 256, 256, true, SceneAntialiasing.BALANCED);
+            scene.setFill(Color.TRANSPARENT);
             stage.setScene(scene);
             showPictureController.showPicture(getJavaFXImage());
             showPictureController.setStage(stage);

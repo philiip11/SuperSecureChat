@@ -93,7 +93,9 @@ public class TCPServerThread extends Thread {
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             tcpClient.sendText("OPENTCP ");
                             for (Contact c : Database.getInstance().getContacts()) {
-                                tcpClient.relayContact(c);
+                                if (!c.getId().equals(Contact.getMyContact().getId())) {
+                                    tcpClient.relayContact(c);
+                                }
                             }
                             for (Message m : messages) {
                                 tcpClient.sendMessage(m);

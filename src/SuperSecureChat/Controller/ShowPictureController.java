@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 
 public class ShowPictureController {
@@ -15,6 +16,10 @@ public class ShowPictureController {
     ImageView picture;
     private Stage stage;
 
+    @FXML
+    public void initialize() {
+        anchorPane.setBackground(Background.EMPTY);
+    }
     public void setStage(Stage stage) {
         this.stage = stage;
     }
