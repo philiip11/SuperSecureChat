@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: #000000ff;" xmlns="http://javafx.com/javafx/8.0.192"
+            fx:controller="SuperSecureChat.Controller.ShowPictureController">
+    <children>
+        <ImageView fx:id="picture" onMouseClicked="#close" onMouseExited="#close" pickOnBounds="true"
+                   preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+    </children>
+</AnchorPane>

@@ -1,13 +1,21 @@
 package SuperSecureChat.Contacts;
 
+import SuperSecureChat.Controller.ShowPictureController;
 import SuperSecureChat.Database;
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -23,7 +31,7 @@ public class ContactListViewCell extends JFXListCell<Contact> {
     @FXML
     JFXBadge badge;
 
-
+    Contact contacts;
     //TODO
     private FXMLLoader mLLoader;
     Database db = Database.getInstance();
@@ -50,11 +58,13 @@ public class ContactListViewCell extends JFXListCell<Contact> {
             }
             label1.setText(contact.getFirstname() + " " + contact.getLastname());
             contactImage.setImage(contact.getJavaFXImage());
+            contactImage.setOnMouseClicked(this::onPictureClick);
             updateBadge(contact);
             setText(null);
             setGraphic(anchorPane);
 
         }
+        this.contacts = contact;
 
     }
 
@@ -75,4 +85,31 @@ public class ContactListViewCell extends JFXListCell<Contact> {
         }
     }
 
+    public void onPictureClick(MouseEvent mouseEvent) {
+        try {
+            System.out.println("Picture!");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/showPicture.fxml"));
+            Parent root = loader.load();
+            ShowPictureController showPictureController = loader.getController();
+            Stage stage = new Stage();
+            stage.setX(mouseEvent.getScreenX() - 128);
+            stage.setY(mouseEvent.getScreenY() - 128);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setTitle(contacts.getFirstname() + " " + contacts.getLastname());
+            stage.getIcons().add(getJavaFXImage());
+            Scene scene = new Scene(root, 256, 256, true, SceneAntialiasing.BALANCED);
+            stage.setScene(scene);
+            showPictureController.showPicture(getJavaFXImage());
+            showPictureController.setStage(stage);
+            stage.show();
+
+            mouseEvent.consume();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Image getJavaFXImage() {
+        return contacts.getJavaFXImage();
+    }
 }

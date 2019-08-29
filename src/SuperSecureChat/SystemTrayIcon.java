@@ -61,7 +61,7 @@ public class SystemTrayIcon {
 
         trayIcon.addActionListener(new ActionListener() {               //TODO soll Anwendung maximieren //doppelclick *thinking*
             public void actionPerformed(ActionEvent e) {
-                ClassConnector.getInstance().openContacts();
+                ClassConnector.getInstance().openContacts(); //TODO Funktioniert so leider nicht, hat jemand eine bessere Idee? :-)
                 JOptionPane.showMessageDialog(null,
                         "[Open Application] Hopefully coming soon");
 
