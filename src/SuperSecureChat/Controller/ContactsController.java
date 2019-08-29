@@ -104,7 +104,7 @@ public class ContactsController {
             Stage stage = new Stage();
             stage.setTitle(contact.getName());
             stage.getIcons().add(contact.getJavaFXImage());
-            openNewStage(root, stage, width, height);
+            openNewStage(root, stage, width, height, contact);
         } catch (Exception ignored) {
 
         }
@@ -126,16 +126,16 @@ public class ContactsController {
             stage.getIcons().add(Contact.getMyContact().getJavaFXImage());
             profilePicture.setStage(stage);
             profilePicture.setContactsController(this);
-            openNewStage(root, stage, 500, 350);
+            openNewStage(root, stage, 500, 350, Contact.getMyContact());
         } catch (Exception ignored) {
 
         }
     }
 
-    private void openNewStage(Parent root, Stage stage, int width, int height) {
+    private void openNewStage(Parent root, Stage stage, int width, int height, Contact contact) {
         JFXDecorator decorator = new JFXDecorator(stage, root);
         decorator.setCustomMaximize(false);
-        ImageView imageView = new ImageView(Contact.getMyContact().getJavaFXImage());
+        ImageView imageView = new ImageView(contact.getJavaFXImage());
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         decorator.setGraphic(imageView);
