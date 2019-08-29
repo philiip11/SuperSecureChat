@@ -34,7 +34,7 @@ public class BackgroundService implements Runnable {
 
     private void starttogetTime() {
         GreetingsAfterTime greetingsAfterTime = new GreetingsAfterTime();
-        greetingsAfterTime.gettimebycalendar();
+
     }
 
 

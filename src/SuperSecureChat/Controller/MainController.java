@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import java.util.Calendar;
+
 public class MainController {
 
     // TODO Implement Chat
@@ -29,12 +31,14 @@ public class MainController {
 
     @FXML
     Label usernameLabel;
+    //TODO Label einbinden und erstellen.
 
     private String vorname;
     private String nachname;
 
     public void initialize() {
         //TODO Set KeyCombos
+        this.gettimebycalendar();
         //TODO good morning einbinden
 
         new Thread(this::init).start(); // Daten asynchron laden
@@ -93,6 +97,23 @@ public class MainController {
         return new String(name).trim();
     }
 
-    //TODO Begrüßung nach Tageszeit
+
+//TODO Begrüßung nach Tageszeit
+
+    public void gettimebycalendar() {
+        Calendar calendar = Calendar.getInstance();
+        int timeofday = calendar.get(Calendar.HOUR_OF_DAY);
+
+        if (timeofday > 0 && timeofday < 12) {
+            System.out.println("Good Morning");
+        } else if (timeofday >= 12 && timeofday < 16) {
+            System.out.println("Good Afternoon");
+        } else if (timeofday >= 16 && timeofday < 21) {
+            System.out.println("Good Evening");
+        } else if (timeofday >= 21) {
+            System.out.println("Good Night");
+        }
+    }
+
 
 }
