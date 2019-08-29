@@ -104,9 +104,12 @@ public class ChatController {
                     break;
                 }
             }
-            messages.remove(remove);
-            Platform.runLater(() -> messages.add(message));
-            Platform.runLater(this::updateListView);
+            Message finalRemove = remove;
+            Platform.runLater(() -> {
+                messages.remove(finalRemove);
+                messages.add(message);
+                updateListView();
+            });
         }
         //}
     }

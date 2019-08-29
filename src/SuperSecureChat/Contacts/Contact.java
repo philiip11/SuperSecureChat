@@ -17,10 +17,8 @@ public class Contact {
     private String lastname;
     private String url;
     private static final Contact me = new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), encoder(
-            new File(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png").exists() ?
-                    System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png"
-                    : Contact.class.getResource("/icon.png").getFile()
-    ), 0);
+            new File(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png").getAbsolutePath())
+            , 0);
     private String image;
     private long notifications;
     private long lastOnline;
@@ -86,6 +84,9 @@ public class Contact {
         String base64File = null;
         try {
             File file = new File(filePath);
+            if (!file.exists()) {
+                file = new File(ExportResource("profile.png"));
+            }
             FileInputStream imageInFile = new FileInputStream(file);
             // Reading a file from file system
             byte[] fileData = new byte[(int) file.length()];
@@ -208,5 +209,36 @@ public class Contact {
 
     public void setImageFromFilePath(String path) {
         setImage(encoder(path));
+    }
+
+    static public String ExportResource(String resourceName) {
+        InputStream stream = null;
+        OutputStream resStreamOut = null;
+        String jarFolder = null;
+        try {
+            stream = Contact.class.getClassLoader().getResourceAsStream(resourceName);//note that each / is a directory down in the "jar tree" been the jar the root of the tree
+            if (stream == null) {
+                throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+            }
+
+            int readBytes;
+            byte[] buffer = new byte[4096];
+            jarFolder = System.getenv("APPDATA") + "\\SuperSecureChat\\";
+            resStreamOut = new FileOutputStream(jarFolder + resourceName);
+            while ((readBytes = stream.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                stream.close();
+                resStreamOut.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return jarFolder + resourceName;
     }
 }

@@ -70,7 +70,7 @@ public class Database {
             String pragma = "PRAGMA "; // Fixes Intellij Errors
             ResultSet rs = stmt.executeQuery(pragma + "user_version;");
             int databaseVersion = rs.getInt(1);
-            System.out.println(rs.getInt(1));
+            System.out.println("Database-Version:" + rs.getInt(1));
             if (databaseVersion != DB_VERSION) {
                 switch (databaseVersion) { //Do not use break; here, please!
                     case 1:
