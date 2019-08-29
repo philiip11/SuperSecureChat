@@ -152,11 +152,9 @@ public class ContactsController {
     }
 
     public void updateProfilePicture() {
-        System.out.println("Updating ProfilePicture1");
         Platform.runLater(() -> {
             //myProfilePicture.setImage(new Image(new File(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png").toURI().toString()));
             myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());
-            System.out.println("Updating ProfilePicture2");
         });
         //TODO Refresh Image somehow
 

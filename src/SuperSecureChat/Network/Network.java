@@ -30,6 +30,7 @@ public class Network {
     private ArrayList<String> secretBlockedIPs = new ArrayList<>();
     private HashMap<String, Long> otherIPsLastPing = new HashMap<>();
     private ObservableList<String> relayedMessages = FXCollections.observableArrayList();
+    private ObservableList<String> relayedContacts = FXCollections.observableArrayList();
 
     public Network() {
         myIPs = getMyIpAddresses();
@@ -58,6 +59,21 @@ public class Network {
             for (String ip : otherIPs) {
                 TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
                 tcpClient.sendMessage(m);
+                tcpClient.close();
+            }
+        }).start();
+    }
+
+    public void sendContact(Contact c, boolean relay) {
+        new Thread(() -> {
+            for (String ip : otherIPs) {
+                TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
+                if (!relay) {
+                    tcpClient.sendContact(c);
+                } else {
+                    tcpClient.relayContact(c);
+                }
+
                 tcpClient.close();
             }
         }).start();
@@ -114,8 +130,15 @@ public class Network {
             relayedMessages.add(message.getId());
             sendMessage(message);
         }
-
     }
+
+    public void relayContact(Contact contact) {
+        if (!relayedContacts.contains(contact.getId() + contact.getImage().hashCode())) {
+            relayedContacts.add(contact.getId() + contact.getImage().hashCode());
+            sendContact(contact, true);
+        }
+    }
+
 
     public byte[] getNewSecretKeyFrom(Contact contact) throws IOException {
         if (!secretBlockedIPs.contains(contact.getUrl())) {

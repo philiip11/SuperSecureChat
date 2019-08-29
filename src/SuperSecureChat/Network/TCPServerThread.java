@@ -46,6 +46,7 @@ public class TCPServerThread extends Thread {
                 if ((line != null) && line.length() > 8) {
                     String command = line.substring(0, 8);
                     String json = line.substring(8);
+                    boolean relay = false;
                     switch (command) {
                         case "MESSAGE:":
                             Message message = Message.fromJSON(json);
@@ -55,15 +56,20 @@ public class TCPServerThread extends Thread {
                             Database.getInstance().newMessage(message);
                             Network.getInstance().relayMessage(message);
                             break;
+                        case "CONTACR:":
+                            relay = true;
                         case "CONTACT:":
                             System.out.println("Kontakt empfangen!");
                             Contact contact = Contact.fromJSON(json);
                             System.out.println(contact.getId());
-                            String url = socket.getRemoteSocketAddress().toString();
-                            String ip = url.substring(1).split(":")[0];
-                            contact.setUrl(ip);
+                            if (!relay) {
+                                String url = socket.getRemoteSocketAddress().toString();
+                                String ip = url.substring(1).split(":")[0];
+                                contact.setUrl(ip);
+                            }
                             ContactList.getInstance().addContact(contact);
                             Database.getInstance().newContact(contact);
+                            Network.getInstance().relayContact(contact);
                             break;
                         case "GETCONTA"://CT
                             System.out.println("Kontaktanfrage empfangen!");

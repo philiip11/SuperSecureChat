@@ -78,6 +78,10 @@ public class TCPClient {
         sendText("CONTACT:" + contact.toJSONString());
     }
 
+    public void relayContact(Contact contact) {
+        sendText("CONTACR:" + contact.toJSONString());
+    }
+
     public void close() {
         try {
             if (socket != null) {
@@ -99,4 +103,5 @@ public class TCPClient {
             }
         }
     }
+
 }
