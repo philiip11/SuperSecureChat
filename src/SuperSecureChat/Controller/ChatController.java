@@ -91,18 +91,23 @@ public class ChatController {
 
 
     public void newMessage(Message message) {
-        if ((message.getReceiver().getId().equals(me.getId()) &&            // Nachricht von Kontakt an mich
+        //if (message.getReceiver() != null && message.getSender() != null) {
+        if ((message.getReceiver().getId().equals(me.getId()) &&            // Naichricht von Kontakt an mch
                 message.getSender().getId().equals(contact.getId())) ||
                 (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
                         message.getSender().getId().equals(me.getId()))) {
 
+            Message remove = null;
             for (Message m : messages) {
                 if (m.getId().equals(message.getId())) {
-                    return;
+                    remove = m;
+                    break;
                 }
             }
+            messages.remove(remove);
             Platform.runLater(() -> messages.add(message));
             Platform.runLater(this::updateListView);
         }
+        //}
     }
 }

@@ -19,10 +19,7 @@
                     </font>
                 </Text>
                 <Label fx:id="labelTime" style="-fx-font-size: 12px" text="Zeit" AnchorPane.bottomAnchor="2.0"
-                       AnchorPane.rightAnchor="18.0"/>
-                <Label fx:id="received" style="-fx-font-size: 12px" text="✓" visible="false"
-                       AnchorPane.bottomAnchor="2.0"
-                       AnchorPane.rightAnchor="6.0"/>
+                       AnchorPane.rightAnchor="14.0"/>
             </children>
             <padding>
                 <Insets left="12.0"/>

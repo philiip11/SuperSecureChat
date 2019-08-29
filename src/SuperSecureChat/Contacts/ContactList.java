@@ -32,14 +32,13 @@ public class ContactList {
 
 
     public void setOnlineByIp(String ip) {
-        boolean noIpFoundException = true;
-        while (noIpFoundException) {
+        while (true) {
             for (Contact contact : contacts) {
                 if (contact.getUrl() != null) {
                     if (contact.getUrl().equals(ip)) {
                         contact.setLastOnline(Instant.now().getEpochSecond());
                         System.out.println("IP " + ip + " gehört " + contact.getId());
-                        noIpFoundException = false;
+                        return;
                     }
                 }
             }

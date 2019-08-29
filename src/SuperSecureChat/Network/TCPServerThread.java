@@ -51,7 +51,12 @@ public class TCPServerThread extends Thread {
                         case "MESSAGE:":
                             Message message = Message.fromJSON(json);
                             message.setReceived(Instant.now().getEpochSecond());
-                            message.setTrace(message.getTrace() + "");
+                            message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond());
+                            if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
+                                if (message.getReceived() == 0) {
+                                    message.setReceived(Instant.now().getEpochSecond());
+                                }
+                            }
                             ClassConnector.getInstance().sendMessageToAllChatControllers(message, !loop);
                             Database.getInstance().newMessage(message);
                             Network.getInstance().relayMessage(message);

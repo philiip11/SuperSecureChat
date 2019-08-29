@@ -12,7 +12,7 @@ public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 13;
+    private static final int DB_VERSION = 14;
     private Connection connection;
 
     static {
@@ -72,18 +72,36 @@ public class Database {
             int databaseVersion = rs.getInt(1);
             System.out.println(rs.getInt(1));
             if (databaseVersion != DB_VERSION) {
+                switch (databaseVersion) { //Do not use break; here, please!
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                        stmt.executeUpdate("DROP TABLE IF EXISTS messages;");
+                        stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
+                        stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
+                        stmt.executeUpdate("CREATE TABLE contacts (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB, publicKey BLOB);");
+                        stmt.executeUpdate("CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);");
+                        stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, secretKey TEXT, idd INTEGER AUTO_INCREMENT PRIMARY KEY);");
+                    case 13:
+                        stmt.executeUpdate("ALTER TABLE messages ADD sendTo TEXT;");
+                    case 14: // Insert future Database changes here
+
+                    case 15:
+
+
+                }
                 stmt.executeUpdate(pragma + "user_version = " + DB_VERSION);
-
-
-                stmt = connection.createStatement();
-                stmt.executeUpdate("DROP TABLE IF EXISTS messages;");
-                stmt.executeUpdate("DROP TABLE IF EXISTS contacts;");
-                stmt.executeUpdate("DROP TABLE IF EXISTS cryptoKeys;");
-
-                stmt.executeUpdate("CREATE TABLE contacts (id TEXT PRIMARY KEY , firstname TEXT, lastname TEXT, url TEXT, lastOnline INTEGER, image BLOB, publicKey BLOB);");
-                stmt.executeUpdate("CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);");
-                stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, secretKey TEXT, idd INTEGER AUTO_INCREMENT PRIMARY KEY);");
                 stmt.close();
+                System.out.println("Database updated to " + DB_VERSION);
 
             }
             rs.close();
@@ -96,7 +114,6 @@ public class Database {
     public void newMessage(Message message) {
         newContact(message.getSender());
         newContact(message.getReceiver());
-        //TODO Encrypt Message
         try {
             PreparedStatement ps = connection.prepareStatement("REPLACE INTO messages (id, sender, receiver, text, data, trace, created, received, 'read', reference) VALUES (?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, message.getId());
@@ -110,7 +127,6 @@ public class Database {
             ps.setLong(9, message.getRead());
             ps.setLong(10, message.getRead());
             ps.executeUpdate();
-            //TODO
 
         } catch (SQLException e) {
             e.printStackTrace();

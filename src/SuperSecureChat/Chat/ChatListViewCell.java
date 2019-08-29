@@ -25,6 +25,8 @@ public class ChatListViewCell extends JFXListCell<Message> {
     @FXML
     Label labelTime;
     @FXML
+    Label received;
+    @FXML
     ImageView contactImage;
     @FXML
     AnchorPane anchorPane;
@@ -48,12 +50,15 @@ public class ChatListViewCell extends JFXListCell<Message> {
             Crypto crypto = new Crypto();
             byte[] secretKey;
             String fxmlResource;
+            boolean messageFromMe;
             if (message.getSender().getId().equals(Contact.getMyContact().getId())) {
                 fxmlResource = "/fxml/chatCellMe.fxml";
                 secretKey = Database.getInstance().getSecretKeyByContact(message.getReceiver());
+                messageFromMe = true;
             } else {
                 fxmlResource = "/fxml/chatCell.fxml";
                 secretKey = Database.getInstance().getSecretKeyByContact(message.getSender());
+                messageFromMe = false;
             }
             crypto.setSecretKey(secretKey);
             mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
@@ -66,6 +71,9 @@ public class ChatListViewCell extends JFXListCell<Message> {
             }
             labelMessage.setText(crypto.decrypt(message.getText()));
             labelTime.setText(simpleDateFormat.format(new Date(message.getCreated() * 1000L)));
+            if (messageFromMe) {
+                received.setVisible(message.getReceived() > 0);
+            }
             //contactImage.setImage(contact.getJavaFXImage());
             //int notifications = db.countUnreadMessagesByContact(contact);
             //badge.setEnabled(notifications > 0);

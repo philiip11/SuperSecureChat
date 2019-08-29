@@ -8,24 +8,20 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="anchorPane" minWidth="0.0" prefWidth="200.0"
             styleClass="chatItem" xmlns="http://javafx.com/javafx/8.0.192">
     <children>
-        <AnchorPane minWidth="100.0" styleClass="speechBubbleMe" AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane minWidth="100.0" styleClass="speechBubble" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Text fx:id="labelMessage" boundsType="VISUAL" fill="WHITE" styleClass="wrapper" text="NACHRICHT"
-                      textAlignment="JUSTIFY" wrappingWidth="300" AnchorPane.bottomAnchor="13.0"
-                      AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                <Text fx:id="labelMessage" text="NACHRICHT" fill="WHITE" textAlignment="JUSTIFY" wrappingWidth="300"
+                      AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="10.0">
                     <font>
                         <Font name="Roboto" size="14.0"/>
                     </font>
                 </Text>
                 <Label fx:id="labelTime" style="-fx-font-size: 12px" text="Zeit" AnchorPane.bottomAnchor="2.0"
-                       AnchorPane.rightAnchor="18.0"/>
-                <Label fx:id="received" style="-fx-font-size: 12px" text="✓" visible="false"
-                       AnchorPane.bottomAnchor="2.0"
-                       AnchorPane.rightAnchor="6.0"/>
+                       AnchorPane.rightAnchor="14.0"/>
             </children>
             <padding>
-                <Insets left="12.0"/>
+                <Insets right="12.0"/>
             </padding>
         </AnchorPane>
     </children>

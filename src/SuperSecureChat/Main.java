@@ -2,6 +2,7 @@ package SuperSecureChat;
 
 import com.jfoenix.controls.JFXDecorator;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -40,6 +41,7 @@ public class Main extends Application {
         }).start();
         primaryStage.setScene(scene);
         primaryStage.show();
+        Platform.setImplicitExit(false);
 
     }
 
