@@ -95,7 +95,10 @@ public class SystemTrayIcon {
             }
         });     //ActionListener zu ende  // Klammern *grrr*
 
-
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            tray.remove(trayIcon);
+            System.out.println("Removed TrayIcon");
+        }));
 
         ClassConnector.getInstance().addSystemTrayIcon(this);
 

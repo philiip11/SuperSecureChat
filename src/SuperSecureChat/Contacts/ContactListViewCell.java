@@ -58,7 +58,11 @@ public class ContactListViewCell extends JFXListCell<Contact> {
 
             }
             label1.setText(contact.getFirstname() + " " + contact.getLastname());
-            contactImage.setImage(contact.getJavaFXImage());
+            try {
+                contactImage.setImage(contact.getJavaFXImage());
+            } catch (NullPointerException ignored) {
+
+            }
             contactImage.setOnMouseClicked(this::onPictureClick);
             updateBadge(contact);
             setText(null);

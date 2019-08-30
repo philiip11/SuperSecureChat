@@ -12,7 +12,7 @@ public class Database {
 
     private static final Database INSTANCE = new Database();
     private static final String DB_PATH = "testdb.db";
-    private static final int DB_VERSION = 14;
+    private static final int DB_VERSION = 15;
     private Connection connection;
 
     static {
@@ -94,9 +94,16 @@ public class Database {
                         stmt.executeUpdate("CREATE TABLE cryptoKeys (id TEXT, secretKey TEXT, idd INTEGER AUTO_INCREMENT PRIMARY KEY);");
                     case 13:
                         stmt.executeUpdate("ALTER TABLE messages ADD sendTo TEXT;");
-                    case 14: // Insert future Database changes here
-
-                    case 15:
+                    case 14: //empty trace coloumn
+                        stmt.executeUpdate("BEGIN TRANSACTION;" +
+                                "CREATE TEMPORARY TABLE messages_backup(id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);" +
+                                "INSERT INTO messages_backup SELECT id, sender, receiver, text, data, created, received, 'read', reference FROM messages;" +
+                                "DROP TABLE messages;" +
+                                "CREATE TABLE messages (id TEXT PRIMARY KEY , sender TEXT, receiver TEXT, text TEXT, data BLOB, trace TEXT,  created INTEGER, received INTEGER, 'read' INTEGER, reference TEXT);" +
+                                "INSERT INTO messages SELECT id, sender, receiver, text, data, '', created, received, 'read', reference FROM messages_backup;" +
+                                "DROP TABLE messages_backup;" +
+                                "COMMIT;");
+                    case 15: // Insert future Database changes here
 
 
                 }

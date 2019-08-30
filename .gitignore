@@ -1,3 +1,4 @@
 /config.properties
 *.db
 /testdb.db
+/update.jar

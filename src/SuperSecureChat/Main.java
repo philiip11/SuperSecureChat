@@ -12,15 +12,76 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 
 public class Main extends Application {
 
+    public static final String VERSION = "v0.1.3";
+
     //TODO Change Icon
+
+    public static boolean file_put_contents(String filename, String data) {
+        try {
+            FileWriter fstream = new FileWriter(filename, true);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write(data);
+            out.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return (true);
+    }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        //Check for Updates:
+        String path = Main.class.getResource("Main.class").toString();
+        System.out.println(path);
+        if (!(new File("PATH").exists())) {
+            file_put_contents("PATH", path);
+        }
+
+        if (path.contains("update.jar")) {
+            try {
+                Thread.sleep(1000); // Wait for old process to close
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            File jar = new File("SuperSecureChat.jar");
+            if (jar.exists()) {
+                if (jar.delete()) {
+                    System.out.println("SuperSecureChat.jar gelöscht");
+                    Files.copy(new File("update.jar").toPath(), jar.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    Runtime.getRuntime().exec("java -jar SuperSecureChat.jar");
+                } else {
+                    file_put_contents("ERROR.log", "SuperSecureChat.jar konnte nicht gelöscht werden.");
+                    System.out.println("SuperSecureChat.jar konnte nicht gelöscht werden.");
+                }
+
+            } else {
+                file_put_contents("ERROR.log", "SuperSecureChat.jar konnte nicht gefunden werden.");
+                System.out.println("SuperSecureChat.jar konnte nicht gefunden werden.");
+
+            }
+            System.exit(1);
+        } else {
+            File update = new File("update.jar");
+            if (update.exists()) {
+                if (update.delete()) {
+                    System.out.println("Update gelöscht");
+                } else {
+                    System.out.println("Update konnte nicht gelöscht werden");
+                }
+            }
+        }
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("SuperSecureChat");
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
@@ -34,17 +95,11 @@ public class Main extends Application {
                 getClass().getResource("/css/custom.css").toExternalForm(),
                 getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
                 getClass().getResource("/css/super-secure-chat.css").toExternalForm());
-
-        new Thread(() -> {
-            BackgroundService backgroundService = BackgroundService.getInstance();
-            backgroundService.run();
-        }).start();
         primaryStage.setScene(scene);
         primaryStage.show();
         Platform.setImplicitExit(false);
 
     }
-
 
     public static void main(String[] args) {
         launch(args);

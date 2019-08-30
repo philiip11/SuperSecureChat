@@ -66,8 +66,11 @@ public class ClassConnector {
 
             stage.setScene(scene);
             stage.show();
+            stage.requestFocus();
+            stage.toFront();
         } catch (Exception ignored) {
 
         }
     }
+
 }

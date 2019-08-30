@@ -19,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ChatController {
@@ -97,16 +98,16 @@ public class ChatController {
                 (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
                         message.getSender().getId().equals(me.getId()))) {
 
-            Message remove = null;
+            ArrayList<Message> remove = new ArrayList<>();
             for (Message m : messages) {
                 if (m.getId().equals(message.getId())) {
-                    remove = m;
-                    break;
+                    remove.add(m);
                 }
             }
-            Message finalRemove = remove;
             Platform.runLater(() -> {
-                messages.remove(finalRemove);
+                for (Message m : remove) {
+                    messages.remove(m);
+                }
                 messages.add(message);
                 updateListView();
             });
