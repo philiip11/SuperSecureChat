@@ -22,7 +22,7 @@ import java.nio.file.StandardCopyOption;
 
 public class Main extends Application {
 
-    public static final String VERSION = "v0.1.3";
+    public static final String VERSION = "v0.1.4";
 
     //TODO Change Icon
 

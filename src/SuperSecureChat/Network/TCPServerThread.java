@@ -106,7 +106,9 @@ public class TCPServerThread extends Thread {
                                 }
                             }
                             for (Message m : messages) {
-                                tcpClient.sendMessage(m);
+                                if (m.getReceived() == 0) {
+                                    tcpClient.sendMessage(m);
+                                }
                             }
                             tcpClient.sendText("CLOSETCP");
                             tcpClient.close();
