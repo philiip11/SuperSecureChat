@@ -2,8 +2,10 @@ package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Crypto.Crypto;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,9 +18,11 @@ public class SystemTrayIcon {
 
     private FXMLLoader Loader;
 
+
     public static final String PATH_TO_TRAY_ICON = "/icon2048.png";
 
     private TrayIcon trayIcon;
+
 
     public static void systemtraysupport() throws AWTException {
         if (SystemTray.isSupported()) {                                                     //frägt ab, ob SystemTray vom System unterstützt wird
@@ -34,6 +38,7 @@ public class SystemTrayIcon {
     public void displayTray() throws AWTException {
 
         //systemtraysupport();
+
         final PopupMenu popup = new PopupMenu();
 
         SystemTray tray = SystemTray.getSystemTray();
@@ -85,13 +90,10 @@ public class SystemTrayIcon {
             @Override
             public void actionPerformed(ActionEvent e) {
                 trayIcon.displayMessage("Starting Application", "loading assets", TrayIcon.MessageType.NONE);
-                trayIcon.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("Hi there!");
-                    }
-                });
-                setonStart();
+                //Application.launch();
+                //trayIcon.addActionListener(event -> Platform.runLater(this::showStage);
+
+                //setonStart();
             }
         });     //ActionListener zu ende  // Klammern *grrr*
 
