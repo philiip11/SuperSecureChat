@@ -100,7 +100,7 @@ public class TCPServerThread extends Thread {
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                            tcpClient.sendText("OPENTCP ");
+                            tcpClient.sendText("OPENTCPP");
                             tcpClient.sendText("TESTTEST");
                             for (Contact c : Database.getInstance().getContacts()) {
                                 if (!c.getId().equals(Contact.getMyContact().getId())) {
@@ -115,11 +115,13 @@ public class TCPServerThread extends Thread {
                             tcpClient.sendText("CLOSETCP");
                             tcpClient.close();
                             break;
-                        case "OPENTCP ":
+                        case "OPENTCPP":
                             loop = true;
+                            System.out.println("loop=true");
                             break;
                         case "CLOSETCP":
                             loop = false;
+                            System.out.println("loop=false");
                             break;
                         case "VERSION:":
                             System.out.println("Version " + json + " empfangen!");
