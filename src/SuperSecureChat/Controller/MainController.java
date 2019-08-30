@@ -106,7 +106,8 @@ public class MainController {
         Platform.runLater(this::close);
     }
 
-    private void checkForUpdate() {
+    public void checkForUpdate() {
+        System.out.println("Check for Update");
         HttpsURLConnection con = null;
         try {
             URL url = new URL("https://api.github.com/repos/philiip11/SuperSecureChat/releases");
@@ -114,6 +115,7 @@ public class MainController {
             con.setRequestMethod("GET");
             int status = con.getResponseCode();
             if (status == 200) {
+                System.out.println("Response from GitHub: 200 OK");
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String line;
                 StringBuilder content = new StringBuilder();
@@ -129,10 +131,12 @@ public class MainController {
 
                 if (!newVersion.equals(Main.VERSION)) {
                     System.out.println(newVersion + " != " + Main.VERSION);
-                    Platform.runLater(() -> {
-                        welcomeLabel.setText("Update wird heruntergeladen...");
-                        daytimeLabel.setText(newVersionName);
-                    });
+                    if (welcomeLabel != null) {
+                        Platform.runLater(() -> {
+                            welcomeLabel.setText("Update wird heruntergeladen...");
+                            daytimeLabel.setText(newVersionName);
+                        });
+                    }
                     JSONArray assets = (JSONArray) release.get("assets");
                     JSONObject asset;
                     String fileName;
@@ -143,8 +147,10 @@ public class MainController {
                         fileName = (String) asset.get("name");
                     } while (!fileName.equals("SuperSecureChat.jar"));
 
-                    Platform.runLater(() -> progress.setVisible(true));
-                    Platform.runLater(() -> spinner.setVisible(false));
+                    if (welcomeLabel != null) {
+                        Platform.runLater(() -> progress.setVisible(true));
+                        Platform.runLater(() -> spinner.setVisible(false));
+                    }
                     JSONObject finalAsset = asset;
                     try {
                         URL url1 = new URL((String) finalAsset.get("browser_download_url"));
@@ -159,7 +165,9 @@ public class MainController {
                         while ((x = in.read(data, 0, 1024)) >= 0) {
                             downloadedFileSize += x;
                             final double currentProgress = (double) downloadedFileSize / (double) completeFileSize;
-                            Platform.runLater(() -> progress.setProgress(currentProgress));
+                            if (progress != null) {
+                                Platform.runLater(() -> progress.setProgress(currentProgress));
+                            }
 
                             bout.write(data, 0, x);
                         }
@@ -167,7 +175,8 @@ public class MainController {
                         in.close();
                         Runtime.getRuntime().exec("java -jar update.jar");
                         System.exit(1);
-                    } catch (IOException ignored) {
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
 
@@ -207,20 +216,24 @@ public class MainController {
     }
 
 
-//TODO Begrüßung nach Tageszeit
+    //TODO Begrüßung nach Tageszeit
 
     public String gettimebycalendar() {
         Calendar calendar = Calendar.getInstance();
         int timeofday = calendar.get(Calendar.HOUR_OF_DAY);
 
-        if (timeofday < 12) {
-            return "Good Morning";
+        if (timeofday < 8) {
+            return "Guten Morgen Frühaufsteher ;-)";
+        } else if (timeofday < 11) {
+            return "Guten Morgen";
+        } else if (timeofday < 12) {
+            return "Mahlzeit!";
         } else if (timeofday < 16) {
-            return "Good Afternoon";
+            return "Guten Nachmittag";
         } else if (timeofday < 21) {
-            return "Good Evening";
+            return "Guten Abend";
         } else {
-            return "Good Night";
+            return "Gute Nacht";
         }
 
     }

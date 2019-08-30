@@ -3,8 +3,10 @@ package SuperSecureChat.Network;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
+import SuperSecureChat.Controller.MainController;
 import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
+import SuperSecureChat.Main;
 import SuperSecureChat.Message;
 
 import java.io.*;
@@ -119,6 +121,15 @@ public class TCPServerThread extends Thread {
                         case "CLOSETCP":
                             loop = false;
                             break;
+                        case "VERSION:":
+                            System.out.println("Version " + json + " empfangen!");
+                            if (versionNumber(json) > versionNumber(Main.VERSION)) {
+                                System.out.println("Neue Version, starte Update...");
+                                new MainController().checkForUpdate();
+                            }
+
+
+                            break;
                     }
 
                     //out.writeBytes(line + "\n\r");
@@ -133,6 +144,11 @@ public class TCPServerThread extends Thread {
                 return;
             }
         }
+    }
+
+    private int versionNumber(String version) {
+        String number = version.replace("v", "").replace(".", "");
+        return Integer.parseInt(number);
     }
 
     private void sendText(String text) {

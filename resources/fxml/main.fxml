@@ -7,7 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" alignment="center" hgap="10" vgap="10"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" alignment="center" hgap="10" minWidth="400.0" vgap="10"
           xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.MainController">
     <columnConstraints>
         <ColumnConstraints/>
@@ -19,7 +19,8 @@
         <RowConstraints/>
     </rowConstraints>
     <Label fx:id="welcomeLabel" style="-fx-font-size: 42px;" text="Willkommen!" GridPane.halignment="CENTER"/>
-    <Label fx:id="daytimeLabel" prefHeight="33.0" prefWidth="243.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+    <Label fx:id="daytimeLabel" prefHeight="33.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS"
+           GridPane.rowIndex="1">
         <font>
             <Font name="System Bold Italic" size="28.0"/>
         </font>
