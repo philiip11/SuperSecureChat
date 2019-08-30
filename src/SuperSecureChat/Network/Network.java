@@ -4,6 +4,7 @@ import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
+import SuperSecureChat.Main;
 import SuperSecureChat.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -92,6 +93,9 @@ public class Network {
             tcpClient.close();
             tcpClient = new TCPClient(ip, TCPServer.PORT);
             tcpClient.sendText("GETMYMM:" + me.getId()); //GetMyMessages
+            tcpClient.close();
+            tcpClient = new TCPClient(ip, TCPServer.PORT);
+            tcpClient.sendText("VERSION:" + Main.VERSION); //GetMyMessages
             tcpClient.close();
 
         }

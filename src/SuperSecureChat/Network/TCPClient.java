@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.time.Instant;
 import java.util.Scanner;
 
 public class TCPClient {
@@ -29,9 +28,6 @@ public class TCPClient {
 
         System.out.println("\r\nConnected to Server: " + client.socket.getInetAddress());
         new Thread(client::start).start();
-        client.sendMessage(new Message("1234", "", new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0),
-                new Contact("1234", "Philip", "Schneider", "169.254.162.72", Instant.now().getEpochSecond(), null, 0),
-                "Hallo, dies ist eine Testnachricht! :-)", null, "", Instant.now().getEpochSecond(), 0, 0));
     }
 
     private void start() {
@@ -39,6 +35,7 @@ public class TCPClient {
         while (true) {
             input = scanner.nextLine();
             sendText(input);
+            System.out.println(receiveText());
         }
     }
 

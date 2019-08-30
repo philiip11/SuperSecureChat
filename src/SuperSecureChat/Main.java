@@ -22,11 +22,11 @@ import java.nio.file.StandardCopyOption;
 
 public class Main extends Application {
 
-    public static final String VERSION = "v0.1.3";
+    public static final String VERSION = "v0.1.6";
 
     //TODO Change Icon
 
-    public static boolean file_put_contents(String filename, String data) {
+    private static boolean file_put_contents(String filename, String data) {
         try {
             FileWriter fstream = new FileWriter(filename, true);
             BufferedWriter out = new BufferedWriter(fstream);
@@ -58,18 +58,14 @@ public class Main extends Application {
             if (jar.exists()) {
                 if (jar.delete()) {
                     System.out.println("SuperSecureChat.jar gelöscht");
-                    Files.copy(new File("update.jar").toPath(), jar.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    Runtime.getRuntime().exec("java -jar SuperSecureChat.jar");
                 } else {
-                    file_put_contents("ERROR.log", "SuperSecureChat.jar konnte nicht gelöscht werden.");
                     System.out.println("SuperSecureChat.jar konnte nicht gelöscht werden.");
                 }
-
             } else {
-                file_put_contents("ERROR.log", "SuperSecureChat.jar konnte nicht gefunden werden.");
                 System.out.println("SuperSecureChat.jar konnte nicht gefunden werden.");
-
             }
+            Files.copy(new File("update.jar").toPath(), jar.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Runtime.getRuntime().exec("java -jar SuperSecureChat.jar");
             System.exit(1);
         } else {
             File update = new File("update.jar");
@@ -82,6 +78,11 @@ public class Main extends Application {
             }
         }
 
+        startMain(primaryStage);
+
+    }
+
+    private void startMain(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("SuperSecureChat");
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
@@ -98,10 +99,13 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         Platform.setImplicitExit(false);
-
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void start() {
+        launch();
     }
 }

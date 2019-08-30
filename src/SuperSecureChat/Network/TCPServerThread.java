@@ -3,8 +3,10 @@ package SuperSecureChat.Network;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
+import SuperSecureChat.Controller.MainController;
 import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
+import SuperSecureChat.Main;
 import SuperSecureChat.Message;
 
 import java.io.*;
@@ -98,7 +100,7 @@ public class TCPServerThread extends Thread {
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                            tcpClient.sendText("OPENTCP ");
+                            tcpClient.sendText("OPENTCPP");
                             tcpClient.sendText("TESTTEST");
                             for (Contact c : Database.getInstance().getContacts()) {
                                 if (!c.getId().equals(Contact.getMyContact().getId())) {
@@ -106,16 +108,29 @@ public class TCPServerThread extends Thread {
                                 }
                             }
                             for (Message m : messages) {
-                                tcpClient.sendMessage(m);
+                                if (m.getReceived() == 0) {
+                                    tcpClient.sendMessage(m);
+                                }
                             }
                             tcpClient.sendText("CLOSETCP");
                             tcpClient.close();
                             break;
-                        case "OPENTCP ":
+                        case "OPENTCPP":
                             loop = true;
+                            System.out.println("loop=true");
                             break;
                         case "CLOSETCP":
                             loop = false;
+                            System.out.println("loop=false");
+                            break;
+                        case "VERSION:":
+                            System.out.println("Version " + json + " empfangen!");
+                            if (versionNumber(json) > versionNumber(Main.VERSION)) {
+                                System.out.println("Neue Version, starte Update...");
+                                new MainController().checkForUpdate();
+                            }
+
+
                             break;
                     }
 
@@ -131,6 +146,11 @@ public class TCPServerThread extends Thread {
                 return;
             }
         }
+    }
+
+    private int versionNumber(String version) {
+        String number = version.replace("v", "").replace(".", "");
+        return Integer.parseInt(number);
     }
 
     private void sendText(String text) {
