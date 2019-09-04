@@ -8,15 +8,22 @@ import SuperSecureChat.Database;
 import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -39,6 +46,7 @@ public class ChatController {
     private Contact contact;
     private Contact me = Contact.getMyContact();
     private Database database = Database.getInstance();
+
 
     public void setContact(Contact contact) {
         this.contact = contact;
@@ -88,6 +96,44 @@ public class ChatController {
             buttonClick();
             txtMessage.clear();
         }
+    }
+
+
+    public void uploadPicture(MouseEvent mouseEvent) {   //TODO einbinden in den Chat
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chatPicture.fxml"));
+            Parent root = loader.load();
+            ChatPictureController chatPicture = loader.getController();
+            Stage stage = new Stage();
+            stage.setTitle("Share a picture");
+            //
+            chatPicture.setStage(stage);
+            chatPicture.setChatController(this);
+            openNewStage(root, stage, 500, 350);
+
+        } catch (Exception ignored) {
+
+        }
+
+    }
+
+    private void openNewStage(Parent root, Stage stage, int width, int height) {
+        JFXDecorator decorator = new JFXDecorator(stage, root);
+        decorator.setCustomMaximize(false);
+        ImageView imageView = new ImageView();  //TODO richtig so?
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
+        decorator.setGraphic(imageView);
+        Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
+        final ObservableList<String> stylesheets = scene.getStylesheets();
+        stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
+                getClass().getResource("/css/jfoenix-design.css").toExternalForm(),
+                getClass().getResource("/css/custom.css").toExternalForm(),
+                getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
+                getClass().getResource("/css/super-secure-chat.css").toExternalForm());
+
+        stage.setScene(scene);
+        stage.show();
     }
 
 
