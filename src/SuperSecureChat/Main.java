@@ -11,6 +11,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import mslinks.ShellLink;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -75,6 +76,13 @@ public class Main extends Application {
                 } else {
                     System.out.println("Update konnte nicht gelöscht werden");
                 }
+            }
+        }
+        String pathToInk = System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SuperSecureChat.lnk";
+        File shortcut = new File(pathToInk);
+        if (!shortcut.exists()) {
+            if (!path.contains("IdeaProjects")) {
+                ShellLink.createLink("SuperSecureChat.jar", pathToInk);
             }
         }
 
