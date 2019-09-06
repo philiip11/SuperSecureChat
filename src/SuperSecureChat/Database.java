@@ -10,9 +10,10 @@ import java.util.Base64;
 
 public class Database {
 
-    private static final Database INSTANCE = new Database();
-    private static final String DB_PATH = "testdb.db";
     private static final int DB_VERSION = 15;
+
+    private static final Database INSTANCE = new Database();
+    private final String DB_PATH = System.getenv("APPDATA") + "\\SuperSecureChat\\db.db";
     private Connection connection;
 
     static {
@@ -44,6 +45,7 @@ public class Database {
             if (connection != null)
                 return;
             System.out.println("Creating Connection to Database...");
+            System.out.println("DB_PATH = " + DB_PATH);
             connection = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
             if (!connection.isClosed())
                 System.out.println("...Connection established");

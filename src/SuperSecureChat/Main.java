@@ -13,17 +13,17 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import mslinks.ShellLink;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Properties;
 
 
 public class Main extends Application {
 
-    public static final String VERSION = "v0.1.6";
+    public static final String VERSION = "v0.1.8";
+
+    private static final String PATH_TO_LNK = System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SuperSecureChat.lnk";
 
     //TODO Change Icon
 
@@ -34,10 +34,30 @@ public class Main extends Application {
             out.write(data);
             out.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return (true);
+    }
+
+    static void enableAutostart() {
+        String path = Main.class.getResource("Main.class").toString();
+        File shortcut = new File(PATH_TO_LNK);
+        if (!shortcut.exists()) {
+            if (!path.contains("IdeaProjects")) {
+                try {
+                    ShellLink.createLink("SuperSecureChat.jar", PATH_TO_LNK);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    static void disableAutostart() {
+        File shortcut = new File(PATH_TO_LNK);
+        //noinspection ResultOfMethodCallIgnored
+        shortcut.delete();
+
     }
 
     @Override
@@ -45,10 +65,6 @@ public class Main extends Application {
         //Check for Updates:
         String path = Main.class.getResource("Main.class").toString();
         System.out.println(path);
-        if (!(new File("PATH").exists())) {
-            file_put_contents("PATH", path);
-        }
-
         if (path.contains("update.jar")) {
             try {
                 Thread.sleep(1000); // Wait for old process to close
@@ -78,12 +94,12 @@ public class Main extends Application {
                 }
             }
         }
-        String pathToInk = System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SuperSecureChat.lnk";
-        File shortcut = new File(pathToInk);
-        if (!shortcut.exists()) {
-            if (!path.contains("IdeaProjects")) {
-                ShellLink.createLink("SuperSecureChat.jar", pathToInk);
-            }
+        if (!new File("config.prop").exists()) {
+
+            enableAutostart();
+            Properties properties = new Properties();
+            properties.setProperty("autostart", "true");
+            properties.store(new FileOutputStream("config.prop"), null);
         }
 
         startMain(primaryStage);
@@ -113,7 +129,4 @@ public class Main extends Application {
         launch(args);
     }
 
-    public void start() {
-        launch();
-    }
 }

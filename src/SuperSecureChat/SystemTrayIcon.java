@@ -2,17 +2,20 @@ package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Crypto.Crypto;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 public class SystemTrayIcon {
 
@@ -50,15 +53,24 @@ public class SystemTrayIcon {
 
         // Creating some stuff --> still under construction
 
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("config.prop"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         MenuItem aboutItem = new MenuItem("Info");
-        Menu displayMenu = new Menu("Settings");
+        CheckboxMenuItem autostartItem = new CheckboxMenuItem("Autostart", properties.getProperty("autostart").equals("true"));
+        Menu settingsMenu = new Menu("Settings");
         MenuItem startapp = new MenuItem("start");
         MenuItem closeapp = new MenuItem("close");
 
         popup.add(startapp);
         popup.addSeparator();
-        popup.add(displayMenu);
-        displayMenu.add(aboutItem);
+        popup.add(settingsMenu);
+        settingsMenu.add(autostartItem);
+        settingsMenu.add(aboutItem);
         popup.addSeparator();
         popup.add(closeapp);
         trayIcon.setPopupMenu(popup);
@@ -81,8 +93,10 @@ public class SystemTrayIcon {
 
         closeapp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 //SystemTray.getSystemTray().remove(trayIcon);
-                System.exit(0);
+                Platform.exit();
+                System.exit(1);
             }
         });
 
@@ -97,6 +111,25 @@ public class SystemTrayIcon {
             }
         });     //ActionListener zu ende  // Klammern *grrr*
 
+
+        autostartItem.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                System.out.println("Autostart = " + autostartItem.getState());
+                if (autostartItem.getState()) {
+                    properties.setProperty("autostart", "true");
+                    Main.enableAutostart();
+                } else {
+                    properties.setProperty("autostart", "false");
+                    Main.disableAutostart();
+                }
+                try {
+                    properties.store(new FileOutputStream("config.prop"), null);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             tray.remove(trayIcon);
             System.out.println("Removed TrayIcon");

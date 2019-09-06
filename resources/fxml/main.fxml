@@ -4,9 +4,11 @@
 
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXSpinner?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" alignment="center" hgap="10" minWidth="400.0" vgap="10"
           xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.MainController">
     <columnConstraints>
@@ -26,6 +28,15 @@
         </font>
     </Label>
     <Label fx:id="usernameLabel" style="-fx-font-size: 42px;" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+    <Text fx:id="changelog" fill="WHITE" fontSmoothingType="LCD" visible="false" wrappingWidth="568.0"
+          GridPane.rowIndex="2">
+        <font>
+            <Font name="Consolas" size="18.0"/>
+        </font>
+        <GridPane.margin>
+            <Insets left="12.0" right="12.0"/>
+        </GridPane.margin>
+    </Text>
     <JFXProgressBar fx:id="progress" prefHeight="12.0" prefWidth="350.0" progress="0.0" visible="false"
                     GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
     <JFXSpinner fx:id="spinner" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>

@@ -3,6 +3,7 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.BackgroundService;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
+import SuperSecureChat.Database;
 import SuperSecureChat.Main;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXSpinner;
@@ -13,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,15 +28,15 @@ import java.util.Calendar;
 
 public class MainController {
 
-    // TODO Implement Chat
+    // DONE Implement Chat
 
-    // TODO Implement GUI via JavaFX
-    // TODO Find Users via TCP
-    // TODO Encrypt Messages
-    // TODO Send Messages via TCP to Every User
-    // TODO Filter Messages send to me
-    // TODO Save Messages in Database
-    // TODO Ping for Online-Status
+    // DONE Implement GUI via JavaFX
+    // DONE Find Users via UDP
+    // DONE Encrypt Messages
+    // DONE Send Messages via TCP to Every User
+    // DONE Filter Messages send to me
+    // DONE Save Messages in Database
+    // DONE Ping for Online-Status
     // TODO Status und Profilbild
     // TODO Windows-Notifications
     // TODO Add DataMessages
@@ -54,18 +56,15 @@ public class MainController {
     JFXProgressBar progress;
     @FXML
     JFXSpinner spinner;
-    //TODO Label einbinden und erstellen.
+    @FXML
+    Text changelog;
 
-    private String vorname;
-    private String nachname;
 
     public void initialize() {
-        //TODO Set KeyCombos
         daytimeLabel.setText(gettimebycalendar());
         GridPane.setHalignment(welcomeLabel, HPos.CENTER);
         GridPane.setHalignment(daytimeLabel, HPos.CENTER);
         GridPane.setHalignment(usernameLabel, HPos.CENTER);
-        //TODO good morning einbinden
 
         new Thread(this::init).start(); // Daten asynchron laden
     }
@@ -73,8 +72,8 @@ public class MainController {
     private void init() {
         String fullName = getFullName();
         String[] nameArr = fullName.split(",");
-        vorname = nameArr[1].trim();
-        nachname = nameArr[0].trim();
+        String vorname = nameArr[1].trim();
+        String nachname = nameArr[0].trim();
         Platform.runLater(() -> usernameLabel.setText(vorname));
         String username = new com.sun.security.auth.module.NTSystem().getName();
         Contact.setMyName(username, vorname, nachname);
@@ -96,9 +95,9 @@ public class MainController {
 
         checkForUpdate();
 
-
-        //TODO Datenbank laden
         new Thread(() -> {
+            //noinspection ResultOfMethodCallIgnored
+            Database.getInstance();
             BackgroundService backgroundService = BackgroundService.getInstance();
             backgroundService.run();
         }).start();
@@ -123,11 +122,10 @@ public class MainController {
                     content.append(line);
                 }
                 JSONArray jsonArray = (JSONArray) new JSONParser().parse(content.toString());
-
                 JSONObject release = (JSONObject) jsonArray.get(0);
-
                 String newVersion = (String) release.get("tag_name");
                 String newVersionName = (String) release.get("name");
+                String newVersionBody = (String) release.get("body");
 
                 if (!newVersion.equals(Main.VERSION)) {
                     System.out.println(newVersion + " != " + Main.VERSION);
@@ -135,6 +133,10 @@ public class MainController {
                         Platform.runLater(() -> {
                             welcomeLabel.setText("Update wird heruntergeladen...");
                             daytimeLabel.setText(newVersionName);
+                            changelog.setText(newVersionBody);
+                            usernameLabel.setVisible(false);
+                            changelog.setVisible(true);
+
                         });
                     }
                     JSONArray assets = (JSONArray) release.get("assets");
@@ -161,32 +163,25 @@ public class MainController {
                         BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
                         byte[] data = new byte[1024];
                         long downloadedFileSize = 0;
-                        int x = 0;
+                        int x;
                         while ((x = in.read(data, 0, 1024)) >= 0) {
                             downloadedFileSize += x;
                             final double currentProgress = (double) downloadedFileSize / (double) completeFileSize;
                             if (progress != null) {
                                 Platform.runLater(() -> progress.setProgress(currentProgress));
                             }
-
                             bout.write(data, 0, x);
                         }
                         bout.close();
                         in.close();
                         Runtime.getRuntime().exec("java -jar update.jar");
+                        Platform.exit();
                         System.exit(1);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-
-                    //FileUtils.copyURLToFile(new URL((String) asset.get("browser_download_url")), new File("update.jar"));
-
                 }
-
             }
-
-
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         } finally {
@@ -215,10 +210,7 @@ public class MainController {
         return new String(name).trim();
     }
 
-
-    //TODO Begrüßung nach Tageszeit
-
-    public String gettimebycalendar() {
+    private String gettimebycalendar() {
         Calendar calendar = Calendar.getInstance();
         int timeofday = calendar.get(Calendar.HOUR_OF_DAY);
 
