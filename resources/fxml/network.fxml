@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
+
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.*?>
-
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="SuperSecureChat.Controller.NetworkController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="1024.0" prefWidth="1280.0"
+            xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.NetworkController">
+   <children>
+      <Canvas fx:id="canvas" height="1024.0" layoutX="6.0" layoutY="14.0" width="1280.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+   </children>
 </AnchorPane>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
@@ -15,5 +17,16 @@
                   AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
        <Label fx:id="nameLabel" layoutX="147.0" layoutY="66.0" styleClass="contactsViewOwnName" text="Name"
               AnchorPane.leftAnchor="147.0"/>
+       <JFXButton fx:id="network" contentDisplay="GRAPHIC_ONLY" layoutX="534.0" layoutY="14.0" minHeight="60.0"
+                  minWidth="60.0" mnemonicParsing="false" onAction="#openNetworkStage" styleClass="network-button"
+                  text="🖧" textFill="WHITE" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="12.0">
+           <graphic>
+               <ImageView fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
+                   <image>
+                       <Image url="@../icons/round_import_export_white_48dp.png"/>
+                   </image>
+               </ImageView>
+           </graphic>
+       </JFXButton>
    </children>
 </AnchorPane>

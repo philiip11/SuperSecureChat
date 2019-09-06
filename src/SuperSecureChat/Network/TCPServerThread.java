@@ -111,6 +111,7 @@ public class TCPServerThread extends Thread {
                             }
                             for (Message m : messages) {
                                 tcpClient.sendMessage(m);
+                                ClassConnector.getInstance().sendMessageToNetworkMap(m);
                             }
                             tcpClient.sendText("CLOSETCP");
                             tcpClient.close();

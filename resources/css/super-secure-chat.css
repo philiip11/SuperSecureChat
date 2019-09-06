@@ -72,6 +72,17 @@ JFXListView {
     -fx-background-color: #bbbbbb;
 }
 
+.network-button {
+    -fx-pref-width: 60px;
+    -fx-background-color: #0d47a1;
+    -fx-background-radius: 60px;
+    -fx-pref-height: 60px;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -jfx-button-type: RAISED;
+}
 
 
 

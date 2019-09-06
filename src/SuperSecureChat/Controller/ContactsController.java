@@ -10,12 +10,15 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.Timer;
@@ -104,11 +107,33 @@ public class ContactsController {
             Stage stage = new Stage();
             stage.setTitle(contact.getName());
             stage.getIcons().add(contact.getJavaFXImage());
-            openNewStage(root, stage, width, height, contact);
+            openNewStage(root, stage, width, height, contact.getJavaFXImage());
         } catch (Exception ignored) {
 
         }
 
+    }
+
+    public void openNetworkStage() {
+        int width = 1280;
+        int height = 1024;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/network.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Netzwerk");
+            Image image = new Image(getClass().getResourceAsStream("/icons/round_import_export_white_48dp.png"));
+            stage.getIcons().add(image);
+            if (Screen.getScreens().size() > 1) {
+                Rectangle2D bounds = Screen.getScreens().get(1).getVisualBounds();
+                stage.setX(bounds.getMinX() + (bounds.getWidth() - width) / 2);
+                stage.setY(0);
+            }
+
+            openNewStage(root, stage, width, height, image);
+        } catch (Exception ignored) {
+
+        }
     }
 
 
@@ -126,16 +151,16 @@ public class ContactsController {
             stage.getIcons().add(Contact.getMyContact().getJavaFXImage());
             profilePicture.setStage(stage);
             profilePicture.setContactsController(this);
-            openNewStage(root, stage, 500, 350, Contact.getMyContact());
+            openNewStage(root, stage, 500, 350, Contact.getMyContact().getJavaFXImage());
         } catch (Exception ignored) {
 
         }
     }
 
-    private void openNewStage(Parent root, Stage stage, int width, int height, Contact contact) {
+    private void openNewStage(Parent root, Stage stage, int width, int height, Image image) {
         JFXDecorator decorator = new JFXDecorator(stage, root);
         decorator.setCustomMaximize(false);
-        ImageView imageView = new ImageView(contact.getJavaFXImage());
+        ImageView imageView = new ImageView(image);
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         decorator.setGraphic(imageView);

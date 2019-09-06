@@ -1,6 +1,7 @@
 package SuperSecureChat;
 
 import SuperSecureChat.Controller.ChatController;
+import SuperSecureChat.Controller.NetworkController;
 import com.jfoenix.controls.JFXDecorator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ public class ClassConnector {
     private static final ClassConnector INSTANCE = new ClassConnector();
     private ObservableList<ChatController> chatControllers = FXCollections.observableArrayList();
     private SystemTrayIcon systemTrayIcon;
+    private NetworkController networkController;
 
     public static ClassConnector getInstance() {
         return INSTANCE;
@@ -27,6 +29,15 @@ public class ClassConnector {
         chatControllers.add(chatController);
     }
 
+    public void addNetworkController(NetworkController networkController) {
+        this.networkController = networkController;
+    }
+
+    void addSystemTrayIcon(SystemTrayIcon systemTrayIcon) {
+        this.systemTrayIcon = systemTrayIcon;
+
+    }
+
     public void sendMessageToAllChatControllers(Message message, boolean notification) {
         for (ChatController chatController : chatControllers) {
             chatController.newMessage(message);
@@ -34,12 +45,15 @@ public class ClassConnector {
         if (notification) {
             systemTrayIcon.showMessage(message);
         }
+        sendMessageToNetworkMap(message);
     }
 
-    public void addSystemTrayIcon(SystemTrayIcon systemTrayIcon) {
-        this.systemTrayIcon = systemTrayIcon;
-
+    public void sendMessageToNetworkMap(Message message) {
+        if (networkController != null) {
+            networkController.newMessage(message);
+        }
     }
+
 
     public void openContacts() {
         int width = 400;

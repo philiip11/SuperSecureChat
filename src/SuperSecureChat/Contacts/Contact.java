@@ -119,6 +119,9 @@ public class Contact {
     }
 
     public long getLastOnline() {
+        if (id.equals(getMyContact().getId())) {
+            return Instant.now().getEpochSecond();
+        }
         return lastOnline;
     }
 
