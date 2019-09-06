@@ -68,7 +68,10 @@ public class TCPClient {
     }
 
     void sendMessage(Message message) {
-        sendText("MESSAGE:" + message.toJSONString());
+        String json = message.toJSONString();
+        if (json != null) {
+            sendText("MESSAGE:" + json);
+        }
     }
 
     void sendContact(Contact contact) {

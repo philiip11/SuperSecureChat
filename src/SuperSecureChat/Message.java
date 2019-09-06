@@ -81,18 +81,23 @@ public class Message {
 
     @SuppressWarnings({"unchecked", "WeakerAccess"})
     public JSONObject toJSON() {
-        JSONObject jsonMessage = new JSONObject();
-        jsonMessage.put("id", id);
-        jsonMessage.put("referenceID", referenceId);
-        jsonMessage.put("sender", sender.toJSON());
-        jsonMessage.put("receiver", receiver.toJSON());
-        jsonMessage.put("text", text);
-        jsonMessage.put("data", data);
-        jsonMessage.put("trace", trace);
-        jsonMessage.put("created", created);
-        jsonMessage.put("read", read);
-        jsonMessage.put("received", received);
-        return jsonMessage;
+        try {
+            JSONObject jsonMessage = new JSONObject();
+            jsonMessage.put("id", id);
+            jsonMessage.put("referenceID", referenceId);
+            jsonMessage.put("sender", sender.toJSON());
+            jsonMessage.put("receiver", receiver.toJSON());
+            jsonMessage.put("text", text);
+            jsonMessage.put("data", data);
+            jsonMessage.put("trace", trace);
+            jsonMessage.put("created", created);
+            jsonMessage.put("read", read);
+            jsonMessage.put("received", received);
+            return jsonMessage;
+        } catch (NullPointerException e) {
+            System.out.println("NullPointer bei Nachricht " + id);
+            return null;
+        }
     }
 
     public String getId() {
