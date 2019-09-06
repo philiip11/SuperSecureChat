@@ -99,7 +99,8 @@ public class TCPServerThread extends Thread {
                             break;
                         case "GETMYMM:"://GETMessagesWithID
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
-                            ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
+                            //ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
+                            ArrayList<Message> messages = Database.getInstance().getMessagesWithIdNotInTrace(json);
                             TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             tcpClient.sendText("OPENTCPP");
                             tcpClient.sendText("TESTTEST");
@@ -109,9 +110,7 @@ public class TCPServerThread extends Thread {
                                 }
                             }
                             for (Message m : messages) {
-                                if (m.getReceived() == 0) {
-                                    tcpClient.sendMessage(m);
-                                }
+                                tcpClient.sendMessage(m);
                             }
                             tcpClient.sendText("CLOSETCP");
                             tcpClient.close();
@@ -126,7 +125,7 @@ public class TCPServerThread extends Thread {
                             break;
                         case "VERSION:":
                             System.out.println("Version " + json + " empfangen!");
-                            if (versionNumber(json) > versionNumber(Main.VERSION)) {
+                            if (!json.equals(Main.VERSION)) {
                                 System.out.println("Neue Version, starte Update...");
                                 new Thread(() -> {
                                     Platform.runLater(() -> {

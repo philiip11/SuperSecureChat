@@ -3,6 +3,7 @@ package SuperSecureChat;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Network.Network;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,6 +45,13 @@ public class Database {
         try {
             if (connection != null)
                 return;
+
+            File oldDB = new File("testdb.db");
+            File newDB = new File(DB_PATH);
+            if (!newDB.exists() && oldDB.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                oldDB.renameTo(newDB);
+            }
             System.out.println("Creating Connection to Database...");
             System.out.println("DB_PATH = " + DB_PATH);
             connection = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
@@ -258,6 +266,20 @@ public class Database {
         }
         return result;
     }
+
+    public ArrayList<Message> getMessagesWithIdNotInTrace(String id) {
+        ArrayList<Message> result = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE trace NOT LIKE ?");
+            ps.setString(1, "%Received by" + id + "%");
+            parseMessages(result, ps);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
     private void parseMessages(ArrayList<Message> result, PreparedStatement ps) throws SQLException {
         ResultSet resultSet = ps.executeQuery();
