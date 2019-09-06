@@ -2,8 +2,6 @@ package SuperSecureChat;
 
 import SuperSecureChat.Network.Network;
 
-import java.awt.*;
-
 public class BackgroundService implements Runnable {
 
 
@@ -13,29 +11,19 @@ public class BackgroundService implements Runnable {
         return INSTANCE;
     }
 
+    private boolean running = false;
+
     @Override
     public void run() {
-        starttogetTime();
-        startSystemTray();
-        Network network = Network.getInstance();
-        network.initUDP();
-
-
-    }
-
-    private void startSystemTray() {
-        SystemTrayIcon systemTrayIcon = new SystemTrayIcon();
-        try {
-            systemTrayIcon.displayTray();                                 //Displays the message in the notificaton corner
-        } catch (AWTException e) {
-            e.printStackTrace();
+        if (!running) {
+            new SystemTrayIcon().displayTray();
+            Network network = Network.getInstance();
+            network.initUDP();
+            running = true;
         }
-    }
-
-    private void starttogetTime() {
-        GreetingsAfterTime greetingsAfterTime = new GreetingsAfterTime();
 
     }
+
 
 
 }

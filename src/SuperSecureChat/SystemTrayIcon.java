@@ -2,14 +2,13 @@ package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Crypto.Crypto;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.FileInputStream;
@@ -26,19 +25,7 @@ public class SystemTrayIcon {
 
     private TrayIcon trayIcon;
 
-
-    public static void systemtraysupport() throws AWTException {
-        if (SystemTray.isSupported()) {                                                     //frägt ab, ob SystemTray vom System unterstützt wird
-            SystemTrayIcon sti = new SystemTrayIcon();
-            sti.displayTray();
-        } else {
-            System.err.println("System tray is not supported on the current system!");      //ansonsten wirft es eine exception
-            Platform.exit();
-        }
-    }
-
-
-    public void displayTray() throws AWTException {
+    public void displayTray() {
 
         //systemtraysupport();
 
@@ -48,8 +35,12 @@ public class SystemTrayIcon {
 
         trayIcon = new TrayIcon(getTrayIcon(), "SuperSecureChat");                                 //symbol und text in der Windows Taskbar Status Area
         trayIcon.setImageAutoSize(true);
-        tray.add(trayIcon);                                                                                          //displays the icon + notification
-        trayIcon.displayMessage("SuperSecureChat", "application started", TrayIcon.MessageType.NONE); //popup text in the sidebar (on the right)
+        try {
+            tray.add(trayIcon);                                                                                          //displays the icon + notification
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        //trayIcon.displayMessage("SuperSecureChat", "application started", TrayIcon.MessageType.NONE); //popup text in the sidebar (on the right)
 
         // Creating some stuff --> still under construction
 
@@ -76,39 +67,34 @@ public class SystemTrayIcon {
         trayIcon.setPopupMenu(popup);
 
 
-        trayIcon.addActionListener(new ActionListener() {               //TODO soll Anwendung maximieren //doppelclick *thinking*
-            public void actionPerformed(ActionEvent e) {
-                ClassConnector.getInstance().openContacts(); //TODO Funktioniert so leider nicht, hat jemand eine bessere Idee? :-)
-                JOptionPane.showMessageDialog(null,
-                        "[Open Application] Hopefully coming soon");
+        //TODO soll Anwendung maximieren //doppelclick *thinking*
+        trayIcon.addActionListener(e -> {
+            ClassConnector.getInstance().openContacts(); //TODO Funktioniert so leider nicht, hat jemand eine bessere Idee? :-)
+            JOptionPane.showMessageDialog(null,
+                    "[Open Application] Hopefully coming soon");
 
-            }
         });
-        aboutItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,
-                        "Creators of the JavaFX application SuperSecureChat");
-            }
-        });
+        aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(null,
+                "Creators of the JavaFX application SuperSecureChat"));
 
-        closeapp.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        closeapp.addActionListener(e -> {
 
-                //SystemTray.getSystemTray().remove(trayIcon);
+            //SystemTray.getSystemTray().remove(trayIcon);
+            Platform.runLater(() -> {
+                com.sun.javafx.application.PlatformImpl.tkExit();
                 Platform.exit();
                 System.exit(1);
-            }
+            });
         });
 
-        startapp.addActionListener(new ActionListener() {       //TODO soll Anwendung starten *thinking*
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                trayIcon.displayMessage("Starting Application", "loading assets", TrayIcon.MessageType.NONE);
-                //Application.launch();
-                //trayIcon.addActionListener(event -> Platform.runLater(this::showStage);
+        //TODO soll Anwendung starten *thinking*
+        startapp.addActionListener(e -> {
 
-                //setonStart();
-            }
+            Platform.exit();
+            Application.launch();
+            //trayIcon.addActionListener(event -> Platform.runLater(this::showStage);
+
+            //setonStart();
         });     //ActionListener zu ende  // Klammern *grrr*
 
 

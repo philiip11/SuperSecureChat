@@ -21,7 +21,7 @@ import java.util.Properties;
 
 public class Main extends Application {
 
-    public static final String VERSION = "v0.1.8";
+    public static final String VERSION = "v0.1.7";
 
     private static final String PATH_TO_LNK = System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SuperSecureChat.lnk";
 
@@ -57,7 +57,6 @@ public class Main extends Application {
         File shortcut = new File(PATH_TO_LNK);
         //noinspection ResultOfMethodCallIgnored
         shortcut.delete();
-
     }
 
     @Override
@@ -106,27 +105,32 @@ public class Main extends Application {
 
     }
 
-    private void startMain(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
-        primaryStage.setTitle("SuperSecureChat");
-        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon2048.png")));
-        JFXDecorator decorator = new JFXDecorator(primaryStage, root);
-        decorator.setCustomMaximize(false);
-        decorator.setGraphic(new ImageView(this.getClass().getResource("/icon16.png").toExternalForm()));
-        Scene scene = new Scene(decorator, 600, 800, true, SceneAntialiasing.BALANCED);
-        final ObservableList<String> stylesheets = scene.getStylesheets();
-        stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
-                getClass().getResource("/css/jfoenix-design.css").toExternalForm(),
-                getClass().getResource("/css/custom.css").toExternalForm(),
-                getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
-                getClass().getResource("/css/super-secure-chat.css").toExternalForm());
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        Platform.setImplicitExit(false);
+    public static void startMain(Stage primaryStage) {
+        try {
+            Parent root = FXMLLoader.load(Main.class.getResource("/fxml/main.fxml"));
+            primaryStage.setTitle("SuperSecureChat");
+            primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon2048.png")));
+            JFXDecorator decorator = new JFXDecorator(primaryStage, root);
+            decorator.setCustomMaximize(false);
+            decorator.setGraphic(new ImageView(Main.class.getResource("/icon16.png").toExternalForm()));
+            Scene scene = new Scene(decorator, 600, 800, true, SceneAntialiasing.BALANCED);
+            final ObservableList<String> stylesheets = scene.getStylesheets();
+            stylesheets.addAll(Main.class.getResource("/css/jfoenix-fonts.css").toExternalForm(),
+                    Main.class.getResource("/css/jfoenix-design.css").toExternalForm(),
+                    Main.class.getResource("/css/custom.css").toExternalForm(),
+                    Main.class.getResource("/css/jfoenix-main-demo.css").toExternalForm(),
+                    Main.class.getResource("/css/super-secure-chat.css").toExternalForm());
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            Platform.setImplicitExit(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
 
 }

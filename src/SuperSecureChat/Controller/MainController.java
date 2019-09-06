@@ -175,8 +175,11 @@ public class MainController {
                         bout.close();
                         in.close();
                         Runtime.getRuntime().exec("java -jar update.jar");
-                        Platform.exit();
-                        System.exit(1);
+                        Platform.runLater(() -> {
+                            com.sun.javafx.application.PlatformImpl.tkExit();
+                            Platform.exit();
+                            System.exit(1);
+                        });
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
