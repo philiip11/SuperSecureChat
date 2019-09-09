@@ -40,17 +40,22 @@ public class Message {
         Message message = new Message();
         try {
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            message.setId(jsonObject.get("id").toString());
-            message.setReferencId(jsonObject.get("referenceID").toString());
-            message.setSender(Contact.fromJSON(jsonObject.get("sender").toString()));
-            message.setReceiver(Contact.fromJSON(jsonObject.get("receiver").toString()));
-            message.setText(jsonObject.get("text").toString());
-            message.setData(jsonObject.get("data").toString());
-            message.setTrace(jsonObject.get("trace").toString());
-            message.setCreated((long) jsonObject.get("created"));
-            message.setRead((long) jsonObject.get("read"));
-            message.setReceived((long) jsonObject.get("received"));
-            message.setId(jsonObject.get("id").toString());
+            try {
+                message.setId(jsonObject.get("id").toString());
+                message.setReferencId(jsonObject.get("referenceID").toString());
+                message.setSender(Contact.fromJSON(jsonObject.get("sender").toString()));
+                message.setReceiver(Contact.fromJSON(jsonObject.get("receiver").toString()));
+                message.setText(jsonObject.get("text").toString());
+                message.setData(jsonObject.get("data").toString());
+                message.setTrace(jsonObject.get("trace").toString());
+                message.setCreated((long) jsonObject.get("created"));
+                message.setRead((long) jsonObject.get("read"));
+                message.setReceived((long) jsonObject.get("received"));
+                message.setId(jsonObject.get("id").toString());
+
+            } catch (NullPointerException e) {
+                System.out.println("NullPointerException bei Nachricht " + jsonObject.get("id").toString());
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }

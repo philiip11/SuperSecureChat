@@ -100,7 +100,10 @@ public class Network {
             otherIPs.add(ip);
             System.out.println("Neue IP: " + ip);
             TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
+            tcpClient.sendText("VERSION:" + Main.VERSION); //GetMyMessages
+            tcpClient.close();
             Contact me = Contact.getMyContact();
+            tcpClient = new TCPClient(ip, TCPServer.PORT);
             tcpClient.sendContact(me);
             tcpClient.close();
             tcpClient = new TCPClient(ip, TCPServer.PORT);
@@ -108,9 +111,6 @@ public class Network {
             tcpClient.close();
             tcpClient = new TCPClient(ip, TCPServer.PORT);
             tcpClient.sendText("GETMYMM:" + me.getId()); //GetMyMessages
-            tcpClient.close();
-            tcpClient = new TCPClient(ip, TCPServer.PORT);
-            tcpClient.sendText("VERSION:" + Main.VERSION); //GetMyMessages
             tcpClient.close();
 
         }

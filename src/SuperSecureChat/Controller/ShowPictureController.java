@@ -33,6 +33,17 @@ public class ShowPictureController {
 
     }
 
+    public void showPicture(Image image, double width, double height) {
+        Platform.runLater(() -> {
+            picture.setImage(image);
+            anchorPane.setPrefWidth(width);
+            anchorPane.setPrefHeight(height);
+            picture.setFitWidth(width);
+            picture.setFitHeight(height);
+        });
+
+    }
+
     public void close() {
         stage.close();
 

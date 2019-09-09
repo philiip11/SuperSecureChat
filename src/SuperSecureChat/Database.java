@@ -271,7 +271,7 @@ public class Database {
         ArrayList<Message> result = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE trace NOT LIKE ?");
-            ps.setString(1, "%Received by" + id + "%");
+            ps.setString(1, "%" + id + "%");
             parseMessages(result, ps);
 
         } catch (SQLException e) {

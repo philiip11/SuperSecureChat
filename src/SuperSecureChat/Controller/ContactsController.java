@@ -99,10 +99,11 @@ public class ContactsController {
         int height = 800;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
+            Stage stage = new Stage();
             Parent root = loader.load();
             ChatController chatController = loader.getController();
             chatController.setContact(contact);
-            Stage stage = new Stage();
+            chatController.setStage(stage);
             stage.setTitle(contact.getName());
             stage.getIcons().add(contact.getJavaFXImage());
             openNewStage(root, stage, width, height, contact.getJavaFXImage());

@@ -106,7 +106,7 @@ public class TCPServerThread extends Thread {
                             ClassConnector.getInstance().sendContactToNetworkMap(Contact.getMyContact(), mFromMe);
                             break;
                         case "KEYEXCH:"://CT
-                            NetworkIconMessage networkIconMessage = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), mToMe);
+                            NetworkIconMessage networkIconMessage = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), mToMe);
                             System.out.println("Schlüsselaustausch...");
                             crypto.generateKeys();
                             crypto.receivePublicKey(Base64.getDecoder().decode(json));
@@ -114,7 +114,7 @@ public class TCPServerThread extends Thread {
                             crypto.generateCommonSecretKey();
                             Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ip), crypto.getSecretKey());
                             crypto.getSecretKey();
-                            networkIconMessage.addResponse(new NetworkIconMessage(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), me, notMe));
+                            networkIconMessage.addResponse(new NetworkIconMessage(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), me, notMe));
                             break;
                         case "GETMYMM:"://GETMessagesWithID
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");

@@ -14,6 +14,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,15 +24,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 
 public class ChatController {
 
-
+    @FXML
+    JFXButton sendFile;
     @FXML
     JFXListView<Message> messagesListView;
     @FXML
@@ -41,11 +48,17 @@ public class ChatController {
 
     private Network network = Network.getInstance();
     private ObservableList<Message> messages = FXCollections.observableArrayList();
-
+    private Stage stage;
+    private String data = "";
 
     private Contact contact;
     private Contact me = Contact.getMyContact();
     private Database database = Database.getInstance();
+    private String dataName = null;
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
 
     public void setContact(Contact contact) {
@@ -54,18 +67,26 @@ public class ChatController {
         Platform.runLater(this::updateListView);
     }
 
+
     public void initialize() {
         ClassConnector.getInstance().addChatController(this);
         //Code
     }
 
     public void buttonClick() {
-        if (txtMessage.getText() == null || txtMessage.getText().equals("")) {
+        if ((txtMessage.getText() == null || txtMessage.getText().equals("")) && dataName == null) {
             return;
         }
+        String text = txtMessage.getText();
+        if (dataName != null) {
+            text = dataName;
+        } else {
+            txtMessage.clear();
+        }
 
-        Message message = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, txtMessage.getText(), "", "", Instant.now().getEpochSecond(), 0, 0);
-
+        Message message = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, text, data, "", Instant.now().getEpochSecond(), 0, 0);
+        data = "";
+        dataName = null;
         Crypto crypto = new Crypto();
         crypto.setSecretKey(Database.getInstance().getSecretKeyByContact(message.getReceiver()));
         message.setText(crypto.encrypt(message.getText()));
@@ -74,7 +95,6 @@ public class ChatController {
         updateListView();
         Database.getInstance().newMessage(message);
 
-        txtMessage.clear();
 
     }
 
@@ -159,5 +179,23 @@ public class ChatController {
             });
         }
         //}
+    }
+
+    public void sendFile(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(stage);
+        if (file == null) {
+            return;
+        }
+
+        dataName = file.getName();
+        try {
+            data = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+            buttonClick();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

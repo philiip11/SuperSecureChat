@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static java.lang.Math.*;
@@ -36,7 +37,8 @@ public class NetworkController {
     private int animator = 0;
     private ContactList contactList = ContactList.getInstance();
     private ArrayList<NetworkContact> networkContactList = new ArrayList<>();
-    private final CopyOnWriteArrayList<NetworkMessage> networkMessages = new CopyOnWriteArrayList<>();
+    private final Stack<NetworkMessage> networkMessages = new Stack<>();
+    private final CopyOnWriteArrayList<NetworkMessage> drawingMessages = new CopyOnWriteArrayList<>();
 
     @FXML
     public void initialize() {
@@ -73,14 +75,19 @@ public class NetworkController {
             contact.draw(gc, animator);
         }
         int i = 0;
-        for (NetworkMessage message : networkMessages) {
+        for (NetworkMessage message : drawingMessages) {
             i++;
-            if (i < 25) {
+            if (i < 50) {
                 message.draw(gc);
             }
 
         }
-        networkMessages.removeIf(NetworkMessage::getDelete);
+        drawingMessages.removeIf(NetworkMessage::getDelete);
+        if (animator % 5 == 0) {
+            if (!networkMessages.empty()) {
+                drawingMessages.add(networkMessages.pop());
+            }
+        }
     }
 
 
