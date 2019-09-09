@@ -196,6 +196,11 @@ public class Network {
         }).start();
     }
 
+    void clearCache() {
+        relayedMessages.clear();
+        relayedContacts.clear();
+    }
+
 
     // TODO Methode, der man eine Adresse übergibt und die dann prüft, ob die Adresse via Ping erreichbar ist
 

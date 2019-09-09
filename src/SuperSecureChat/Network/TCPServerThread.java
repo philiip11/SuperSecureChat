@@ -118,6 +118,7 @@ public class TCPServerThread extends Thread {
                             break;
                         case "GETMYMM:"://GETMessagesWithID
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
+                            Network.getInstance().clearCache();
                             //ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithIdNotInTrace(json);
                             for (Contact c : Database.getInstance().getContacts()) {
