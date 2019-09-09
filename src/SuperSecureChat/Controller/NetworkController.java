@@ -57,6 +57,7 @@ public class NetworkController {
         ClassConnector.getInstance().addNetworkController(this);
     }
 
+
     private void addContact(int size, double i, Contact contact) {
         double x = CENTER_X + sin((i / (double) size) * PI * 2) * RADIUS;
         double y = CENTER_Y + cos((i / (double) size) * PI * 2) * RADIUS;
@@ -68,15 +69,18 @@ public class NetworkController {
         animator = animator % ANIMATION_LOOP;
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, WIDTH, HEIGHT);
-        synchronized (networkMessages) {
-            for (NetworkContact contact : networkContactList) {
-                contact.draw(gc, animator);
-            }
-            for (NetworkMessage message : networkMessages) {
+        for (NetworkContact contact : networkContactList) {
+            contact.draw(gc, animator);
+        }
+        int i = 0;
+        for (NetworkMessage message : networkMessages) {
+            i++;
+            if (i < 25) {
                 message.draw(gc);
             }
-            networkMessages.removeIf(NetworkMessage::getDelete);
+
         }
+        networkMessages.removeIf(NetworkMessage::getDelete);
     }
 
 

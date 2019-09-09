@@ -68,7 +68,12 @@ public class TCPClient {
     }
 
     void sendMessage(Message message) {
+        sendMessage(message, false);
+    }
+
+    void sendMessage(Message message, boolean relay) {
         String json = message.toJSONString();
+        String command = relay ? "MESSAGR:" : "MESSAGE:";
         if (json != null) {
             sendText("MESSAGE:" + json);
         }

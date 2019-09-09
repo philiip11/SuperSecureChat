@@ -68,6 +68,8 @@ public class TCPServerThread extends Thread {
                     NetworkContact me = networkController.getNetworkContactByContact(Contact.getMyContact());
                     boolean relay = false;
                     switch (command) {
+                        case "MESSAGR:":
+                            relay = true;
                         case "MESSAGE:":
                             Message message = Message.fromJSON(json);
                             message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond() + "; ");
@@ -76,7 +78,7 @@ public class TCPServerThread extends Thread {
                                     message.setReceived(Instant.now().getEpochSecond());
                                 }
                             }
-                            ClassConnector.getInstance().sendMessageToAllChatControllers(message, !loop);
+                            ClassConnector.getInstance().sendMessageToAllChatControllers(message, !relay);
                             NetworkMessage networkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
                             Database.getInstance().newMessage(message);
                             Network.getInstance().relayMessage(message, networkMessage);
@@ -129,9 +131,9 @@ public class TCPServerThread extends Thread {
                             }
                             for (Message mmmm : messages) {
                                 TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                                tcpClient.sendMessage(mmmm);
+                                tcpClient.sendMessage(mmmm, true);
                                 tcpClient.close();
-                                Thread.sleep(100);
+                                Thread.sleep(50);
                                 ClassConnector.getInstance().sendMessageToNetworkMap(mmmm, mFromMe);
                             }
                             break;
