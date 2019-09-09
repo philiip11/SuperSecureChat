@@ -3,6 +3,9 @@ package SuperSecureChat;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Controller.ChatController;
 import SuperSecureChat.Controller.NetworkController;
+import SuperSecureChat.NetworkMap.NetworkContactMessage;
+import SuperSecureChat.NetworkMap.NetworkIconMessage;
+import SuperSecureChat.NetworkMap.NetworkMessage;
 import com.jfoenix.controls.JFXDecorator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +24,11 @@ public class ClassConnector {
     private static final ClassConnector INSTANCE = new ClassConnector();
     private ObservableList<ChatController> chatControllers = FXCollections.observableArrayList();
     private SystemTrayIcon systemTrayIcon;
+
+    public NetworkController getNetworkController() {
+        return networkController;
+    }
+
     private NetworkController networkController;
 
     public static ClassConnector getInstance() {
@@ -49,24 +57,35 @@ public class ClassConnector {
         }
     }
 
-    public void sendMessageToNetworkMap(Message message, Message m) {
+    public NetworkMessage sendMessageToNetworkMap(Message message, Message m) {
         if (networkController != null) {
-            networkController.newMessage(message, m);
+            return networkController.newMessage(message, m);
         }
+        return null;
     }
 
-    public void sendContactToNetworkMap(Contact contact, Message message) {
+    public NetworkContactMessage sendContactToNetworkMap(Contact contact, Message message) {
         if (networkController != null) {
-            networkController.newContact(contact, message);
+            return networkController.newContact(contact, message);
         }
+        return null;
     }
 
-    public void sendIconMessageToNetworkMap(Image image, Message message) {
+    public NetworkIconMessage sendIconMessageToNetworkMap(Image image, Message message) {
         if (networkController != null) {
-            networkController.newIconMessage(image, message);
+            return networkController.newIconMessage(image, message);
         }
 
+        return null;
     }
+
+    public NetworkMessage sendNetworkMessageToNetworkMap(NetworkMessage message) {
+        if (networkController != null) {
+            return networkController.newNetworkMessage(message);
+        }
+        return message;
+    }
+
     public void openContacts() {
         int width = 400;
         int height = 800;

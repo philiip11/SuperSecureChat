@@ -25,7 +25,7 @@ public class NetworkController {
 
     //TODO Respone Message after 1st Message
 
-    public final static int ANIMATION_LOOP = 60;
+    public final static int ANIMATION_LOOP = 120;
     private final int RADIUS = 360;
     private final int WIDTH = 1280;
     private final int HEIGHT = 1024;
@@ -80,11 +80,13 @@ public class NetworkController {
     }
 
 
-    public void newMessage(Message message, Message m) {
-        networkMessages.add(new NetworkMessage(message.getText(), getNetworkContactByContact(m.getSender()), getNetworkContactByContact(m.getReceiver())));
+    public NetworkMessage newMessage(Message message, Message m) {
+        NetworkMessage networkMessage = new NetworkMessage(message.getText(), getNetworkContactByContact(m.getSender()), getNetworkContactByContact(m.getReceiver()));
+        networkMessages.add(networkMessage);
+        return networkMessage;
     }
 
-    private NetworkContact getNetworkContactByContact(Contact contact) {
+    public NetworkContact getNetworkContactByContact(Contact contact) {
         for (NetworkContact c : networkContactList) {
             if (c.getContact().getId().equals(contact.getId())) {
                 return c;
@@ -93,12 +95,21 @@ public class NetworkController {
         return networkContactList.get(0);
     }
 
-    public void newContact(Contact contact, Message message) {
-        networkMessages.add(new NetworkContactMessage(contact, getNetworkContactByContact(message.getSender()), getNetworkContactByContact(message.getReceiver())));
+    public NetworkContactMessage newContact(Contact contact, Message message) {
+        NetworkContactMessage networkContactMessage = new NetworkContactMessage(contact, getNetworkContactByContact(message.getSender()), getNetworkContactByContact(message.getReceiver()));
+        networkMessages.add(networkContactMessage);
+        return networkContactMessage;
 
     }
 
-    public void newIconMessage(Image image, Message message) {
-        networkMessages.add(new NetworkIconMessage(image, getNetworkContactByContact(message.getSender()), getNetworkContactByContact(message.getReceiver())));
+    public NetworkIconMessage newIconMessage(Image image, Message message) {
+        NetworkIconMessage networkIconMessage = new NetworkIconMessage(image, getNetworkContactByContact(message.getSender()), getNetworkContactByContact(message.getReceiver()));
+        networkMessages.add(networkIconMessage);
+        return networkIconMessage;
+    }
+
+    public NetworkMessage newNetworkMessage(NetworkMessage message) {
+        networkMessages.add(message);
+        return message;
     }
 }

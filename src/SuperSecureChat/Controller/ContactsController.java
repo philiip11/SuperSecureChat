@@ -39,8 +39,6 @@ public class ContactsController {
     private Stage stage;
 
     public void initialize() {
-        //TODO Set KeyCombos
-
         new Thread(this::init).start();
         myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());
         setData(Contact.getMyContact().getFirstname(), Contact.getMyContact().getLastname());
@@ -77,7 +75,6 @@ public class ContactsController {
     }
 
     private void loadContacts() {
-        //TODO Load Real Contacts from Database
         contactList.addAll(Database.getInstance().getContacts());
         contactList.remove(Contact.getMyContact());
 
@@ -182,7 +179,6 @@ public class ContactsController {
             //myProfilePicture.setImage(new Image(new File(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png").toURI().toString()));
             myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());
         });
-        //TODO Refresh Image somehow
 
     }
 

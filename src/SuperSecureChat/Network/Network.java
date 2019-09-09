@@ -3,10 +3,13 @@ package SuperSecureChat.Network;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
+import SuperSecureChat.Controller.NetworkController;
 import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
 import SuperSecureChat.Main;
 import SuperSecureChat.Message;
+import SuperSecureChat.NetworkMap.NetworkContactMessage;
+import SuperSecureChat.NetworkMap.NetworkMessage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -70,20 +73,24 @@ public class Network {
         }).start();
     }
 
-    public void sendContact(Contact c, boolean relay) {
+    public void sendContact(Contact c, NetworkContactMessage networkContactMessage) {
         new Thread(() -> {
+            NetworkController networkController = ClassConnector.getInstance().getNetworkController();
             for (String ip : otherIPs) {
                 TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
-                if (!relay) {
+                if (networkContactMessage == null) {
                     tcpClient.sendContact(c);
                 } else {
                     tcpClient.relayContact(c);
+                    NetworkContactMessage response = new NetworkContactMessage(c,
+                            networkController.getNetworkContactByContact(Contact.getMyContact()),
+                            networkController.getNetworkContactByContact(ContactList.getInstance().getContactByIP(ip)));
+                    networkContactMessage.addResponse(response);
                 }
                 tcpClient.close();
                 Message m = new Message();
                 m.setSender(Contact.getMyContact());
                 m.setReceiver(ContactList.getInstance().getContactByIP(ip));
-                ClassConnector.getInstance().sendContactToNetworkMap(c, m);
             }
         }).start();
     }
@@ -137,17 +144,26 @@ public class Network {
         return myIPs;
     }
 
-    public void relayMessage(Message message) {
+    public void relayMessage(Message message, NetworkMessage networkMessage) {
+        NetworkController networkController = ClassConnector.getInstance().getNetworkController();
         if (!relayedMessages.contains(message.getId())) {
             relayedMessages.add(message.getId());
             sendMessage(message);
+            if (networkMessage != null) {
+                for (String ip : otherIPs) {
+                    NetworkMessage nm = new NetworkMessage(message.getText(),
+                            networkController.getNetworkContactByContact(Contact.getMyContact()),
+                            networkController.getNetworkContactByContact(ContactList.getInstance().getContactByIP(ip)));
+                    networkMessage.addResponse(nm);
+                }
+            }
         }
     }
 
-    public void relayContact(Contact contact) {
+    public void relayContact(Contact contact, NetworkContactMessage networkContactMessage) {
         if (!relayedContacts.contains(contact.getId() + contact.getImage().hashCode())) {
             relayedContacts.add(contact.getId() + contact.getImage().hashCode());
-            sendContact(contact, true);
+            sendContact(contact, networkContactMessage);
         }
     }
 

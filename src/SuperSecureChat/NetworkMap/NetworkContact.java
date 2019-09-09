@@ -48,7 +48,7 @@ public class NetworkContact {
     }
 
     public void draw(GraphicsContext gc, int animator) {
-        if (contact.getLastOnline() > Instant.now().getEpochSecond() - 11) {
+        if (contact.getLastOnline() > Instant.now().getEpochSecond() - 15) {
             gc.setFill(Paint.valueOf("#00ff00"));
         } else {
             gc.setFill(Paint.valueOf("#ff0000"));

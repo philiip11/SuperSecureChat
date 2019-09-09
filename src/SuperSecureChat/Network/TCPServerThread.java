@@ -3,10 +3,15 @@ package SuperSecureChat.Network;
 import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
+import SuperSecureChat.Controller.NetworkController;
 import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
 import SuperSecureChat.Main;
 import SuperSecureChat.Message;
+import SuperSecureChat.NetworkMap.NetworkContact;
+import SuperSecureChat.NetworkMap.NetworkContactMessage;
+import SuperSecureChat.NetworkMap.NetworkIconMessage;
+import SuperSecureChat.NetworkMap.NetworkMessage;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -52,12 +57,15 @@ public class TCPServerThread extends Thread {
                     String json = line.substring(8);
                     String url = socket.getRemoteSocketAddress().toString();
                     String ip = url.substring(1).split(":")[0];
+                    NetworkController networkController = ClassConnector.getInstance().getNetworkController();
                     Message mToMe = new Message();
                     mToMe.setSender(ContactList.getInstance().getContactByIP(ip));
                     mToMe.setReceiver(Contact.getMyContact());
                     Message mFromMe = new Message();
                     mFromMe.setSender(ContactList.getInstance().getContactByIP(ip));
                     mFromMe.setReceiver(Contact.getMyContact());
+                    NetworkContact notMe = networkController.getNetworkContactByContact(mFromMe.getSender());
+                    NetworkContact me = networkController.getNetworkContactByContact(Contact.getMyContact());
                     boolean relay = false;
                     switch (command) {
                         case "MESSAGE:":
@@ -69,14 +77,15 @@ public class TCPServerThread extends Thread {
                                 }
                             }
                             ClassConnector.getInstance().sendMessageToAllChatControllers(message, !loop);
-                            ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
+                            NetworkMessage networkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
                             Database.getInstance().newMessage(message);
-                            Network.getInstance().relayMessage(message);
+                            Network.getInstance().relayMessage(message, networkMessage);
                             break;
                         case "CONTACR:":
                             relay = true;
                         case "CONTACT:":
                             Contact contact = Contact.fromJSON(json);
+                            NetworkContactMessage networkContactMessage = ClassConnector.getInstance().sendContactToNetworkMap(contact, mToMe);
                             if (!contact.getId().equals(Contact.getMyContact().getId())) {
                                 System.out.println("Kontakt empfangen!");
                                 System.out.println(contact.getId());
@@ -85,9 +94,8 @@ public class TCPServerThread extends Thread {
                                 }
                                 ContactList.getInstance().addContact(contact);
                                 Database.getInstance().newContact(contact);
-                                Network.getInstance().relayContact(contact);
+                                Network.getInstance().relayContact(contact, networkContactMessage);
                             }
-                            ClassConnector.getInstance().sendContactToNetworkMap(contact, mToMe);
                             break;
                         case "GETCONTA"://CT
                             System.out.println("Kontaktanfrage empfangen!");
@@ -96,7 +104,7 @@ public class TCPServerThread extends Thread {
                             ClassConnector.getInstance().sendContactToNetworkMap(Contact.getMyContact(), mFromMe);
                             break;
                         case "KEYEXCH:"://CT
-                            ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), mToMe);
+                            NetworkIconMessage networkIconMessage = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), mToMe);
                             System.out.println("Schlüsselaustausch...");
                             crypto.generateKeys();
                             crypto.receivePublicKey(Base64.getDecoder().decode(json));
@@ -104,27 +112,28 @@ public class TCPServerThread extends Thread {
                             crypto.generateCommonSecretKey();
                             Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ip), crypto.getSecretKey());
                             crypto.getSecretKey();
-                            ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), mFromMe);
+                            networkIconMessage.addResponse(new NetworkIconMessage(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), me, notMe));
                             break;
                         case "GETMYMM:"://GETMessagesWithID
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
                             //ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
                             ArrayList<Message> messages = Database.getInstance().getMessagesWithIdNotInTrace(json);
-                            TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                            tcpClient.sendText("OPENTCPP");
-                            tcpClient.sendText("TESTTEST");
                             for (Contact c : Database.getInstance().getContacts()) {
                                 if (!c.getId().equals(Contact.getMyContact().getId())) {
+                                    TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                                     tcpClient.relayContact(c);
+                                    tcpClient.close();
+                                    Thread.sleep(100);
                                     ClassConnector.getInstance().sendContactToNetworkMap(c, mFromMe);
                                 }
                             }
                             for (Message mmmm : messages) {
+                                TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                                 tcpClient.sendMessage(mmmm);
+                                tcpClient.close();
+                                Thread.sleep(100);
                                 ClassConnector.getInstance().sendMessageToNetworkMap(mmmm, mFromMe);
                             }
-                            tcpClient.sendText("CLOSETCP");
-                            tcpClient.close();
                             break;
                         case "OPENTCPP":
                             loop = true;
@@ -160,6 +169,8 @@ public class TCPServerThread extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

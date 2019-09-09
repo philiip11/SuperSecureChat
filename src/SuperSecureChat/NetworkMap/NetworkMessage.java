@@ -1,8 +1,11 @@
 package SuperSecureChat.NetworkMap;
 
+import SuperSecureChat.ClassConnector;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.text.TextAlignment;
+
+import java.util.ArrayList;
 
 public class NetworkMessage {
     private final int ANIMATION_DURATION = 60;
@@ -13,6 +16,7 @@ public class NetworkMessage {
     private double x;
     private double y;
     private String text;
+    private ArrayList<NetworkMessage> responses = new ArrayList<>();
 
     private boolean delete = false;
 
@@ -31,6 +35,9 @@ public class NetworkMessage {
     public void draw(GraphicsContext gc, Image image, int size) {
         animation++;
         if (animation > ANIMATION_DURATION) {
+            for (NetworkMessage response : responses) {
+                ClassConnector.getInstance().sendNetworkMessageToNetworkMap(response);
+            }
             this.delete = true;
             return;
         }
@@ -58,6 +65,10 @@ public class NetworkMessage {
         y = sender.getY() - (sender.getY() - reveiver.getY()) * percent;
 
 
+    }
+
+    public void addResponse(NetworkMessage response) {
+        responses.add(response);
     }
 
     public boolean getDelete() {
