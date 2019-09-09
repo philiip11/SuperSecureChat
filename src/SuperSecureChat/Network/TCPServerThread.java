@@ -78,7 +78,7 @@ public class TCPServerThread extends Thread {
                                     message.setReceived(Instant.now().getEpochSecond());
                                 }
                             }
-                            ClassConnector.getInstance().sendMessageToAllChatControllers(message, !relay);
+                            ClassConnector.getInstance().sendMessageToAllChatControllers(message, relay);
                             NetworkMessage networkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
                             Database.getInstance().newMessage(message);
                             Network.getInstance().relayMessage(message, networkMessage);
