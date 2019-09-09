@@ -62,7 +62,7 @@ public class NetworkMessage {
         //double percent = 1 / (1 + Math.pow(Math.E, t));
         double percent = (float) animation / ANIMATION_DURATION;
         x = sender.getX() - (sender.getX() - reveiver.getX()) * percent;
-        y = sender.getY() - (sender.getY() - reveiver.getY()) * percent;
+        y = sender.getY() - (sender.getY() - reveiver.getY()) * percent * percent;
 
 
     }
