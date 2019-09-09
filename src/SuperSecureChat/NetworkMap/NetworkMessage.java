@@ -22,16 +22,19 @@ public class NetworkMessage {
         y = sender.getY();
     }
 
-    public void draw(GraphicsContext gc) {
+    public void draw(GraphicsContext gc, Image image) {
         animation++;
         if (animation > ANIMATION_DURATION) {
             this.delete = true;
             return;
         }
         calculateNewPosition();
+        gc.drawImage(image, x, y, 24, 24);
 
-        gc.drawImage(new Image(getClass().getResourceAsStream("/icons/round_chat_white_24dp.png")), x, y);
+    }
 
+    public void draw(GraphicsContext gc) {
+        draw(gc, new Image(getClass().getResourceAsStream("/icons/round_chat_white_24dp.png")));
     }
 
     public void calculateNewPosition() {

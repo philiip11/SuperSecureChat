@@ -1,5 +1,6 @@
 package SuperSecureChat.Network;
 
+import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Crypto.Crypto;
@@ -61,6 +62,10 @@ public class Network {
                 TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
                 tcpClient.sendMessage(m);
                 tcpClient.close();
+                Message mm = new Message();
+                mm.setSender(Contact.getMyContact());
+                mm.setReceiver(ContactList.getInstance().getContactByIP(ip));
+                ClassConnector.getInstance().sendMessageToNetworkMap(m, mm);
             }
         }).start();
     }
@@ -74,8 +79,11 @@ public class Network {
                 } else {
                     tcpClient.relayContact(c);
                 }
-
                 tcpClient.close();
+                Message m = new Message();
+                m.setSender(Contact.getMyContact());
+                m.setReceiver(ContactList.getInstance().getContactByIP(ip));
+                ClassConnector.getInstance().sendContactToNetworkMap(c, m);
             }
         }).start();
     }

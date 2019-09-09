@@ -5,12 +5,15 @@ import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Message;
 import SuperSecureChat.NetworkMap.NetworkContact;
+import SuperSecureChat.NetworkMap.NetworkContactMessage;
+import SuperSecureChat.NetworkMap.NetworkIconMessage;
 import SuperSecureChat.NetworkMap.NetworkMessage;
 import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 
@@ -47,10 +50,7 @@ public class NetworkController {
             }
         };
         timer.start();
-
         ClassConnector.getInstance().addNetworkController(this);
-
-
     }
 
     private void addContact(int size, double i, Contact contact) {
@@ -60,8 +60,6 @@ public class NetworkController {
     }
 
     private void draw() {
-
-
         animator++;
         animator = animator % ANIMATION_LOOP;
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -77,8 +75,8 @@ public class NetworkController {
     }
 
 
-    public void newMessage(Message message) {
-        networkMessages.add(new NetworkMessage(getNetworkContactByContact(message.getSender()), getNetworkContactByContact(message.getReceiver())));
+    public void newMessage(Message message, Message m) {
+        networkMessages.add(new NetworkMessage(getNetworkContactByContact(m.getSender()), getNetworkContactByContact(m.getReceiver())));
     }
 
     private NetworkContact getNetworkContactByContact(Contact contact) {
@@ -88,5 +86,14 @@ public class NetworkController {
             }
         }
         return networkContactList.get(0);
+    }
+
+    public void newContact(Contact contact, Message message) {
+        networkMessages.add(new NetworkContactMessage(contact, getNetworkContactByContact(message.getSender()), getNetworkContactByContact(message.getReceiver())));
+
+    }
+
+    public void newIconMessage(Image image, Message message) {
+        networkMessages.add(new NetworkIconMessage(image, getNetworkContactByContact(message.getSender()), getNetworkContactByContact(message.getReceiver())));
     }
 }

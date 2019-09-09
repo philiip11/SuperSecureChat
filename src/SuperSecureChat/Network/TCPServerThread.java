@@ -8,6 +8,7 @@ import SuperSecureChat.Database;
 import SuperSecureChat.Main;
 import SuperSecureChat.Message;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -49,6 +50,14 @@ public class TCPServerThread extends Thread {
                 if ((line != null) && line.length() > 8) {
                     String command = line.substring(0, 8);
                     String json = line.substring(8);
+                    String url = socket.getRemoteSocketAddress().toString();
+                    String ip = url.substring(1).split(":")[0];
+                    Message mToMe = new Message();
+                    mToMe.setSender(ContactList.getInstance().getContactByIP(ip));
+                    mToMe.setReceiver(Contact.getMyContact());
+                    Message mFromMe = new Message();
+                    mFromMe.setSender(ContactList.getInstance().getContactByIP(ip));
+                    mFromMe.setReceiver(Contact.getMyContact());
                     boolean relay = false;
                     switch (command) {
                         case "MESSAGE:":
@@ -61,6 +70,7 @@ public class TCPServerThread extends Thread {
                                 }
                             }
                             ClassConnector.getInstance().sendMessageToAllChatControllers(message, !loop);
+                            ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
                             Database.getInstance().newMessage(message);
                             Network.getInstance().relayMessage(message);
                             break;
@@ -72,30 +82,30 @@ public class TCPServerThread extends Thread {
                                 System.out.println("Kontakt empfangen!");
                                 System.out.println(contact.getId());
                                 if (!relay) {
-                                    String url = socket.getRemoteSocketAddress().toString();
-                                    String ip = url.substring(1).split(":")[0];
                                     contact.setUrl(ip);
                                 }
                                 ContactList.getInstance().addContact(contact);
                                 Database.getInstance().newContact(contact);
                                 Network.getInstance().relayContact(contact);
                             }
+                            ClassConnector.getInstance().sendContactToNetworkMap(contact, mToMe);
                             break;
                         case "GETCONTA"://CT
                             System.out.println("Kontaktanfrage empfangen!");
                             TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                             client.sendContact(Contact.getMyContact());
+                            ClassConnector.getInstance().sendContactToNetworkMap(Contact.getMyContact(), mFromMe);
                             break;
                         case "KEYEXCH:"://CT
+                            ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), mToMe);
                             System.out.println("Schlüsselaustausch...");
                             crypto.generateKeys();
                             crypto.receivePublicKey(Base64.getDecoder().decode(json));
                             sendText("KEYPUBL:" + Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
                             crypto.generateCommonSecretKey();
-                            String urll = socket.getRemoteSocketAddress().toString();
-                            String ipp = urll.substring(1).split(":")[0];
-                            Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ipp), crypto.getSecretKey());
+                            Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ip), crypto.getSecretKey());
                             crypto.getSecretKey();
+                            ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/baseline_vpn_key_white_24dp.png")), mFromMe);
                             break;
                         case "GETMYMM:"://GETMessagesWithID
                             System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
@@ -107,11 +117,12 @@ public class TCPServerThread extends Thread {
                             for (Contact c : Database.getInstance().getContacts()) {
                                 if (!c.getId().equals(Contact.getMyContact().getId())) {
                                     tcpClient.relayContact(c);
+                                    ClassConnector.getInstance().sendContactToNetworkMap(c, mFromMe);
                                 }
                             }
-                            for (Message m : messages) {
-                                tcpClient.sendMessage(m);
-                                ClassConnector.getInstance().sendMessageToNetworkMap(m);
+                            for (Message mmmm : messages) {
+                                tcpClient.sendMessage(mmmm);
+                                ClassConnector.getInstance().sendMessageToNetworkMap(mmmm, mFromMe);
                             }
                             tcpClient.sendText("CLOSETCP");
                             tcpClient.close();

@@ -70,7 +70,6 @@ public class ChatController {
         crypto.setSecretKey(Database.getInstance().getSecretKeyByContact(message.getReceiver()));
         message.setText(crypto.encrypt(message.getText()));
         network.sendMessage(message);
-        ClassConnector.getInstance().sendMessageToNetworkMap(message);
         messages.add(message);
         updateListView();
         Database.getInstance().newMessage(message);

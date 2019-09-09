@@ -1,5 +1,6 @@
 package SuperSecureChat;
 
+import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Controller.ChatController;
 import SuperSecureChat.Controller.NetworkController;
 import com.jfoenix.controls.JFXDecorator;
@@ -9,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -45,16 +47,26 @@ public class ClassConnector {
         if (notification) {
             systemTrayIcon.showMessage(message);
         }
-        sendMessageToNetworkMap(message);
     }
 
-    public void sendMessageToNetworkMap(Message message) {
+    public void sendMessageToNetworkMap(Message message, Message m) {
         if (networkController != null) {
-            networkController.newMessage(message);
+            networkController.newMessage(message, m);
         }
     }
 
+    public void sendContactToNetworkMap(Contact contact, Message message) {
+        if (networkController != null) {
+            networkController.newContact(contact, message);
+        }
+    }
 
+    public void sendIconMessageToNetworkMap(Image image, Message message) {
+        if (networkController != null) {
+            networkController.newIconMessage(image, message);
+        }
+
+    }
     public void openContacts() {
         int width = 400;
         int height = 800;
