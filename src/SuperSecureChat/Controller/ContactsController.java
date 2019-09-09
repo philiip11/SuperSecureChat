@@ -71,6 +71,7 @@ public class ContactsController {
                 Platform.runLater(() -> showContacts());
             }
         }, 0, 5000);
+        Platform.runLater(this::openNetworkStage);
 
 
     }

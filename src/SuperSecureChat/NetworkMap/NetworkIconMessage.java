@@ -13,6 +13,6 @@ public class NetworkIconMessage extends NetworkMessage {
 
     @Override
     public void draw(GraphicsContext gc) {
-        super.draw(gc, image);
+        super.draw(gc, image, 48);
     }
 }

@@ -62,7 +62,6 @@ public class TCPServerThread extends Thread {
                     switch (command) {
                         case "MESSAGE:":
                             Message message = Message.fromJSON(json);
-                            message.setReceived(Instant.now().getEpochSecond());
                             message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond() + "; ");
                             if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
                                 if (message.getReceived() == 0) {

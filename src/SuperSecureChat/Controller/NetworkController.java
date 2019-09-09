@@ -32,7 +32,7 @@ public class NetworkController {
     private int animator = 0;
     private ContactList contactList = ContactList.getInstance();
     private ArrayList<NetworkContact> networkContactList = new ArrayList<>();
-    private ArrayList<NetworkMessage> networkMessages = new ArrayList<>();
+    private final ArrayList<NetworkMessage> networkMessages = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -64,14 +64,15 @@ public class NetworkController {
         animator = animator % ANIMATION_LOOP;
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, WIDTH, HEIGHT);
-        for (NetworkContact contact : networkContactList) {
-            contact.draw(gc, animator);
+        synchronized (networkMessages) {
+            for (NetworkContact contact : networkContactList) {
+                contact.draw(gc, animator);
+            }
+            for (NetworkMessage message : networkMessages) {
+                message.draw(gc);
+            }
+            networkMessages.removeIf(NetworkMessage::getDelete);
         }
-        for (NetworkMessage message : networkMessages) {
-            message.draw(gc);
-        }
-        networkMessages.removeIf(NetworkMessage::getDelete);
-
     }
 
 
@@ -80,7 +81,9 @@ public class NetworkController {
     }
 
     private NetworkContact getNetworkContactByContact(Contact contact) {
+        System.out.println(contact.getId());
         for (NetworkContact c : networkContactList) {
+            System.out.println(c.getContact().getId());
             if (c.getContact().getId().equals(contact.getId())) {
                 return c;
             }
