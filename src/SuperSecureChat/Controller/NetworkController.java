@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static java.lang.Math.*;
 
@@ -32,7 +33,7 @@ public class NetworkController {
     private int animator = 0;
     private ContactList contactList = ContactList.getInstance();
     private ArrayList<NetworkContact> networkContactList = new ArrayList<>();
-    private final ArrayList<NetworkMessage> networkMessages = new ArrayList<>();
+    private final CopyOnWriteArrayList<NetworkMessage> networkMessages = new CopyOnWriteArrayList<>();
 
     @FXML
     public void initialize() {

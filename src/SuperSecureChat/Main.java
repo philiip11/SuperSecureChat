@@ -26,6 +26,8 @@ public class Main extends Application {
     private static final String PATH_TO_LNK = System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SuperSecureChat.lnk";
 
     //TODO Change Icon
+    //TODO Blockieren
+    //TODO Freunde
 
     private static boolean file_put_contents(String filename, String data) {
         try {
