@@ -2,6 +2,7 @@ package SuperSecureChat.NetworkMap;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.text.TextAlignment;
 
 public class NetworkMessage {
     private final int ANIMATION_DURATION = 60;
@@ -11,15 +12,20 @@ public class NetworkMessage {
     private int animation;
     private double x;
     private double y;
+    private String text;
 
     private boolean delete = false;
 
-    public NetworkMessage(NetworkContact sender, NetworkContact reveiver) {
+    public NetworkMessage(String text, NetworkContact sender, NetworkContact reveiver) {
         this.sender = sender;
         this.reveiver = reveiver;
         animation = 0;
         x = sender.getX();
         y = sender.getY();
+        if (text.length() > 16) {
+            text = text.substring(0, 16);
+        }
+        this.text = text;
     }
 
     public void draw(GraphicsContext gc, Image image, int size) {
@@ -30,6 +36,8 @@ public class NetworkMessage {
         }
         calculateNewPosition();
         gc.drawImage(image, x, y, size, size);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(text, x + ((float) size / 2), y + 12 + size);
 
     }
 

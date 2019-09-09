@@ -84,7 +84,7 @@ public class Main extends Application {
             }
             Files.copy(new File("update.jar").toPath(), jar.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Runtime.getRuntime().exec("java -jar SuperSecureChat.jar");
-            System.exit(1);
+            Runtime.getRuntime().halt(0);
         } else {
             File update = new File("update.jar");
             if (update.exists()) {

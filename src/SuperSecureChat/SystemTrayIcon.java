@@ -83,7 +83,7 @@ public class SystemTrayIcon {
             Platform.runLater(() -> {
                 com.sun.javafx.application.PlatformImpl.tkExit();
                 Platform.exit();
-                System.exit(1);
+                Runtime.getRuntime().halt(0);
             });
         });
 

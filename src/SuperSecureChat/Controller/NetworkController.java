@@ -22,6 +22,9 @@ import static java.lang.Math.*;
 
 @SuppressWarnings({"FieldCanBeLocal"})
 public class NetworkController {
+
+    //TODO Respone Message after 1st Message
+
     public final static int ANIMATION_LOOP = 60;
     private final int RADIUS = 360;
     private final int WIDTH = 1280;
@@ -78,12 +81,11 @@ public class NetworkController {
 
 
     public void newMessage(Message message, Message m) {
-        networkMessages.add(new NetworkMessage(getNetworkContactByContact(m.getSender()), getNetworkContactByContact(m.getReceiver())));
+        networkMessages.add(new NetworkMessage(message.getText(), getNetworkContactByContact(m.getSender()), getNetworkContactByContact(m.getReceiver())));
     }
 
     private NetworkContact getNetworkContactByContact(Contact contact) {
         for (NetworkContact c : networkContactList) {
-            System.out.println(c.getContact().getId());
             if (c.getContact().getId().equals(contact.getId())) {
                 return c;
             }

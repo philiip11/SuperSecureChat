@@ -54,8 +54,7 @@ public class NetworkContact {
             gc.setFill(Paint.valueOf("#ff0000"));
         }
 
-        double r = 76 + sin(animator * PI / (NetworkController.ANIMATION_LOOP / 2)) * 12;
-
+        double r = 70 + sin(animator * PI / (NetworkController.ANIMATION_LOOP / 2)) * 6;
         gc.fillOval(x - r / 2, y - r / 2, r, r);
         gc.drawImage(contact.getJavaFXImage(), 0, 0, 256, 256, x - 32, y - 32, 64, 64);
 

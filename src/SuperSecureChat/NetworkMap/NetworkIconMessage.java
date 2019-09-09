@@ -7,7 +7,7 @@ public class NetworkIconMessage extends NetworkMessage {
     private Image image;
 
     public NetworkIconMessage(Image image, NetworkContact sender, NetworkContact reveiver) {
-        super(sender, reveiver);
+        super("", sender, reveiver);
         this.image = image;
     }
 

@@ -62,6 +62,7 @@ public class UDPServer implements Runnable {
             }
         } catch (BindException ex) {
             System.out.println("SuperSecureChat läuft bereits!");
+            //TODO Große Fehlermeldung!!!
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
         }

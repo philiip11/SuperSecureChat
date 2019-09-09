@@ -7,7 +7,7 @@ public class NetworkContactMessage extends NetworkMessage {
     private Contact contact;
 
     public NetworkContactMessage(Contact contact, NetworkContact sender, NetworkContact reveiver) {
-        super(sender, reveiver);
+        super(contact.getId(), sender, reveiver);
         this.contact = contact;
     }
 
