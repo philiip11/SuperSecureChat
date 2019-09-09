@@ -17,9 +17,33 @@ public class ContactList {
     }
 
     public void addContact(Contact contact) {
-        Platform.runLater(() -> removeContact(contact.getId()));
-        Platform.runLater(() -> contacts.add(contact));
+        Platform.runLater(() -> {
+            boolean contains = contacts.stream().anyMatch(c -> c.getId().equals(contact.getId()));
+            if (contains) {
+                replaceContact(contact);
+            } else {
+                removeContact(contact.getId());
+                contacts.add(contact);
+            }
+        });
 
+
+    }
+
+    private void replaceContact(Contact contact) {
+        Contact old = new Contact();
+        for (Contact c : contacts) {
+            if (c.getId().equals(contact.getId())) {
+                old = c;
+            }
+        }
+        old.setId(contact.getId());
+        old.setFirstname(contact.getFirstname());
+        old.setLastname(contact.getLastname());
+        old.setUrl(contact.getUrl());
+        old.setLastOnline(contact.getLastOnline());
+        old.setImage(contact.getImage());
+        old.setNotifications(contact.getNotifications());
     }
 
     private void removeContact(String id) {
@@ -72,6 +96,6 @@ public class ContactList {
             }
         }
 
-        return null;
+        return Contact.getMyContact();
     }
 }

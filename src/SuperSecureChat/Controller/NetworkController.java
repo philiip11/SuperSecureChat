@@ -81,7 +81,6 @@ public class NetworkController {
     }
 
     private NetworkContact getNetworkContactByContact(Contact contact) {
-        System.out.println(contact.getId());
         for (NetworkContact c : networkContactList) {
             System.out.println(c.getContact().getId());
             if (c.getContact().getId().equals(contact.getId())) {
