@@ -29,7 +29,7 @@ public class Main extends Application {
     //TODO Blockieren
     //TODO Freunde
 
-    private static boolean file_put_contents(String filename, String data) {
+    public static boolean file_put_contents(String filename, String data) {
         try {
             FileWriter fstream = new FileWriter(filename, true);
             BufferedWriter out = new BufferedWriter(fstream);

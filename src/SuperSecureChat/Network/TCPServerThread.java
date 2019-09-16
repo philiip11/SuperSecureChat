@@ -137,7 +137,7 @@ public class TCPServerThread extends Thread {
 
                 for (Contact c : Database.getInstance().getContacts()) {
                     if (!c.getId().equals(Contact.getMyContact().getId())) {
-                        jsonContacts.add(c);
+                        jsonContacts.add(c.toJSON());
                         /*TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                         tcpClient.relayContact(c);
                         tcpClient.close();
@@ -150,7 +150,9 @@ public class TCPServerThread extends Thread {
                     tcpClient.close();
                     Thread.sleep(50);
                     ClassConnector.getInstance().sendMessageToNetworkMap(mmmm, mFromMe);*/
-                jsonMessages.addAll(messages);
+                for (Message m : messages) {
+                    jsonMessages.add(m.toJSON());
+                }
                 JSONObject jsonBlob = new JSONObject();
                 jsonBlob.put("MESSAGR:", jsonMessages);
                 jsonBlob.put("CONTACR:", jsonContacts);
@@ -163,6 +165,7 @@ public class TCPServerThread extends Thread {
                 break;
             case "JSNBLOB:":
                 try {
+                    Main.file_put_contents("debug", json);
                     JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
                     for (Object o : jsonObject.keySet()) {
                         String commando = (String) o;
