@@ -81,7 +81,11 @@ public class TCPServerThread extends Thread {
     @SuppressWarnings({"unchecked", "DuplicateBranchesInSwitch"})
     private void parseInput(Crypto crypto, String command, String json, String ip, Message mToMe, Message mFromMe, NetworkContact notMe, NetworkContact me, NetworkMessage parentNetworkMessage) {
         boolean relay = false;
-        System.out.println("Empfange: " + command + json.substring(0, Math.min(json.length() - 1, 64)) + "...");
+        if (parentNetworkMessage == null) {
+            System.out.println("Empfange: " + command + json.substring(0, Math.min(json.length() - 1, 64)) + "...");
+        } else {
+            System.out.println("BLOBEmpfange: " + command + json.substring(0, Math.min(json.length() - 1, 64)) + "...");
+        }
         try {
             switch (command) {
                 case "MESSAGR:":
