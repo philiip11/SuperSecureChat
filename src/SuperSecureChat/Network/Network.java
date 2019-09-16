@@ -97,7 +97,6 @@ public class Network {
 
     void addIP(String ip) {
         if (!otherIPs.contains(ip)) {
-            otherIPs.add(ip);
             System.out.println("Neue IP: " + ip);
             TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
             tcpClient.sendText("VERSION:" + Main.VERSION); //GetMyMessages
@@ -112,6 +111,7 @@ public class Network {
             tcpClient = new TCPClient(ip, TCPServer.PORT);
             tcpClient.sendText("GETMYMM:" + me.getId()); //GetMyMessages
             tcpClient.close();
+            otherIPs.add(ip);
 
         }
         otherIPsLastPing.put(ip, Instant.now().getEpochSecond());
