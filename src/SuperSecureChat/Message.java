@@ -36,6 +36,7 @@ public class Message {
 
     }
 
+    @SuppressWarnings("unchecked")
     public static Message fromJSON(String json) {
         Message message = new Message();
         try {
@@ -45,6 +46,8 @@ public class Message {
                 message.setReferencId(jsonObject.get("referenceID").toString());
                 message.setSender(Contact.fromJSON(jsonObject.get("sender").toString()));
                 message.setReceiver(Contact.fromJSON(jsonObject.get("receiver").toString()));
+                jsonObject.putIfAbsent("text", "");
+                jsonObject.putIfAbsent("data", "");
                 message.setText(jsonObject.get("text").toString());
                 message.setData(jsonObject.get("data").toString());
                 message.setTrace(jsonObject.get("trace").toString());
