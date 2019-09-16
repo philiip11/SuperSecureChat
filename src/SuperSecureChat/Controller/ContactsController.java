@@ -105,11 +105,9 @@ public class ContactsController {
             stage.setTitle("Netzwerk");
             Image image = new Image(getClass().getResourceAsStream("/icons/round_import_export_white_48dp.png"));
             stage.getIcons().add(image);
-            if (Screen.getScreens().size() > 1) {
-                Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
-                stage.setX(bounds.getMinX() + (bounds.getWidth() - width - 400) / 2);
-                stage.setY(0);
-            }
+            Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
+            stage.setX(bounds.getMinX() + (bounds.getWidth() - width - 400) / 2);
+            stage.setY(0);
 
             openNewStage(root, stage, width, height, image);
         } catch (Exception ignored) {
@@ -157,7 +155,7 @@ public class ContactsController {
         stage.show();
     }
 
-    public void updateProfilePicture() {
+    void updateProfilePicture() {
         Platform.runLater(() -> {
             //myProfilePicture.setImage(new Image(new File(System.getenv("APPDATA") + "\\SuperSecureChat\\profile.png").toURI().toString()));
             myProfilePicture.setImage(Contact.getMyContact().getJavaFXImage());

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="300.0" prefWidth="300.0"
+            xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.NotificationController">
+
+    <JFXListView fx:id="messagesListView" prefHeight="300.0" prefWidth="300.0" styleClass="chatListView"
+                 AnchorPane.bottomAnchor="128.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                 AnchorPane.topAnchor="0.0" style="-fx-background-color: #00000000;"/>
+    <ImageView fx:id="picture" fitHeight="128.0" fitWidth="128.0" onMouseClicked="#openChat" onMouseExited="#close"
+               pickOnBounds="true" preserveRatio="true" style="-fx-background-color: #00000000;"
+               AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+</AnchorPane>

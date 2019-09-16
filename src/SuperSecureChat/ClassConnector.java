@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+
 public class ClassConnector {
 
 
@@ -54,6 +55,7 @@ public class ClassConnector {
         }
         if (notification) {
             systemTrayIcon.showMessage(message);
+            NotificationHandler.getInstance().newMessage(message);
         }
     }
 

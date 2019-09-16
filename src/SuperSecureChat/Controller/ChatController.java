@@ -61,7 +61,7 @@ public class ChatController {
         Platform.runLater(this::updateListView);
     }
 
-
+    @FXML
     public void initialize() {
         ClassConnector.getInstance().addChatController(this);
         //Code
@@ -118,7 +118,7 @@ public class ChatController {
 
     public void newMessage(Message message) {
         if (message.getReceiver() != null && message.getSender() != null) {
-            if ((message.getReceiver().getId().equals(me.getId()) &&            // Naichricht von Kontakt an mch
+            if ((message.getReceiver().getId().equals(me.getId()) &&            // Nachricht von Kontakt an mch
                     message.getSender().getId().equals(contact.getId())) ||
                     (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
                             message.getSender().getId().equals(me.getId()))) {

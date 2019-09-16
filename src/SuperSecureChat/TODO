@@ -1,25 +1,3 @@
-// TODO Implement Chat
-
-
     // TODO Change Icon to something unique, not FB Messenger
-    // TODO Encrypt Messages (just the user the message was meant for can read it)
-    // TODO Save Messages in Database
-    // TODO Ping for Online-Status (cmd ping like request to see if one is online, [online/offline])
     // TODO Status und Profilbild
-
-
     // TODO Windows-Notifications   (found some awt guide, not javafx tho)
-
-
-    // TODO Show Network Graphically (transport of sent messages)
-
-
-    //TODO Filter for specific words (Swear words --> *****) [List for words who will be censored?] // Wollen wir das wirklich?
-
-    //
-    //
-    // TCP
-    // Nutzer finden über Netzwerknachrichten
-    // Ping -- Online?
-    //
-}
