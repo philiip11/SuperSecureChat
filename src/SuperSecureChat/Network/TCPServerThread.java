@@ -137,7 +137,7 @@ public class TCPServerThread extends Thread {
 
                 for (Contact c : Database.getInstance().getContacts()) {
                     if (!c.getId().equals(Contact.getMyContact().getId())) {
-                        jsonContacts.add(c.toJSON());
+                        jsonContacts.add(c.toJSONString());
                         /*TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                         tcpClient.relayContact(c);
                         tcpClient.close();
@@ -151,7 +151,7 @@ public class TCPServerThread extends Thread {
                     Thread.sleep(50);
                     ClassConnector.getInstance().sendMessageToNetworkMap(mmmm, mFromMe);*/
                 for (Message m : messages) {
-                    jsonMessages.add(m.toJSON());
+                    jsonMessages.add(m.toJSONString());
                 }
                 JSONObject jsonBlob = new JSONObject();
                 jsonBlob.put("MESSAGR:", jsonMessages);
