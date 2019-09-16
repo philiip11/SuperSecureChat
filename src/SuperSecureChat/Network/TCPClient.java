@@ -2,6 +2,7 @@ package SuperSecureChat.Network;
 
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Message;
+import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -110,4 +111,7 @@ public class TCPClient {
         }
     }
 
+    void sendJSONBlob(JSONObject jsonBlob) {
+        sendText("JSNBLOB:" + jsonBlob.toJSONString());
+    }
 }
