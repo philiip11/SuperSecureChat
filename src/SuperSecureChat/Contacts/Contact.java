@@ -77,7 +77,7 @@ public class Contact {
             contact.setNotifications((long) jsonObject.get("notifications"));
         } catch (ParseException ignored) {
         }
-        return contact; //TODO Base64 of Image File
+        return contact;
     }
 
     public static String encoder(String filePath) {

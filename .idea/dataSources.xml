@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="testdb.db" uuid="0a4c9aa7-d8a2-4242-a046-483d26b93335">
+    <data-source source="LOCAL" name="db.db" uuid="ea2c330e-4777-4d97-8d18-74cdf81f7a02">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/testdb.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$USER_HOME$/AppData/Roaming/SuperSecureChat/db.db</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
       </driver-properties>

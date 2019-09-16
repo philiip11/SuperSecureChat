@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--TODO some magix with controllers -->
-
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import javafx.geometry.Insets?>

@@ -147,7 +147,7 @@ public class TCPServerThread extends Thread {
                         Thread.sleep(100);
                         ClassConnector.getInstance().sendContactToNetworkMap(c, mFromMe);*/
                     }
-                } // TODO JSONBLOB = All in one Message
+                }
                 /*TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                     tcpClient.sendMessage(mmmm, true);
                     tcpClient.close();

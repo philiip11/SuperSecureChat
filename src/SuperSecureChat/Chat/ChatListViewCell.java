@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 
@@ -50,7 +51,6 @@ public class ChatListViewCell extends JFXListCell<Message> {
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
     Database db = Database.getInstance();
-    //TODO
     private FXMLLoader mLLoader;
 
     @Override
@@ -90,6 +90,10 @@ public class ChatListViewCell extends JFXListCell<Message> {
             mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
             mLLoader.setController(this);
 
+            if (message.getRead() == 0) {
+                message.setRead(Instant.now().getEpochSecond());
+                Database.getInstance().markRead(message);
+            }
             try {
                 mLLoader.load();
             } catch (IOException e) {
@@ -103,11 +107,11 @@ public class ChatListViewCell extends JFXListCell<Message> {
             if (dataMessage) {
                 String filename = crypto.decrypt(message.getText());
                 String filenameLower = filename.toLowerCase();
-                //TODO Dateien verschlüsseln
                 if (filenameLower.contains(".png") ||
                         filenameLower.contains(".jpg") ||
                         filenameLower.contains(".jfif")) {
                     Image image = Contact.imageDecoder(crypto.decrypt(message.getData()));
+                    //Image image = Contact.imageDecoder(message.getData());
                     imageView.setImage(image);
                     imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override

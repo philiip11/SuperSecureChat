@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDecorator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
@@ -96,7 +97,11 @@ public class ClassConnector {
             Stage stage = new Stage();
             stage.setTitle("SSC - Kontakte");
             stage.getIcons().add(new javafx.scene.image.Image(this.getClass().getResourceAsStream("/icon2048.png")));
-            stage.setX(Screen.getPrimary().getVisualBounds().getMaxX() - width);
+
+            Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
+            stage.setX(bounds.getMaxX() - width);
+            stage.setY(bounds.getMinY() + (bounds.getHeight() - height) / 2);
+
             JFXDecorator decorator = new JFXDecorator(stage, root);
             decorator.setCustomMaximize(false);
             decorator.setGraphic(new ImageView(this.getClass().getResource("/icon16.png").toExternalForm()));

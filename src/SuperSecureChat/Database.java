@@ -249,8 +249,19 @@ public class Database {
     }
 
     public int countUnreadMessagesByContact(Contact contact) {
-        //TODO
-        return 0;
+        int result = 0;
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT count(*) FROM messages WHERE sender like ? AND receiver like ? AND read = 0");
+            ps.setString(1, contact.getId());
+            ps.setString(2, Contact.getMyContact().getId());
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+            result = resultSet.getInt("count(*)");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public ArrayList<Message> getMessagesWithId(String id) {
@@ -283,7 +294,6 @@ public class Database {
 
     private void parseMessages(ArrayList<Message> result, PreparedStatement ps) throws SQLException {
         ResultSet resultSet = ps.executeQuery();
-        //TODO decrypt Message
         while (resultSet.next()) {
             Message m = new Message();
             m.setId(resultSet.getString(1));
@@ -336,5 +346,17 @@ public class Database {
             e.printStackTrace();
         }
 
+    }
+
+    public void markRead(Message message) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE messages SET read = ? WHERE id = ?");
+            ps.setLong(1, message.getRead());
+            ps.setString(2, message.getId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

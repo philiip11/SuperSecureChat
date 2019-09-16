@@ -39,9 +39,7 @@ public class MainController {
     // DONE Ping for Online-Status
     // TODO Status und Profilbild
     // TODO Windows-Notifications
-    // TODO Add DataMessages
 
-    // TODO Show Network Graphically
 
 
     @FXML

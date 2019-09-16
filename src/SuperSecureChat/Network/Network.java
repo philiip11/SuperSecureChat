@@ -155,6 +155,7 @@ public class Network {
                             networkController.getNetworkContactByContact(Contact.getMyContact()),
                             networkController.getNetworkContactByContact(ContactList.getInstance().getContactByIP(ip)));
                     networkMessage.addResponse(nm);
+                    System.out.println("Add Response to " + ip);
                 }
             }
         }
@@ -202,9 +203,4 @@ public class Network {
     }
 
 
-    // TODO Methode, der man eine Adresse übergibt und die dann prüft, ob die Adresse via Ping erreichbar ist
-
-    // TODO Broadcast an gesamtes Netzwerk
-
-    // TODO send Message to all Contacts
 }

@@ -24,7 +24,6 @@ import static java.lang.Math.*;
 @SuppressWarnings({"FieldCanBeLocal"})
 public class NetworkController {
 
-    //TODO Respone Message after 1st Message
 
     public final static int ANIMATION_LOOP = 120;
     private final int RADIUS = 360;

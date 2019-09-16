@@ -126,7 +126,7 @@ public class ContactsController {
             stage.getIcons().add(image);
             if (Screen.getScreens().size() > 1) {
                 Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
-                stage.setX(bounds.getMinX() + (bounds.getWidth() - width) / 2);
+                stage.setX(bounds.getMinX() + (bounds.getWidth() - width - 400) / 2);
                 stage.setY(0);
             }
 

@@ -33,7 +33,6 @@ public class ContactListViewCell extends JFXListCell<Contact> {
     JFXBadge badge;
 
     Contact contacts;
-    //TODO
     private FXMLLoader mLLoader;
     Database db = Database.getInstance();
 
