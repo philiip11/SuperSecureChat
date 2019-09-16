@@ -52,15 +52,19 @@ public class TCPServerThread extends Thread {
                 String json = line.substring(8);
                 String url = socket.getRemoteSocketAddress().toString();
                 String ip = url.substring(1).split(":")[0];
-                NetworkController networkController = ClassConnector.getInstance().getNetworkController();
                 Message mToMe = new Message();
                 mToMe.setSender(ContactList.getInstance().getContactByIP(ip));
                 mToMe.setReceiver(Contact.getMyContact());
                 Message mFromMe = new Message();
                 mFromMe.setSender(ContactList.getInstance().getContactByIP(ip));
                 mFromMe.setReceiver(Contact.getMyContact());
-                NetworkContact notMe = networkController.getNetworkContactByContact(mFromMe.getSender());
-                NetworkContact me = networkController.getNetworkContactByContact(Contact.getMyContact());
+                NetworkController networkController = ClassConnector.getInstance().getNetworkController();
+                NetworkContact notMe = null;
+                NetworkContact me = null;
+                if (networkController != null) {
+                    notMe = networkController.getNetworkContactByContact(mFromMe.getSender());
+                    me = networkController.getNetworkContactByContact(Contact.getMyContact());
+                }
                 parseInput(crypto, command, json, ip, mToMe, mFromMe, notMe, me, null);
 
                 //out.writeBytes(line + "\n\r");
@@ -130,7 +134,9 @@ public class TCPServerThread extends Thread {
                     crypto.generateCommonSecretKey();
                     Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ip), crypto.getSecretKey());
                     crypto.getSecretKey();
-                    networkIconMessage.addResponse(new NetworkIconMessage(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), me, notMe));
+                    if (me != null && notMe != null) {
+                        networkIconMessage.addResponse(new NetworkIconMessage(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), me, notMe));
+                    }
                     break;
                 case "GETMYMM:"://GETMessagesWithID
                     System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
@@ -178,7 +184,9 @@ public class TCPServerThread extends Thread {
                         for (Object o : jsonObject.keySet()) {
                             String commando = (String) o;
                             JSONArray jsonArrayo = (JSONArray) jsonObject.get(commando);
-                            jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me, networkMessage1));
+                            if (me != null && notMe != null) {
+                                jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me, networkMessage1));
+                            }
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
