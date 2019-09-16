@@ -113,12 +113,17 @@ public class ChatListViewCell extends JFXListCell<Message> {
                         @Override
                         public void handle(MouseEvent event) {
                             try {
-                                double width = image.getWidth();
-                                double height = image.getHeight();
+                                double imageWidth = image.getWidth();
+                                double imageHeight = image.getHeight();
                                 double screenHeight = Screen.getPrimary().getBounds().getHeight();
                                 double screenWidth = Screen.getPrimary().getBounds().getWidth();
-                                width = Math.min(width, screenWidth);
-                                height = Math.min(height, screenHeight);
+                                double width = Math.min(imageWidth, screenWidth);
+                                double height = Math.min(imageHeight, screenHeight);
+                                if (width < imageWidth || height < imageHeight) {
+                                    double ratio = Math.min(width / imageWidth, height / imageHeight);
+                                    width = imageWidth * ratio;
+                                    height = imageHeight * ratio;
+                                }
                                 double x = (screenWidth - width) / 2;
                                 double y = (screenHeight - height) / 2;
 
