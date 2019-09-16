@@ -149,13 +149,17 @@ public class Network {
         if (!relayedMessages.contains(message.getId())) {
             relayedMessages.add(message.getId());
             sendMessage(message);
-            if (networkMessage != null) {
-                for (String ip : otherIPs) {
+            for (String ip : otherIPs) {
+                if (networkMessage != null) {
                     NetworkMessage nm = new NetworkMessage(message.getText(),
                             networkController.getNetworkContactByContact(Contact.getMyContact()),
                             networkController.getNetworkContactByContact(ContactList.getInstance().getContactByIP(ip)));
                     networkMessage.addResponse(nm);
-                    System.out.println("Add Response to " + ip);
+                } else {
+                    Message m = new Message();
+                    m.setSender(Contact.getMyContact());
+                    m.setReceiver(ContactList.getInstance().getContactByIP(ip));
+                    ClassConnector.getInstance().sendMessageToNetworkMap(message, m);
                 }
             }
         }

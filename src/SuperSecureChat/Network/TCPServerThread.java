@@ -13,14 +13,15 @@ import SuperSecureChat.NetworkMap.NetworkIconMessage;
 import SuperSecureChat.NetworkMap.NetworkMessage;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.Socket;
+import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -76,124 +77,160 @@ public class TCPServerThread extends Thread {
     @SuppressWarnings({"unchecked", "DuplicateBranchesInSwitch"})
     private void parseInput(Crypto crypto, String command, String json, String ip, Message mToMe, Message mFromMe, NetworkContact notMe, NetworkContact me, NetworkMessage parentNetworkMessage) {
         boolean relay = false;
-        switch (command) {
-            case "MESSAGR:":
-                relay = true;
-            case "MESSAGE:":
-                Message message = Message.fromJSON(json);
-                message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond() + "; ");
-                if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
-                    if (message.getReceived() == 0) {
-                        message.setReceived(Instant.now().getEpochSecond());
+        try {
+            switch (command) {
+                case "MESSAGR:":
+                    relay = true;
+                case "MESSAGE:":
+                    Message message = Message.fromJSON(json);
+                    message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond() + "; ");
+                    if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
+                        if (message.getReceived() == 0) {
+                            message.setReceived(Instant.now().getEpochSecond());
+                        }
                     }
-                }
-                ClassConnector.getInstance().sendMessageToAllChatControllers(message, relay);
-                if (parentNetworkMessage == null) {
-                    parentNetworkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
-                }
-                Database.getInstance().newMessage(message);
-                Network.getInstance().relayMessage(message, parentNetworkMessage);
-                break;
-            case "CONTACR:":
-                relay = true;
-            case "CONTACT:":
-                Contact contact = Contact.fromJSON(json);
-                if (parentNetworkMessage == null) {
-                    parentNetworkMessage = ClassConnector.getInstance().sendContactToNetworkMap(contact, mToMe);
-                }
-                if (!contact.getId().equals(Contact.getMyContact().getId())) {
-                    System.out.println("Kontakt empfangen!");
-                    System.out.println(contact.getId());
-                    if (!relay) {
-                        contact.setUrl(ip);
+                    ClassConnector.getInstance().sendMessageToAllChatControllers(message, relay);
+                    if (parentNetworkMessage == null) {
+                        parentNetworkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
                     }
-                    ContactList.getInstance().addContact(contact);
-                    Database.getInstance().newContact(contact);
-                    Network.getInstance().relayContact(contact, parentNetworkMessage);
-                }
-                break;
-            case "GETCONTA"://CT
-                System.out.println("Kontaktanfrage empfangen!");
-                TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                client.sendContact(Contact.getMyContact());
-                ClassConnector.getInstance().sendContactToNetworkMap(Contact.getMyContact(), mFromMe);
-                break;
-            case "KEYEXCH:"://CT
-                NetworkIconMessage networkIconMessage = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), mToMe);
-                System.out.println("Schlüsselaustausch...");
-                crypto.generateKeys();
-                crypto.receivePublicKey(Base64.getDecoder().decode(json));
-                sendText("KEYPUBL:" + Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
-                crypto.generateCommonSecretKey();
-                Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ip), crypto.getSecretKey());
-                crypto.getSecretKey();
-                networkIconMessage.addResponse(new NetworkIconMessage(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), me, notMe));
-                break;
-            case "GETMYMM:"://GETMessagesWithID
-                System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
-                Network.getInstance().clearCache();
-                //ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
-                ArrayList<Message> messages = Database.getInstance().getMessagesWithIdNotInTrace(json);
-                JSONArray jsonMessages = new JSONArray();
-                JSONArray jsonContacts = new JSONArray();
+                    Database.getInstance().newMessage(message);
+                    Network.getInstance().relayMessage(message, parentNetworkMessage);
+                    break;
+                case "CONTACR:":
+                    relay = true;
+                case "CONTACT:":
+                    Contact contact = Contact.fromJSON(json);
+                    if (parentNetworkMessage == null) {
+                        parentNetworkMessage = ClassConnector.getInstance().sendContactToNetworkMap(contact, mToMe);
+                    }
+                    if (!contact.getId().equals(Contact.getMyContact().getId())) {
+                        System.out.println("Kontakt empfangen!");
+                        System.out.println(contact.getId());
+                        if (!relay) {
+                            contact.setUrl(ip);
+                        }
+                        ContactList.getInstance().addContact(contact);
+                        Database.getInstance().newContact(contact);
+                        Network.getInstance().relayContact(contact, parentNetworkMessage);
+                    }
+                    break;
+                case "GETCONTA"://CT
+                    System.out.println("Kontaktanfrage empfangen!");
+                    TCPClient client = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
+                    client.sendContact(Contact.getMyContact());
+                    ClassConnector.getInstance().sendContactToNetworkMap(Contact.getMyContact(), mFromMe);
+                    break;
+                case "KEYEXCH:"://CT
+                    NetworkIconMessage networkIconMessage = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), mToMe);
+                    System.out.println("Schlüsselaustausch...");
+                    crypto.generateKeys();
+                    crypto.receivePublicKey(Base64.getDecoder().decode(json));
+                    sendText("KEYPUBL:" + Base64.getEncoder().encodeToString(crypto.getPublicKey().getEncoded()));
+                    crypto.generateCommonSecretKey();
+                    Database.getInstance().addSecretKey(ContactList.getInstance().getContactByIP(ip), crypto.getSecretKey());
+                    crypto.getSecretKey();
+                    networkIconMessage.addResponse(new NetworkIconMessage(new Image(getClass().getResourceAsStream("/icons/round_vpn_key_white_24dp.png")), me, notMe));
+                    break;
+                case "GETMYMM:"://GETMessagesWithID
+                    System.out.println("Nachrichtenanfrage empfangen, sende alle Nachrichten...");
+                    Network.getInstance().clearCache();
+                    //ArrayList<Message> messages = Database.getInstance().getMessagesWithId(json);
+                    ArrayList<Message> messages = Database.getInstance().getMessagesWithIdNotInTrace(json);
+                    JSONArray jsonMessages = new JSONArray();
+                    JSONArray jsonContacts = new JSONArray();
 
 
-                for (Contact c : Database.getInstance().getContacts()) {
-                    if (!c.getId().equals(Contact.getMyContact().getId())) {
-                        jsonContacts.add(c.toJSONString());
+                    for (Contact c : Database.getInstance().getContacts()) {
+                        if (!c.getId().equals(Contact.getMyContact().getId())) {
+                            jsonContacts.add(c.toJSONString());
                         /*TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                         tcpClient.relayContact(c);
                         tcpClient.close();
                         Thread.sleep(100);
                         ClassConnector.getInstance().sendContactToNetworkMap(c, mFromMe);*/
+                        }
                     }
-                }
                 /*TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
                     tcpClient.sendMessage(mmmm, true);
                     tcpClient.close();
                     Thread.sleep(50);
                     ClassConnector.getInstance().sendMessageToNetworkMap(mmmm, mFromMe);*/
-                for (Message m : messages) {
-                    jsonMessages.add(m.toJSONString());
-                }
-                JSONObject jsonBlob = new JSONObject();
-                jsonBlob.put("MESSAGR:", jsonMessages);
-                jsonBlob.put("CONTACR:", jsonContacts);
-                TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
-                tcpClient.sendJSONBlob(jsonBlob);
-                tcpClient.close();
-                ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_all_inbox_white_48dp.png")), mFromMe);
-
-
-                break;
-            case "JSNBLOB:":
-                NetworkMessage networkMessage1 = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_all_inbox_white_48dp.png")), mToMe);
-
-                try {
-                    Main.file_put_contents("debug", json);
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-                    for (Object o : jsonObject.keySet()) {
-                        String commando = (String) o;
-                        JSONArray jsonArrayo = (JSONArray) jsonObject.get(commando);
-                        jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me, networkMessage1));
+                    for (Message m : messages) {
+                        jsonMessages.add(m.toJSONString());
                     }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                    JSONObject jsonBlob = new JSONObject();
+                    jsonBlob.put("MESSAGR:", jsonMessages);
+                    jsonBlob.put("CONTACR:", jsonContacts);
+                    TCPClient tcpClient = new TCPClient(socket.getInetAddress().getHostAddress(), TCPServer.PORT);
+                    tcpClient.sendJSONBlob(jsonBlob);
+                    tcpClient.close();
+                    ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_all_inbox_white_48dp.png")), mFromMe);
 
 
-                break;
-            case "VERSION:":
-                System.out.println("Version " + json + " empfangen!");
-                if (!json.equals(Main.VERSION)) {
-                    System.out.println("Neue Version, starte Update...");
-                    new Thread(() -> Platform.runLater(() -> Main.startMain(new Stage()))).start();
-                }
-                break;
-            default:
-                System.out.println("Unkown Message recieved: " + command);
-                System.out.println(json);
+                    break;
+                case "JSNBLOB:":
+                    NetworkMessage networkMessage1 = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_all_inbox_white_48dp.png")), mToMe);
+
+                    try {
+                        Main.file_put_contents("debug", json);
+                        JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+                        for (Object o : jsonObject.keySet()) {
+                            String commando = (String) o;
+                            JSONArray jsonArrayo = (JSONArray) jsonObject.get(commando);
+                            jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me, networkMessage1));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    break;
+                case "VERSION:":
+                    System.out.println("Version " + json + " empfangen!");
+                    if (!json.equals(Main.VERSION)) {
+                        System.out.println("Check for Update");
+                        URL url = new URL("https://api.github.com/repos/philiip11/SuperSecureChat/releases");
+                        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+                        con.setRequestMethod("GET");
+                        int status = con.getResponseCode();
+                        if (status == 200) {
+                            System.out.println("Response from GitHub: 200 OK");
+                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                            String line;
+                            StringBuilder content = new StringBuilder();
+                            while ((line = bufferedReader.readLine()) != null) {
+                                content.append(line);
+                            }
+                            JSONArray jsonArray = (JSONArray) new JSONParser().parse(content.toString());
+                            JSONObject release = (JSONObject) jsonArray.get(0);
+                            String newVersion = (String) release.get("tag_name");
+
+                            if (!newVersion.equals(Main.VERSION)) {
+                                System.out.println("Neue Version, starte Update...");
+                                new Thread(() -> Platform.runLater(() -> {
+                                    try {
+                                        Runtime.getRuntime().exec("java -jar SuperSecureChat.jar");
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    com.sun.javafx.application.PlatformImpl.tkExit();
+                                    Platform.exit();
+                                    Runtime.getRuntime().halt(0);
+
+                                })).start();
+                            }
+                        }
+
+                    }
+                    break;
+                default:
+                    System.out.println("Unkown Message recieved: " + command);
+                    System.out.println(json);
+            }
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
         }
+
     }
 
     private void sendText(String text) {

@@ -6,6 +6,7 @@ import SuperSecureChat.Controller.ShowPictureController;
 import SuperSecureChat.Crypto.Crypto;
 import SuperSecureChat.Database;
 import SuperSecureChat.Message;
+import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
 import javafx.event.EventHandler;
@@ -90,10 +91,6 @@ public class ChatListViewCell extends JFXListCell<Message> {
             mLLoader = new FXMLLoader(getClass().getResource(fxmlResource));
             mLLoader.setController(this);
 
-            if (message.getRead() == 0) {
-                message.setRead(Instant.now().getEpochSecond());
-                Database.getInstance().markRead(message);
-            }
             try {
                 mLLoader.load();
             } catch (IOException e) {
@@ -103,6 +100,16 @@ public class ChatListViewCell extends JFXListCell<Message> {
             labelTime.setText(simpleDateFormat.format(new Date(message.getCreated() * 1000L)));
             if (messageFromMe) {
                 received.setVisible(message.getReceived() > 0);
+                received.getStyleClass().clear();
+                if (message.getRead() != 0) {
+                    received.getStyleClass().add("read");
+                }
+            } else {
+                if (message.getRead() == 0) {
+                    message.setRead(Instant.now().getEpochSecond());
+                    Database.getInstance().markRead(message);
+                }
+                Network.getInstance().relayMessage(message, null);
             }
             if (dataMessage) {
                 String filename = crypto.decrypt(message.getText());

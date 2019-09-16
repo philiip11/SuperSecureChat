@@ -50,6 +50,11 @@ JFXListView {
     -fx-background-radius: 25px;
 }
 
+.read {
+    -fx-text-fill: lime;
+}
+
+
 .wrapper {
     -fx-word-wrap: break-word;
 }
