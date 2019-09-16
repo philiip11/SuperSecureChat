@@ -102,10 +102,11 @@ public class ChatListViewCell extends JFXListCell<Message> {
             }
             if (dataMessage) {
                 String filename = crypto.decrypt(message.getText());
+                String filenameLower = filename.toLowerCase();
                 //TODO Dateien verschlüsseln
-                if (filename.contains(".png") ||
-                        filename.contains(".jpg") ||
-                        filename.contains(".jfif")) {
+                if (filenameLower.contains(".png") ||
+                        filenameLower.contains(".jpg") ||
+                        filenameLower.contains(".jfif")) {
                     Image image = Contact.imageDecoder(crypto.decrypt(message.getData()));
                     imageView.setImage(image);
                     imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
