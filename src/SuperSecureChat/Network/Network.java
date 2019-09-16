@@ -73,7 +73,7 @@ public class Network {
         }).start();
     }
 
-    public void sendContact(Contact c, NetworkContactMessage networkContactMessage) {
+    public void sendContact(Contact c, NetworkMessage networkContactMessage) {
         new Thread(() -> {
             NetworkController networkController = ClassConnector.getInstance().getNetworkController();
             for (String ip : otherIPs) {
@@ -160,7 +160,7 @@ public class Network {
         }
     }
 
-    public void relayContact(Contact contact, NetworkContactMessage networkContactMessage) {
+    public void relayContact(Contact contact, NetworkMessage networkContactMessage) {
         if (!relayedContacts.contains(contact.getId() + contact.getImage().hashCode())) {
             relayedContacts.add(contact.getId() + contact.getImage().hashCode());
             sendContact(contact, networkContactMessage);

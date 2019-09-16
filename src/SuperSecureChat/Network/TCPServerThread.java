@@ -9,7 +9,6 @@ import SuperSecureChat.Database;
 import SuperSecureChat.Main;
 import SuperSecureChat.Message;
 import SuperSecureChat.NetworkMap.NetworkContact;
-import SuperSecureChat.NetworkMap.NetworkContactMessage;
 import SuperSecureChat.NetworkMap.NetworkIconMessage;
 import SuperSecureChat.NetworkMap.NetworkMessage;
 import javafx.application.Platform;
@@ -61,7 +60,7 @@ public class TCPServerThread extends Thread {
                 mFromMe.setReceiver(Contact.getMyContact());
                 NetworkContact notMe = networkController.getNetworkContactByContact(mFromMe.getSender());
                 NetworkContact me = networkController.getNetworkContactByContact(Contact.getMyContact());
-                parseInput(crypto, command, json, ip, mToMe, mFromMe, notMe, me);
+                parseInput(crypto, command, json, ip, mToMe, mFromMe, notMe, me, null);
 
                 //out.writeBytes(line + "\n\r");
                 sendText("200 OK");
@@ -75,7 +74,7 @@ public class TCPServerThread extends Thread {
     }
 
     @SuppressWarnings({"unchecked", "DuplicateBranchesInSwitch"})
-    private void parseInput(Crypto crypto, String command, String json, String ip, Message mToMe, Message mFromMe, NetworkContact notMe, NetworkContact me) {
+    private void parseInput(Crypto crypto, String command, String json, String ip, Message mToMe, Message mFromMe, NetworkContact notMe, NetworkContact me, NetworkMessage parentNetworkMessage) {
         boolean relay = false;
         switch (command) {
             case "MESSAGR:":
@@ -89,15 +88,19 @@ public class TCPServerThread extends Thread {
                     }
                 }
                 ClassConnector.getInstance().sendMessageToAllChatControllers(message, relay);
-                NetworkMessage networkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
+                if (parentNetworkMessage == null) {
+                    parentNetworkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
+                }
                 Database.getInstance().newMessage(message);
-                Network.getInstance().relayMessage(message, networkMessage);
+                Network.getInstance().relayMessage(message, parentNetworkMessage);
                 break;
             case "CONTACR:":
                 relay = true;
             case "CONTACT:":
                 Contact contact = Contact.fromJSON(json);
-                NetworkContactMessage networkContactMessage = ClassConnector.getInstance().sendContactToNetworkMap(contact, mToMe);
+                if (parentNetworkMessage == null) {
+                    parentNetworkMessage = ClassConnector.getInstance().sendContactToNetworkMap(contact, mToMe);
+                }
                 if (!contact.getId().equals(Contact.getMyContact().getId())) {
                     System.out.println("Kontakt empfangen!");
                     System.out.println(contact.getId());
@@ -106,7 +109,7 @@ public class TCPServerThread extends Thread {
                     }
                     ContactList.getInstance().addContact(contact);
                     Database.getInstance().newContact(contact);
-                    Network.getInstance().relayContact(contact, networkContactMessage);
+                    Network.getInstance().relayContact(contact, parentNetworkMessage);
                 }
                 break;
             case "GETCONTA"://CT
@@ -164,7 +167,7 @@ public class TCPServerThread extends Thread {
 
                 break;
             case "JSNBLOB:":
-                ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_all_inbox_white_48dp.png")), mToMe);
+                NetworkMessage networkMessage1 = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_all_inbox_white_48dp.png")), mToMe);
 
                 try {
                     Main.file_put_contents("debug", json);
@@ -172,7 +175,7 @@ public class TCPServerThread extends Thread {
                     for (Object o : jsonObject.keySet()) {
                         String commando = (String) o;
                         JSONArray jsonArrayo = (JSONArray) jsonObject.get(commando);
-                        jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me));
+                        jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me, networkMessage1));
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
