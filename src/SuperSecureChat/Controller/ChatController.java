@@ -117,27 +117,34 @@ public class ChatController {
 
 
     public void newMessage(Message message) {
-        //if (message.getReceiver() != null && message.getSender() != null) {
-        if ((message.getReceiver().getId().equals(me.getId()) &&            // Naichricht von Kontakt an mch
-                message.getSender().getId().equals(contact.getId())) ||
-                (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
-                        message.getSender().getId().equals(me.getId()))) {
+        if (message.getReceiver() != null && message.getSender() != null) {
+            if ((message.getReceiver().getId().equals(me.getId()) &&            // Naichricht von Kontakt an mch
+                    message.getSender().getId().equals(contact.getId())) ||
+                    (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
+                            message.getSender().getId().equals(me.getId()))) {
 
-            ArrayList<Message> remove = new ArrayList<>();
-            for (Message m : messages) {
-                if (m.getId().equals(message.getId())) {
-                    remove.add(m);
+                ArrayList<Message> remove = new ArrayList<>();
+                for (Message m : messages) {
+                    if (m.getId().equals(message.getId())) {
+                        remove.add(m);
+                    }
                 }
+                Platform.runLater(() -> {
+                    for (Message m : remove) {
+                        messages.remove(m);
+                    }
+                    messages.add(message);
+                    updateListView();
+                });
             }
-            Platform.runLater(() -> {
-                for (Message m : remove) {
-                    messages.remove(m);
-                }
-                messages.add(message);
-                updateListView();
-            });
+        } else {
+            System.out.println("ChatControllerNullPointerException");
+            System.out.println("me.getId(): " + me.getId());
+            System.out.println("contact.getId(): " + contact.getId());
+            System.out.println("message.getText(): " + message.getText());
+            System.out.println("message.getSender().getId(): " + message.getSender().getId());
+            System.out.println("message.getReceiver().getId(): " + message.getReceiver().getId());
         }
-        //}
     }
 
     public void sendFile(ActionEvent actionEvent) {
