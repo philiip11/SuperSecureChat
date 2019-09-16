@@ -188,9 +188,8 @@ public class TCPServerThread extends Thread {
                         for (Object o : jsonObject.keySet()) {
                             String commando = (String) o;
                             JSONArray jsonArrayo = (JSONArray) jsonObject.get(commando);
-                            if (me != null && notMe != null) {
-                                jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me, networkMessage1));
-                            }
+                            jsonArrayo.forEach((Consumer<String>) s -> parseInput(crypto, commando, s, ip, mToMe, mFromMe, notMe, me, networkMessage1));
+
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
