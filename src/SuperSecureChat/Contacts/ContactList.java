@@ -1,5 +1,6 @@
 package SuperSecureChat.Contacts;
 
+import SuperSecureChat.Database;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +15,11 @@ public class ContactList {
 
     public static ContactList getInstance() {
         return INSTANCE;
+    }
+
+    private ContactList() {
+        addAll(Database.getInstance().getContacts());
+        remove(Contact.getMyContact());
     }
 
     public void addContact(Contact contact) {

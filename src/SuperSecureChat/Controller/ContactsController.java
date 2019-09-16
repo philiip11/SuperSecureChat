@@ -3,7 +3,6 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Contacts.ContactListViewCell;
-import SuperSecureChat.Database;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -49,19 +48,6 @@ public class ContactsController {
     }
 
     private void init() {
-
-        /*try (InputStream input = new FileInputStream("config.properties")) {
-            Properties prop = new Properties();
-            prop.load(input);
-            vorname = prop.getProperty("vorname");
-            nachname = prop.getProperty("nachname");
-            username = prop.getProperty("username");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }*/
-
-
-        loadContacts();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -75,11 +61,6 @@ public class ContactsController {
 
     }
 
-    private void loadContacts() {
-        contactList.addAll(Database.getInstance().getContacts());
-        contactList.remove(Contact.getMyContact());
-
-    }
 
     private void showContacts() {
         contactJFXListView.refresh();

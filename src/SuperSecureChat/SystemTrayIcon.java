@@ -2,7 +2,6 @@ package SuperSecureChat;
 
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Crypto.Crypto;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 
@@ -67,31 +66,23 @@ public class SystemTrayIcon {
         trayIcon.setPopupMenu(popup);
 
 
-        //TODO soll Anwendung maximieren //doppelclick *thinking*
         trayIcon.addActionListener(e -> {
-            ClassConnector.getInstance().openContacts(); //TODO Funktioniert so leider nicht, hat jemand eine bessere Idee? :-)
-            JOptionPane.showMessageDialog(null,
-                    "[Open Application] Hopefully coming soon");
-
+            Platform.runLater(() -> ClassConnector.getInstance().openContacts());
         });
         aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(null,
                 "Creators of the JavaFX application SuperSecureChat"));
 
         closeapp.addActionListener(e -> {
-
-            //SystemTray.getSystemTray().remove(trayIcon);
             Platform.runLater(() -> {
+                SystemTray.getSystemTray().remove(trayIcon);
                 com.sun.javafx.application.PlatformImpl.tkExit();
                 Platform.exit();
                 Runtime.getRuntime().halt(0);
             });
         });
 
-        //TODO soll Anwendung starten *thinking*
         startapp.addActionListener(e -> {
-
-            Platform.exit();
-            Application.launch();
+            Platform.runLater(() -> ClassConnector.getInstance().openContacts());
             //trayIcon.addActionListener(event -> Platform.runLater(this::showStage);
 
             //setonStart();

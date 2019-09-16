@@ -25,15 +25,14 @@ public class ClassConnector {
     private static final ClassConnector INSTANCE = new ClassConnector();
     private ObservableList<ChatController> chatControllers = FXCollections.observableArrayList();
     private SystemTrayIcon systemTrayIcon;
-
-    public NetworkController getNetworkController() {
-        return networkController;
-    }
-
     private NetworkController networkController;
 
     public static ClassConnector getInstance() {
         return INSTANCE;
+    }
+
+    public NetworkController getNetworkController() {
+        return networkController;
     }
 
     public void addChatController(ChatController chatController) {
