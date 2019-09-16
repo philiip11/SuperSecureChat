@@ -11,7 +11,7 @@ import java.util.Base64;
 
 public class Database {
 
-    private static final int DB_VERSION = 15;
+    private static final int DB_VERSION = 16;
 
     private static final Database INSTANCE = new Database();
     private final String DB_PATH = System.getenv("APPDATA") + "\\SuperSecureChat\\db.db";

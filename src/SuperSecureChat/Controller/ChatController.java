@@ -90,6 +90,9 @@ public class ChatController {
         Crypto crypto = new Crypto();
         crypto.setSecretKey(Database.getInstance().getSecretKeyByContact(message.getReceiver()));
         message.setText(crypto.encrypt(message.getText()));
+        if (!message.getData().equals("") && message.getData() != null) {
+            message.setData(crypto.encrypt(message.getData()));
+        }
         network.sendMessage(message);
         messages.add(message);
         updateListView();

@@ -125,7 +125,7 @@ public class ContactsController {
             Image image = new Image(getClass().getResourceAsStream("/icons/round_import_export_white_48dp.png"));
             stage.getIcons().add(image);
             if (Screen.getScreens().size() > 1) {
-                Rectangle2D bounds = Screen.getScreens().get(1).getVisualBounds();
+                Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
                 stage.setX(bounds.getMinX() + (bounds.getWidth() - width) / 2);
                 stage.setY(0);
             }

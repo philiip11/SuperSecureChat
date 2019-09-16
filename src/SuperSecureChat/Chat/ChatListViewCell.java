@@ -106,7 +106,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 if (filename.contains(".png") ||
                         filename.contains(".jpg") ||
                         filename.contains(".jfif")) {
-                    Image image = Contact.imageDecoder(message.getData());
+                    Image image = Contact.imageDecoder(crypto.decrypt(message.getData()));
                     imageView.setImage(image);
                     imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
@@ -128,7 +128,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
                                 stage.setX(x);
                                 stage.setY(y);
                                 stage.initStyle(StageStyle.TRANSPARENT);
-                                stage.setTitle(message.getText());
+                                stage.setTitle(filename);
                                 stage.getIcons().add(image);
                                 Scene scene = new Scene(root, width, height, true, SceneAntialiasing.BALANCED);
                                 scene.setFill(Color.TRANSPARENT);
@@ -150,7 +150,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
                         File file = fileChooser.showSaveDialog(null);
                         if (file != null) {
                             try {
-                                Files.write(file.toPath(), Base64.getDecoder().decode(message.getData()));
+                                Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
