@@ -81,9 +81,9 @@ public class ClassConnector {
         return null;
     }
 
-    public NetworkMessage sendNetworkMessageToNetworkMap(NetworkMessage message) {
+    public NetworkMessage sendNetworkMessageToNetworkMap(NetworkMessage message, boolean now) {
         if (networkController != null) {
-            return networkController.newNetworkMessage(message);
+            return networkController.newNetworkMessage(message, now);
         }
         return message;
     }

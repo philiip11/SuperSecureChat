@@ -36,7 +36,7 @@ public class NetworkMessage {
         animation++;
         if (animation > ANIMATION_DURATION) {
             for (NetworkMessage response : responses) {
-                ClassConnector.getInstance().sendNetworkMessageToNetworkMap(response);
+                ClassConnector.getInstance().sendNetworkMessageToNetworkMap(response, true);
             }
             this.delete = true;
             return;

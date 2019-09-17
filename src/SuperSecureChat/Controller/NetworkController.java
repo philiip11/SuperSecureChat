@@ -111,7 +111,7 @@ public class NetworkController {
         int i = 0;
         for (NetworkMessage message : drawingMessages) {
             i++;
-            if (i < 50) {
+            if (i < 100) {
                 message.draw(gc);
             }
 
@@ -153,8 +153,12 @@ public class NetworkController {
         return networkIconMessage;
     }
 
-    public NetworkMessage newNetworkMessage(NetworkMessage message) {
-        networkMessages.add(message);
+    public NetworkMessage newNetworkMessage(NetworkMessage message, boolean now) {
+        if (now) {
+            drawingMessages.add(message);
+        } else {
+            networkMessages.add(message);
+        }
         return message;
     }
 }
