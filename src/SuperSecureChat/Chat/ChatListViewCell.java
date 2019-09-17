@@ -38,7 +38,7 @@ import java.util.Date;
 public class ChatListViewCell extends JFXListCell<Message> {
 
     @FXML
-    Text labelMessage;
+    Text labelMessage; //TODO Change to TextFlow
     @FXML
     Label labelTime;
     @FXML

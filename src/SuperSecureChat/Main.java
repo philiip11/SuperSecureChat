@@ -102,7 +102,7 @@ public class Main extends Application {
             properties.setProperty("autostart", "true");
             properties.store(new FileOutputStream("config.prop"), null);
         }
-
+        //Font.loadFont(getClass().getResource("/emoji/NotoColorEmoji.ttf").toExternalForm(), 12);
         startMain(primaryStage);
 
     }
