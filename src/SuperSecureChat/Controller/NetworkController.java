@@ -54,10 +54,10 @@ public class NetworkController {
         ObservableList<Contact> allContacts = contactList.getAllContacts();
         networkContactList.clear();
         int size = allContacts.size();
+        addContact(size + 1, 0, Contact.getMyContact());
         for (int i = 0; i < size; i++) {
             addContact(size + 1, i + 1, allContacts.get(i));
         }
-        addContact(size + 1, 0, Contact.getMyContact());
         /*Message m = new Message();        // Test message for notification testing
         m.setSender(Contact.getMyContact());
         m.setReceiver(Contact.getMyContact());
@@ -73,15 +73,15 @@ public class NetworkController {
             newContacts.removeIf(contact -> contact.getId().equals(nc.getContact().getId()));
         }
 
-        int size = allContacts.size();
-        int sizenew = newContacts.size();
+        int size = allContacts.size() + 1;
         int j = 0;
         for (NetworkContact nc : networkContactList) {
-            moveContact(size + 1, j + 1, nc);
+            moveContact(size, j, nc);
             j++;
         }
-        for (int i = size - sizenew; i < sizenew; i++) {
-            addContact(size + 1, i + 1, newContacts.get(i - size + sizenew));
+        for (Contact nc : newContacts) {
+            addContact(size, j, nc);
+            j++;
         }
 
 

@@ -1,5 +1,6 @@
 package SuperSecureChat.Contacts;
 
+import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Database;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -31,6 +32,7 @@ public class ContactList {
                 removeContact(contact.getId());
                 contacts.add(contact);
             }
+            ClassConnector.getInstance().updateContactListOnNetworkMap();
         });
 
 

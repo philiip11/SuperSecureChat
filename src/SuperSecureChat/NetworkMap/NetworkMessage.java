@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class NetworkMessage {
     private final int ANIMATION_DURATION = 60;
-
+    private final double START_ANGLE = 45 * Math.PI / 180;
     private NetworkContact sender;
     private NetworkContact reveiver;
     private int animation;
@@ -28,8 +28,8 @@ public class NetworkMessage {
         animation = 0;
         x = sender.getX();
         y = sender.getY();
-        ax = 0;
-        ay = 0;
+        ax = Math.random() * 2 - 1;
+        ay = Math.random() * 2 - 1;
         if (text.length() > 16) {
             text = text.substring(0, 16);
         }
@@ -37,6 +37,7 @@ public class NetworkMessage {
     }
 
     public void draw(GraphicsContext gc, Image image, int size) {
+        animation++;
         calculateNewPosition();
         if (reachedTarget()) {
             for (NetworkMessage response : responses) {
@@ -64,7 +65,7 @@ public class NetworkMessage {
         draw(gc, new Image(getClass().getResourceAsStream("/icons/round_chat_white_24dp.png")));
     }
 
-    public void calculateNewPosition() {
+    public void calculateNewPosition() { //TODO Switch for first 10 frames or so
         if (reveiver.getX() != x) {
             ax += (reveiver.getX() - x) / 100;
             x = x + ax;

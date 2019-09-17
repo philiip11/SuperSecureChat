@@ -120,7 +120,6 @@ public class TCPServerThread extends Thread {
                         if (!relay) {
                             contact.setUrl(ip);
                         }
-                        ClassConnector.getInstance().updateContactListOnNetworkMap();
                         ContactList.getInstance().addContact(contact);
                         Database.getInstance().newContact(contact);
                         Network.getInstance().relayContact(contact, parentNetworkMessage);
