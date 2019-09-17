@@ -91,14 +91,16 @@ public class TCPServerThread extends Thread {
                 case "MESSAGR:":
                     relay = true;
                 case "MESSAGE:":
+                    boolean notification = false;
                     Message message = Message.fromJSON(json);
                     message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond() + "; ");
                     if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
                         if (message.getReceived() == 0) {
                             message.setReceived(Instant.now().getEpochSecond());
+                            notification = true;
                         }
                     }
-                    ClassConnector.getInstance().sendMessageToAllChatControllers(message, relay);
+                    ClassConnector.getInstance().sendMessageToAllChatControllers(message, notification);
                     if (parentNetworkMessage == null) {
                         parentNetworkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
                     }
@@ -118,6 +120,7 @@ public class TCPServerThread extends Thread {
                         if (!relay) {
                             contact.setUrl(ip);
                         }
+                        ClassConnector.getInstance().updateContactListOnNetworkMap();
                         ContactList.getInstance().addContact(contact);
                         Database.getInstance().newContact(contact);
                         Network.getInstance().relayContact(contact, parentNetworkMessage);

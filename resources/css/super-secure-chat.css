@@ -90,10 +90,6 @@ JFXListView {
 }
 
 
-
-
-
-
 .numberButton {
     -fx-background-color: #111111;
     -fx-text-fill: white;
@@ -173,5 +169,13 @@ JFXListView {
 
 }
 
-.chatItem {
+.chatListViewNotification .chatItem {
+    -fx-background-color: #00000000;
+}
+
+.chatListViewNotification .jfx-list-cell {
+    -fx-min-width: 340px;
+    -fx-background-color: #00000000;
+    -fx-alignment: center-right;
+
 }

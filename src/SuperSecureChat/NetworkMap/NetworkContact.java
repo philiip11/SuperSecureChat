@@ -59,4 +59,9 @@ public class NetworkContact {
         gc.drawImage(contact.getJavaFXImage(), 0, 0, 256, 256, x - 32, y - 32, 64, 64);
 
     }
+
+    public void moveTo(double x, double y) {
+        setX(x); //TODO Animate
+        setY(y);
+    }
 }

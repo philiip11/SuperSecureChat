@@ -69,7 +69,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
             boolean messageFromMe;
             boolean dataMessage = false;
             if (message.getSender().getId().equals(Contact.getMyContact().getId())) {
-                if (message.getData().equals("") || message.getData() == null) {
+                if (message.getData() == null || message.getData().equals("")) {
                     fxmlResource = "/fxml/chatCellMe.fxml";
                 } else {
                     fxmlResource = "/fxml/chatCellPictureMe.fxml";
@@ -78,7 +78,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 secretKey = Database.getInstance().getSecretKeyByContact(message.getReceiver());
                 messageFromMe = true;
             } else {
-                if (message.getData().equals("") || message.getData() == null) {
+                if (message.getData() == null || message.getData().equals("")) {
                     fxmlResource = "/fxml/chatCell.fxml";
                 } else {
                     fxmlResource = "/fxml/chatCellPicture.fxml";

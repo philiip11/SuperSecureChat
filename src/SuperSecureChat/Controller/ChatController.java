@@ -117,7 +117,7 @@ public class ChatController {
 
 
     public void newMessage(Message message) {
-        if (message.getReceiver() != null && message.getSender() != null) {
+        if (message.getReceiver() != null && message.getSender() != null && contact != null && contact.getId() != null) {
             if ((message.getReceiver().getId().equals(me.getId()) &&            // Nachricht von Kontakt an mch
                     message.getSender().getId().equals(contact.getId())) ||
                     (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
@@ -134,7 +134,9 @@ public class ChatController {
                         messages.remove(m);
                     }
                     messages.add(message);
-                    updateListView();
+                    if (message.getRead() == 0) {
+                        updateListView();
+                    }
                 });
             }
         } else {

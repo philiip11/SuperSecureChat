@@ -4,9 +4,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="300.0" prefWidth="300.0"
-            xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.NotificationController">
+            xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.NotificationController"
+            style="-fx-background-color: #00000000;">
 
-    <JFXListView fx:id="messagesListView" prefHeight="300.0" prefWidth="300.0" styleClass="chatListView"
+    <JFXListView fx:id="messagesListView" prefHeight="300.0" prefWidth="300.0" styleClass="chatListViewNotification"
                  AnchorPane.bottomAnchor="128.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                  AnchorPane.topAnchor="0.0" style="-fx-background-color: #00000000;"/>
     <ImageView fx:id="picture" fitHeight="128.0" fitWidth="128.0" onMouseClicked="#openChat" onMouseExited="#close"

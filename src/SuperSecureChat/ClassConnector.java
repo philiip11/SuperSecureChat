@@ -54,7 +54,7 @@ public class ClassConnector {
             chatController.newMessage(message);
         }
         if (notification) {
-            systemTrayIcon.showMessage(message);
+            //systemTrayIcon.showMessage(message);
             NotificationHandler.getInstance().newMessage(message);
         }
     }
@@ -124,4 +124,10 @@ public class ClassConnector {
         }
     }
 
+    public void updateContactListOnNetworkMap() {
+        if (networkController != null) {
+            networkController.updateContactList();
+        }
+
+    }
 }

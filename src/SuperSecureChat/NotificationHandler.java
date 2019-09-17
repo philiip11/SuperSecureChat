@@ -48,29 +48,33 @@ public class NotificationHandler {
                         message.getReceiver() : message.getSender();
             }
             Contact finalOtherContact = otherContact;
-            Platform.runLater(() -> openNotificationWindow(finalOtherContact));
+            Platform.runLater(() -> {
+                openNotificationWindow(finalOtherContact, message);
+            });
 
         }
 
     }
 
-    private void openNotificationWindow(Contact otherContact) {
+    private void openNotificationWindow(Contact otherContact, Message message) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/notification.fxml"));
             Stage stage = new Stage();
             Parent root = loader.load();
-            int width = 300;
+            int width = 320;
             int height = 300;
             NotificationController notificationController = loader.getController();
             notificationController.setContact(otherContact);
             notificationController.setStage(stage);
+            notificationController.newMessage(message);
+            notificationControllers.add(notificationController);
             stage.getIcons().add(otherContact.getJavaFXImage());
 
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-            stage.setX(bounds.getMaxX() - width);
-            stage.setY(bounds.getMaxY() - height);
+            stage.setX(bounds.getMaxX() - width - 12);
+            stage.setY(bounds.getMaxY() - height - 12);
             stage.initStyle(StageStyle.TRANSPARENT);
-            openNewStage(root, stage, 300, 300, otherContact.getJavaFXImage());
+            openNewStage(root, stage, width, height, otherContact.getJavaFXImage());
         } catch (IOException e) {
             e.printStackTrace();
         }

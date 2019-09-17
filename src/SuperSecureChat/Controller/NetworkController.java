@@ -35,18 +35,13 @@ public class NetworkController {
     Canvas canvas;
     private int animator = 0;
     private ContactList contactList = ContactList.getInstance();
-    private ArrayList<NetworkContact> networkContactList = new ArrayList<>();
+    private CopyOnWriteArrayList<NetworkContact> networkContactList = new CopyOnWriteArrayList<>();
     private final Stack<NetworkMessage> networkMessages = new Stack<>();
     private final CopyOnWriteArrayList<NetworkMessage> drawingMessages = new CopyOnWriteArrayList<>();
 
     @FXML
     public void initialize() {
-        ObservableList<Contact> allContacts = contactList.getAllContacts();
-        int size = allContacts.size();
-        for (int i = 0; i < size; i++) {
-            addContact(size + 1, i + 1, allContacts.get(i));
-        }
-        addContact(size + 1, 0, Contact.getMyContact());
+        updateContactList();
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -56,6 +51,46 @@ public class NetworkController {
         };
         timer.start();
         ClassConnector.getInstance().addNetworkController(this);
+        ObservableList<Contact> allContacts = contactList.getAllContacts();
+        networkContactList.clear();
+        int size = allContacts.size();
+        for (int i = 0; i < size; i++) {
+            addContact(size + 1, i + 1, allContacts.get(i));
+        }
+        addContact(size + 1, 0, Contact.getMyContact());
+        /*Message m = new Message();        // Test message for notification testing
+        m.setSender(Contact.getMyContact());
+        m.setReceiver(Contact.getMyContact());
+        m.setId("0");
+        m.setText("Lorem ipsum dolor sit amet");
+        ClassConnector.getInstance().sendMessageToAllChatControllers(m, true);*/
+    }
+
+    public void updateContactList() {
+        ArrayList<Contact> allContacts = new ArrayList<>(contactList.getAllContacts());
+        ArrayList<Contact> newContacts = new ArrayList<>(allContacts);
+        for (NetworkContact nc : networkContactList) {
+            newContacts.removeIf(contact -> contact.getId().equals(nc.getContact().getId()));
+        }
+
+        int size = allContacts.size();
+        int sizenew = newContacts.size();
+        int j = 0;
+        for (NetworkContact nc : networkContactList) {
+            moveContact(size + 1, j + 1, nc);
+            j++;
+        }
+        for (int i = size - sizenew; i < sizenew; i++) {
+            addContact(size + 1, i + 1, newContacts.get(i - size + sizenew));
+        }
+
+
+    }
+
+    private void moveContact(int size, int i, NetworkContact nc) {
+        double x = CENTER_X + sin((i / (double) size) * PI * 2) * RADIUS;
+        double y = CENTER_Y + cos((i / (double) size) * PI * 2) * RADIUS;
+        nc.moveTo(x, y);
     }
 
 
