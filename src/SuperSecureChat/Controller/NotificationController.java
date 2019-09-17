@@ -4,17 +4,11 @@ import SuperSecureChat.Chat.ChatListViewCell;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Message;
 import SuperSecureChat.NotificationHandler;
-import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -60,22 +54,7 @@ public class NotificationController {
     }
 
     public void openChat(MouseEvent mouseEvent) {
-        int width = 500;
-        int height = 800;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            ChatController chatController = loader.getController();
-            chatController.setContact(contact);
-            chatController.setStage(stage);
-            stage.setTitle(contact.getName());
-            stage.setAlwaysOnTop(true);
-            stage.getIcons().add(contact.getJavaFXImage());
-            openNewStage(root, stage, width, height, contact.getJavaFXImage());
-        } catch (Exception ignored) {
-
-        }
+        ContactsController.getInstance().openChat(contact);
     }
 
     public void close() {
@@ -83,22 +62,5 @@ public class NotificationController {
         NotificationHandler.getInstance().notificationControllerClosed(this);
     }
 
-    private void openNewStage(Parent root, Stage stage, int width, int height, Image image) {
-        JFXDecorator decorator = new JFXDecorator(stage, root);
-        decorator.setCustomMaximize(false);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(32);
-        imageView.setFitWidth(32);
-        decorator.setGraphic(imageView);
-        Scene scene = new Scene(decorator, width, height, true, SceneAntialiasing.BALANCED);
-        final ObservableList<String> stylesheets = scene.getStylesheets();
-        stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
-                getClass().getResource("/css/jfoenix-design.css").toExternalForm(),
-                getClass().getResource("/css/custom.css").toExternalForm(),
-                getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
-                getClass().getResource("/css/super-secure-chat.css").toExternalForm());
 
-        stage.setScene(scene);
-        stage.show();
-    }
 }

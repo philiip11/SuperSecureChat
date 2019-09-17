@@ -3,6 +3,7 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Contacts.ContactListViewCell;
+import SuperSecureChat.NotificationHandler;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -76,13 +77,14 @@ public class ContactsController {
         openChat(contact);
     }
 
-    private void openChat(Contact contact) {
+    public void openChat(Contact contact) {
         int width = 500;
         int height = 800;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
             Stage stage = new Stage();
             Parent root = loader.load();
+            NotificationHandler.getInstance().closeNotification(contact);
             ChatController chatController = loader.getController();
             chatController.setContact(contact);
             chatController.setStage(stage);

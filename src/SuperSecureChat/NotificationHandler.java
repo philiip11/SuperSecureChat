@@ -48,9 +48,7 @@ public class NotificationHandler {
                         message.getReceiver() : message.getSender();
             }
             Contact finalOtherContact = otherContact;
-            Platform.runLater(() -> {
-                openNotificationWindow(finalOtherContact, message);
-            });
+            Platform.runLater(() -> openNotificationWindow(finalOtherContact, message));
 
         }
 

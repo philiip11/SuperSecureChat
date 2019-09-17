@@ -107,9 +107,11 @@ public class ChatListViewCell extends JFXListCell<Message> {
             } else {
                 if (message.getRead() == 0) {
                     message.setRead(Instant.now().getEpochSecond());
-                    Database.getInstance().markRead(message);
+                    new Thread(() -> {
+                        Database.getInstance().markRead(message);
+                        Network.getInstance().relayMessage(message, null);
+                    }).start();
                 }
-                Network.getInstance().relayMessage(message, null);
             }
             if (dataMessage) {
                 String filename = crypto.decrypt(message.getText());
