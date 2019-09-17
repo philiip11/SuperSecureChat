@@ -67,7 +67,7 @@ public class NotificationHandler {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/notification.fxml"));
             Stage stage = new Stage();
             Parent root = loader.load();
-            int width = 320;
+            int width = 350;
             int height = 300;
             NotificationController notificationController = loader.getController();
             notificationController.setContact(otherContact);
@@ -80,6 +80,7 @@ public class NotificationHandler {
             stage.setX(bounds.getMaxX() - width - 12);
             stage.setY(bounds.getMaxY() - height - 12);
             stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setAlwaysOnTop(true);
             openNewStage(root, stage, width, height, otherContact.getJavaFXImage());
         } catch (IOException e) {
             e.printStackTrace();

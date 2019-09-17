@@ -14,13 +14,24 @@ import static java.lang.Math.sin;
 public class NetworkContact {
     private double x;
     private double y;
+    private double tx;
+    private double ty;
+    private double ax;
+    private double ay;
+    private int CENTER_X;
+    private int CENTER_Y;
     private Contact contact;
 
 
-    public NetworkContact(double x, double y, Contact contact) {
-        this.x = x;
-        this.y = y;
+    public NetworkContact(double x, double y, Contact contact, int CENTER_X, int CENTER_Y) {
+        this.x = CENTER_X;
+        this.y = CENTER_Y;
+        this.CENTER_X = CENTER_X;
+        this.CENTER_Y = CENTER_Y;
+        tx = x;
+        ty = y;
         this.contact = contact;
+
     }
 
     public double getX() {
@@ -54,14 +65,31 @@ public class NetworkContact {
             gc.setFill(Paint.valueOf("#ff0000"));
         }
 
+        calcNewPosition();
+
+
         double r = 70 + sin(animator * PI / (NetworkController.ANIMATION_LOOP / 2)) * 6;
         gc.fillOval(x - r / 2, y - r / 2, r, r);
         gc.drawImage(contact.getJavaFXImage(), 0, 0, 256, 256, x - 32, y - 32, 64, 64);
 
+
+    }
+
+    private void calcNewPosition() {
+        if (tx != x) {
+            ax += (tx - x) / 100;
+            x = x + ax;
+            ax = ax * 0.85;
+        }
+        if (ty != y) {
+            ay += (ty - y) / 100;
+            y = y + ay;
+            ay = ay * 0.85;
+        }
     }
 
     public void moveTo(double x, double y) {
-        setX(x); //TODO Animate
-        setY(y);
+        tx = x;
+        ty = y;
     }
 }

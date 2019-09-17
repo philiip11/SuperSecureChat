@@ -97,7 +97,7 @@ public class NetworkController {
     private void addContact(int size, double i, Contact contact) {
         double x = CENTER_X + sin((i / (double) size) * PI * 2) * RADIUS;
         double y = CENTER_Y + cos((i / (double) size) * PI * 2) * RADIUS;
-        networkContactList.add(new NetworkContact(x, y, contact));
+        networkContactList.add(new NetworkContact(x, y, contact, CENTER_X, CENTER_Y));
     }
 
     private void draw() {
