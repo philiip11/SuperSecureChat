@@ -124,18 +124,23 @@ public class ChatController {
                             message.getSender().getId().equals(me.getId()))) {
 
                 ArrayList<Message> remove = new ArrayList<>();
+                boolean update = true;
                 for (Message m : messages) {
                     if (m.getId().equals(message.getId())) {
                         remove.add(m);
+                        update = false;
                     }
                 }
+                boolean finalUpdate = update;
                 Platform.runLater(() -> {
                     for (Message m : remove) {
                         messages.remove(m);
                     }
                     messages.add(message);
-                    if (message.getRead() == 0) {
+                    if (finalUpdate) {
                         updateListView();
+                    } else {
+                        messagesListView.getItems().sort(Comparator.comparingLong(Message::getCreated));
                     }
                 });
             }
