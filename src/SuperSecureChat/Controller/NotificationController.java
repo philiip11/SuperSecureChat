@@ -43,8 +43,10 @@ public class NotificationController {
     }
 
     public void newMessage(Message message) {
-        messages.add(message);
-        Platform.runLater(this::updateListView);
+        Platform.runLater(() -> {
+            messages.add(message);
+            updateListView();
+        });
     }
 
 

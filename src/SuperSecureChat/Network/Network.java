@@ -79,7 +79,7 @@ public class Network {
             for (String ip : otherIPs) {
                 TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
                 if (networkContactMessage == null) {
-                    tcpClient.sendContact(c);
+                    tcpClient.relayContact(c);
                 } else {
                     tcpClient.relayContact(c);
                     NetworkContactMessage response = new NetworkContactMessage(c,
