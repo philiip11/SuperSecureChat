@@ -56,6 +56,14 @@ public class NotificationHandler {
 
     }
 
+    public void closeNotification(Contact contact) {
+        for (NotificationController notificationController : notificationControllers) {
+            if (contact.getId().equals(notificationController.getContact().getId())) {
+                notificationController.close();
+            }
+        }
+    }
+
     private void openNotificationWindow(Contact otherContact, Message message) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/notification.fxml"));
@@ -97,5 +105,9 @@ public class NotificationHandler {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void notificationControllerClosed(NotificationController notificationController) {
+        notificationControllers.remove(notificationController);
     }
 }

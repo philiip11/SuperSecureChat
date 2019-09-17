@@ -3,6 +3,7 @@ package SuperSecureChat.Controller;
 import SuperSecureChat.Chat.ChatListViewCell;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Message;
+import SuperSecureChat.NotificationHandler;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -69,6 +70,7 @@ public class NotificationController {
             chatController.setContact(contact);
             chatController.setStage(stage);
             stage.setTitle(contact.getName());
+            stage.setAlwaysOnTop(true);
             stage.getIcons().add(contact.getJavaFXImage());
             openNewStage(root, stage, width, height, contact.getJavaFXImage());
         } catch (Exception ignored) {
@@ -76,8 +78,9 @@ public class NotificationController {
         }
     }
 
-    public void close(MouseEvent mouseEvent) {
+    public void close() {
         stage.close();
+        NotificationHandler.getInstance().notificationControllerClosed(this);
     }
 
     private void openNewStage(Parent root, Stage stage, int width, int height, Image image) {
