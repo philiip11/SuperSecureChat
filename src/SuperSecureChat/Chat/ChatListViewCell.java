@@ -238,11 +238,11 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 //emojis.add(EmojiUtils.getEmoji(emojiCode).getEmoji());
             }
         }*/
-        int size = 136;
+        int size = 128;
         for (int i = 0; i < string.length(); i++) {
             int ch = string.codePointAt(i);
             if (ch <= 128) {
-                size = 64;
+                size = 16;
                 break;
             }
         }
@@ -313,13 +313,11 @@ public class ChatListViewCell extends JFXListCell<Message> {
     }
 
     private boolean addEmoji(List<Node> textList, int size, String string) {
-        String emojiPath = "/emoji/img-google-" + size + "/" + string + ".png";
+        String emojiPath = "/emoji/128/emoji_u" + string + ".png";
         try {
             ImageView emoji = new ImageView(getClass().getResource(emojiPath).toExternalForm());
-            if (size == 64) {
-                emoji.setFitHeight(16);
-                emoji.setFitWidth(16);
-            }
+            emoji.setFitHeight(size);
+            emoji.setFitWidth(size);
             textList.add(emoji);
             return true;
         } catch (NullPointerException e) {
@@ -328,7 +326,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
     }
 
     private void addEmoji(List<Node> textList, String emojiCode) {
-        String emojiPath = "/emoji/img-google-64/" + EmojiUtils.hexHtmlify(emojiCode).replaceAll("&#x", "").replace(";", "") + ".png";
+        String emojiPath = "/emoji/128/emoji_u" + EmojiUtils.hexHtmlify(emojiCode).replaceAll("&#x", "").replace(";", "") + ".png";
         System.out.println(emojiPath);
         try {
             ImageView emoji = new ImageView(getClass().getResource(emojiPath).toExternalForm());
