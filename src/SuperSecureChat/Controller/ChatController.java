@@ -16,11 +16,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +44,8 @@ public class ChatController {
     JFXListView<Message> messagesListView;
     @FXML
     JFXButton sendMessage;
+    @FXML
+    JFXButton openEmojiPicker;
     @FXML
     JFXTextField txtMessage;
 
@@ -172,5 +180,41 @@ public class ChatController {
         }
 
 
+    }
+
+    public void openEmojiPicker(ActionEvent actionEvent) {
+        try {
+            int height = 400;
+            int width = 350;
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/emojiPicker.fxml"));
+            Parent root = loader.load();
+            EmojiPickerController emojiPickerController = loader.getController();
+            Stage stage = new Stage();
+            Bounds boundsInScreen = openEmojiPicker.localToScreen(openEmojiPicker.getBoundsInLocal());
+
+            stage.setY(boundsInScreen.getMaxY() - 64 - height);
+            stage.setX(boundsInScreen.getMaxX() - width);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setTitle("Emojipicker");
+            stage.getIcons().add(contact.getJavaFXImage());
+            Scene scene = new Scene(root, width, height, true, SceneAntialiasing.BALANCED);
+            final ObservableList<String> stylesheets = scene.getStylesheets();
+            stylesheets.addAll(getClass().getResource("/css/jfoenix-fonts.css").toExternalForm(),
+                    getClass().getResource("/css/jfoenix-design.css").toExternalForm(),
+                    getClass().getResource("/css/custom.css").toExternalForm(),
+                    getClass().getResource("/css/jfoenix-main-demo.css").toExternalForm(),
+                    getClass().getResource("/css/super-secure-chat.css").toExternalForm());
+            stage.setScene(scene);
+            emojiPickerController.setStage(stage);
+            emojiPickerController.setChatController(this);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add(String text) {
+        txtMessage.setText(txtMessage.getText() + text);
     }
 }

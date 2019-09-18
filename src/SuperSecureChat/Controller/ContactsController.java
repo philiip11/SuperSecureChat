@@ -90,6 +90,7 @@ public class ContactsController {
             chatController.setStage(stage);
             stage.setTitle(contact.getName());
             stage.getIcons().add(contact.getJavaFXImage());
+            stage.setY(0);
             openNewStage(root, stage, width, height, contact.getJavaFXImage());
         } catch (Exception ignored) {
 

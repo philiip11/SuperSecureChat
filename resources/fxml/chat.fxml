@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="419.0" prefWidth="629.0"
             xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.ChatController">
@@ -15,7 +13,11 @@
             <children>
                 <JFXTextField fx:id="txtMessage" onKeyReleased="#txtOnKeyReleased" prefHeight="25.0" prefWidth="554.0"
                               styleClass="chatTextField" unFocusColor="BLACK" AnchorPane.bottomAnchor="8.0"
-                              AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="96.0"/>
+                              AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="136.0"/>
+                <JFXButton fx:id="openEmojiPicker" buttonType="RAISED" mnemonicParsing="false"
+                           onAction="#openEmojiPicker"
+                           styleClass="chatSendButton" text="☺" AnchorPane.bottomAnchor="6.0"
+                           AnchorPane.rightAnchor="96.0"/>
                 <JFXButton fx:id="sendFile" buttonType="RAISED" mnemonicParsing="false" onAction="#sendFile"
                            styleClass="chatSendButton" text="📎" AnchorPane.bottomAnchor="6.0"
                            AnchorPane.rightAnchor="62.0"/>

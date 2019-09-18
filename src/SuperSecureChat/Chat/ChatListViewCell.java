@@ -242,7 +242,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
         for (int i = 0; i < string.length(); i++) {
             int ch = string.codePointAt(i);
             if (ch <= 128) {
-                size = 16;
+                size = 24;
                 break;
             }
         }
@@ -318,6 +318,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
             ImageView emoji = new ImageView(getClass().getResource(emojiPath).toExternalForm());
             emoji.setFitHeight(size);
             emoji.setFitWidth(size);
+            emoji.setSmooth(true);
             textList.add(emoji);
             return true;
         } catch (NullPointerException e) {
