@@ -4,21 +4,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="anchorPane" minWidth="0.0" prefWidth="300.0"
             styleClass="chatItem" xmlns="http://javafx.com/javafx/8.0.192">
     <children>
         <AnchorPane minWidth="100.0" styleClass="speechBubbleMe" AnchorPane.bottomAnchor="0.0"
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Text fx:id="labelMessage" boundsType="VISUAL" fill="WHITE" styleClass="wrapper" text="NACHRICHT"
-                      textAlignment="JUSTIFY" wrappingWidth="300" AnchorPane.bottomAnchor="13.0"
-                      AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
-                    <font>
-                        <Font name="Roboto" size="14.0"/>
-                    </font>
-                </Text>
+                <TextFlow fx:id="labelMessage" styleClass="wrapper"
+                          textAlignment="JUSTIFY" maxWidth="300" AnchorPane.bottomAnchor="13.0"
+                          AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                </TextFlow>
                 <ImageView fx:id="imageView" fitHeight="256.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true"
                            AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0"/>
                 <Label fx:id="labelTime" style="-fx-font-size: 12px" text="Zeit" AnchorPane.bottomAnchor="2.0"

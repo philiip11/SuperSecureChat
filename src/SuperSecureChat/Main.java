@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import mslinks.ShellLink;
 
@@ -102,7 +103,7 @@ public class Main extends Application {
             properties.setProperty("autostart", "true");
             properties.store(new FileOutputStream("config.prop"), null);
         }
-        //Font.loadFont(getClass().getResource("/emoji/NotoColorEmoji.ttf").toExternalForm(), 12);
+        Font.loadFont(getClass().getResource("/emoji/NotoColorEmoji.ttf").toExternalForm(), 12);
         startMain(primaryStage);
 
     }

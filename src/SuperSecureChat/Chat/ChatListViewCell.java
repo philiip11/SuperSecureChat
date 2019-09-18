@@ -9,9 +9,11 @@ import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
+import emoji4j.EmojiUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
@@ -21,7 +23,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -32,13 +37,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ChatListViewCell extends JFXListCell<Message> {
 
-    @FXML
-    Text labelMessage; //TODO Change to TextFlow
+    private static final Pattern htmlEntityPattern = Pattern.compile("&#\\w+;");
     @FXML
     Label labelTime;
     @FXML
@@ -53,6 +60,27 @@ public class ChatListViewCell extends JFXListCell<Message> {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
     Database db = Database.getInstance();
     private FXMLLoader mLLoader;
+    @FXML
+    TextFlow labelMessage;
+
+    protected static String htmlifyHelper(String text) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < text.length(); i++) {
+            int ch = text.codePointAt(i);
+
+            if (ch <= 128) {
+                sb.appendCodePoint(ch);
+            } else if (ch >= 159 && (ch < 55296 || ch > 57343)) {
+                sb.append("&#x").append(Integer.toHexString(ch)).append(";");
+
+            }
+
+        }
+
+        return sb.toString();
+    }
 
     @Override
     protected void updateItem(Message message, boolean empty) {
@@ -96,7 +124,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            labelMessage.setText(crypto.decrypt(message.getText()));
+            labelMessage.getChildren().addAll(parseText(crypto.decrypt(message.getText())));
             labelTime.setText(simpleDateFormat.format(new Date(message.getCreated() * 1000L)));
             if (messageFromMe) {
                 received.setVisible(message.getReceived() > 0);
@@ -193,4 +221,149 @@ public class ChatListViewCell extends JFXListCell<Message> {
 
     }
 
+    private List<Node> parseText(String string) {
+        List<Node> textList = new ArrayList<>();
+        /*String htmlifiedText = EmojiUtils.hexHtmlify(string);
+        // regex to identify html entitities in htmlified text
+        Matcher matcher = htmlEntityPattern.matcher(htmlifiedText);
+        int start = 0;
+        int end = 0;
+        while (matcher.find()) {
+            String emojiCode = matcher.group();
+            if (isEmoji(emojiCode)) {
+                end = matcher.start(0);
+                addText(textList, htmlifiedText, start, end);
+                start = matcher.end(0);
+                addEmoji(textList, emojiCode);
+                //emojis.add(EmojiUtils.getEmoji(emojiCode).getEmoji());
+            }
+        }*/
+        int size = 136;
+        for (int i = 0; i < string.length(); i++) {
+            int ch = string.codePointAt(i);
+            if (ch <= 128) {
+                size = 64;
+                break;
+            }
+        }
+        boolean success = true;
+        int charCounter = 0;
+        int i = -1;
+
+        // !sucess  i       while
+        //  true    false   true
+        //  true    true    true
+        //  false   false   false
+        //  false   true    true
+        StringBuilder charBuffer = new StringBuilder();
+        while (!success || i < string.length()) {
+            i++;
+            if (i >= string.length()) {
+                i -= charCounter;
+                if (i < string.length()) {
+                    int ch = string.codePointAt(i);
+                    addText(textList, ch);
+                    charBuffer = new StringBuilder();
+                    charCounter = 0;
+                    success = true;
+                    i++;
+                } else {
+                    break;
+                }
+            }
+            int ch = string.codePointAt(i);
+            if (success && ch <= 256 && ch != 169 && ch != 174) {           // Copyright and Registered
+                addText(textList, ch);
+            } else if (ch < 55296 || ch > 57343) {
+                success = addEmoji(textList, size, charBuffer + Integer.toHexString(ch));
+                if (!success) {
+                    charCounter++;
+                    charBuffer.append(Integer.toHexString(ch)).append("-");
+                    if (charCounter > 4) {
+                        i -= charCounter;
+                        i++;
+                        ch = string.codePointAt(i);
+                        addText(textList, ch);
+                        charCounter = 0;
+                        charBuffer = new StringBuilder();
+                    }
+                } else {
+                    charCounter = 0;
+                    charBuffer = new StringBuilder();
+                }
+            }
+
+        }
+        /*
+        String patternStart = "&#;";
+
+        String emojiCode = matcher.group();
+        if (isEmoji(emojiCode)) {
+            end = matcher.start(0);
+            addText(textList, htmlifiedText, start, end);
+            start = matcher.end(0);
+            addEmoji(textList, emojiCode);
+            //emojis.add(EmojiUtils.getEmoji(emojiCode).getEmoji());
+        }
+        //addText(textList, htmlifiedText, start);*/
+        return textList;
+    }
+
+    private boolean addEmoji(List<Node> textList, int size, String string) {
+        String emojiPath = "/emoji/img-google-" + size + "/" + string + ".png";
+        try {
+            ImageView emoji = new ImageView(getClass().getResource(emojiPath).toExternalForm());
+            if (size == 64) {
+                emoji.setFitHeight(16);
+                emoji.setFitWidth(16);
+            }
+            textList.add(emoji);
+            return true;
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    private void addEmoji(List<Node> textList, String emojiCode) {
+        String emojiPath = "/emoji/img-google-64/" + EmojiUtils.hexHtmlify(emojiCode).replaceAll("&#x", "").replace(";", "") + ".png";
+        System.out.println(emojiPath);
+        try {
+            ImageView emoji = new ImageView(getClass().getResource(emojiPath).toExternalForm());
+            textList.add(emoji);
+        } catch (NullPointerException e) {
+
+        }
+    }
+
+    private void addText(List<Node> textList, String htmlifiedText, int start, int end) {
+
+        Text text = new Text(htmlifiedText.substring(start, end - start));
+        addText(textList, text);
+    }
+
+    private void addText(List<Node> textList, String htmlifiedText, int start) {
+        Text text = new Text(htmlifiedText.substring(start));
+        addText(textList, text);
+    }
+
+    private void addText(List<Node> textList, Text text) {
+        text.setFont(Font.font("Roboto", 14));
+        text.setFill(Paint.valueOf("white"));
+        textList.add(text);
+    }
+
+    private void addText(List<Node> textList, String string) {
+        Text text = new Text(string);
+        text.setFont(Font.font("Roboto", 14));
+        text.setFill(Paint.valueOf("white"));
+        textList.add(text);
+    }
+
+    private void addText(List<Node> textList, int codePoint) {
+        String string = String.valueOf((char) codePoint);
+        Text text = new Text(string);
+        text.setFont(Font.font("Roboto", 14));
+        text.setFill(Paint.valueOf("white"));
+        textList.add(text);
+    }
 }
