@@ -267,6 +267,9 @@ public class ChatListViewCell extends JFXListCell<Message> {
                     charCounter = 0;
                     success = true;
                     i++;
+                    if (i == string.length()) {
+                        break;
+                    }
                 } else {
                     break;
                 }
