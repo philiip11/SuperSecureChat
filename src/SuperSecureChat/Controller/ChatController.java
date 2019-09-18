@@ -10,6 +10,7 @@ import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
+import emoji4j.EmojiUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -75,6 +76,7 @@ public class ChatController {
         if (dataName != null) {
             text = dataName;
         } else {
+            text = EmojiUtils.emojify(text);
             txtMessage.clear();
         }
 
