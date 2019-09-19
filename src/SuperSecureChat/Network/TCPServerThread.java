@@ -255,7 +255,6 @@ public class TCPServerThread extends Thread {
                     break;
             }
             Database.getInstance().updateMessage(referencedMessage);
-            Database.getInstance().vacuum();
 
         }
 

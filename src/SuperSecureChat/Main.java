@@ -22,7 +22,7 @@ import java.util.Properties;
 
 public class Main extends Application {
 
-    public static final String VERSION = "v0.2.6.5";
+    public static final String VERSION = "v0.2.6.6";
 
     private static final String PATH_TO_LNK = System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SuperSecureChat.lnk";
 

@@ -118,6 +118,7 @@ public class Database {
 
                 }
                 stmt.executeUpdate(pragma + "user_version = " + DB_VERSION);
+                stmt.executeUpdate("VACUUM;");
                 stmt.close();
                 System.out.println("Database updated to " + DB_VERSION);
 

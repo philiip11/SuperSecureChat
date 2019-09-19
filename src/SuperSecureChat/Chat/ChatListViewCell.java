@@ -180,10 +180,9 @@ public class ChatListViewCell extends JFXListCell<Message> {
                     }
                 }
                 if (!message.getData().equals("DELDATA")) {
-                    Network.getInstance().sendMessage(new ReferenceMessage(message, "DELDATA:THIS"));
-                    message.setData("DELDATA");
-                    Database.getInstance().updateMessage(message);
-                    Database.getInstance().vacuum();
+                    if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
+                        sendDelData(message);
+                    }
                 }
                 BufferedImage thumbnail = JIconExtractor.getJIconExtractor().extractIconFromFile(file, IconSize.JUMBO);
                 Platform.runLater(() -> imageView.setImage(SwingFXUtils.toFXImage(thumbnail, null)));
@@ -208,13 +207,13 @@ public class ChatListViewCell extends JFXListCell<Message> {
         if (!message.getData().equals("DELDATA")) {
             File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
             if (!file.exists()) {
-                if (!file.exists()) {
-                    try {
-                        Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
-                        Network.getInstance().sendMessage(new ReferenceMessage(message, "DELDATA:THIS"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                try {
+                    Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
+                    if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
+                        sendDelData(message);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -266,6 +265,12 @@ public class ChatListViewCell extends JFXListCell<Message> {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendDelData(Message message) {
+        Network.getInstance().sendMessage(new ReferenceMessage(message, "DELDATA:THIS"));
+        message.setData("DELDATA");
+        Database.getInstance().updateMessage(message);
     }
 
 
