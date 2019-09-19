@@ -91,21 +91,7 @@ public class TCPServerThread extends Thread {
                 case "MESSAGR:":
                     relay = true;
                 case "MESSAGE:":
-                    boolean notification = false;
-                    Message message = Message.fromJSON(json);
-                    message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond() + "; ");
-                    if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
-                        if (message.getReceived() == 0) {
-                            message.setReceived(Instant.now().getEpochSecond());
-                            notification = true;
-                        }
-                    }
-                    ClassConnector.getInstance().sendMessageToAllChatControllers(message, notification);
-                    if (parentNetworkMessage == null) {
-                        parentNetworkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
-                    }
-                    Database.getInstance().newMessage(message);
-                    Network.getInstance().relayMessage(message, parentNetworkMessage);
+                    handleMessage(json, mToMe, parentNetworkMessage);
                     break;
                 case "CONTACR:":
                     relay = true;
@@ -246,6 +232,40 @@ public class TCPServerThread extends Thread {
             e.printStackTrace();
         }
 
+    }
+
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
+    private void handleMessage(String json, Message mToMe, NetworkMessage parentNetworkMessage) {
+        boolean notification = false;
+        Message message = Message.fromJSON(json);
+        message.setTrace(message.getTrace() + "Recieved by " + Contact.getMyContact().getId() + " at " + Instant.now().getEpochSecond() + "; ");
+        if (message.getReceiver().getId().equals(Contact.getMyContact().getId())) {
+            if (message.getReceived() == 0) {
+                message.setReceived(Instant.now().getEpochSecond());
+                notification = true;
+            }
+        }
+        if (!message.getReferencId().equals("")) {
+            Message referencedMessage = Database.getInstance().getMessagesById(message.getReferencId());
+            switch (message.getData()) {
+                case "DELDATA:THIS":
+                    referencedMessage.setData("DELDATA");
+                    System.out.println("Delete Data of Message " + referencedMessage.getId());
+                    notification = false;
+                    break;
+            }
+            Database.getInstance().updateMessage(referencedMessage);
+            Database.getInstance().vacuum();
+
+        }
+
+
+        ClassConnector.getInstance().sendMessageToAllChatControllers(message, notification);
+        if (parentNetworkMessage == null) {
+            parentNetworkMessage = ClassConnector.getInstance().sendMessageToNetworkMap(message, mToMe);
+        }
+        Database.getInstance().updateMessage(message);
+        Network.getInstance().relayMessage(message, parentNetworkMessage);
     }
 
     private void sendText(String text) {

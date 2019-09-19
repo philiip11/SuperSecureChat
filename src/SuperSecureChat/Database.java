@@ -129,7 +129,7 @@ public class Database {
         }
     }
 
-    public void newMessage(Message message) {
+    public void updateMessage(Message message) {
         newContact(message.getSender());
         newContact(message.getReceiver());
         try {
@@ -358,5 +358,27 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Message getMessagesById(String id) {
+        ArrayList<Message> result = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE id = ?");
+            ps.setString(1, id);
+            parseMessages(result, ps);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result.get(0);
+    }
+
+    public void vacuum() {
+        try {
+            connection.createStatement().executeUpdate("VACUUM;");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

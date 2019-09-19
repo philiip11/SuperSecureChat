@@ -9,6 +9,7 @@ import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -36,6 +37,8 @@ import me.marnic.jiconextract.extractor.JIconExtractor;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -164,24 +167,32 @@ public class ChatListViewCell extends JFXListCell<Message> {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void showFile(Message message, Crypto crypto, String filename) {
-        String home = System.getProperty("user.home");
-        new File(home + "/Downloads/SuperSecureChat/").mkdir();
-        File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
-        try {
-            Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (getScene() != null) {
+            new Thread(() -> {
+                String home = System.getProperty("user.home");
+                new File(home + "/Downloads/SuperSecureChat/").mkdir();
+                File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
+                if (!file.exists()) {
+                    try {
+                        Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (!message.getData().equals("DELDATA")) {
+                    Network.getInstance().sendMessage(new ReferenceMessage(message, "DELDATA:THIS"));
+                    message.setData("DELDATA");
+                    Database.getInstance().updateMessage(message);
+                    Database.getInstance().vacuum();
+                }
+                BufferedImage thumbnail = JIconExtractor.getJIconExtractor().extractIconFromFile(file, IconSize.JUMBO);
+                Platform.runLater(() -> imageView.setImage(SwingFXUtils.toFXImage(thumbnail, null)));
+                imageView.setOnMouseClicked(event -> openFile(filename));
+            }).start();
         }
-        BufferedImage thumbnail = JIconExtractor.getJIconExtractor().extractIconFromFile(file, IconSize.JUMBO);
-        imageView.setImage(SwingFXUtils.toFXImage(thumbnail, null));
-        imageView.setOnMouseClicked(event -> {
-            openFile(message, crypto, filename);
-
-
-        });
     }
 
-    private void openFile(Message message, Crypto crypto, String filename) {
+    private void openFile(String filename) {
         String home = System.getProperty("user.home");
         File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
         try {
@@ -192,49 +203,71 @@ public class ChatListViewCell extends JFXListCell<Message> {
     }
 
     private void showImage(Message message, Crypto crypto, String filename) {
-        Image image = Contact.imageDecoder(crypto.decrypt(message.getData()));
-        //Image image = Contact.imageDecoder(message.getData());
-        imageView.setImage(image);
-        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                try {
-                    double imageWidth = image.getWidth();
-                    double imageHeight = image.getHeight();
-                    double screenHeight = Screen.getPrimary().getBounds().getHeight();
-                    double screenWidth = Screen.getPrimary().getBounds().getWidth();
-                    double width = Math.min(imageWidth, screenWidth);
-                    double height = Math.min(imageHeight, screenHeight);
-                    if (width < imageWidth || height < imageHeight) {
-                        double ratio = Math.min(width / imageWidth, height / imageHeight);
-                        width = imageWidth * ratio;
-                        height = imageHeight * ratio;
+        Image image;
+        String home = System.getProperty("user.home");
+        if (!message.getData().equals("DELDATA")) {
+            File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
+            if (!file.exists()) {
+                if (!file.exists()) {
+                    try {
+                        Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
+                        Network.getInstance().sendMessage(new ReferenceMessage(message, "DELDATA:THIS"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    double x = (screenWidth - width) / 2;
-                    double y = (screenHeight - height) / 2;
-
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/showPicture.fxml"));
-                    Parent root = loader.load();
-                    ShowPictureController showPictureController = loader.getController();
-                    Stage stage = new Stage();
-                    stage.setX(x);
-                    stage.setY(y);
-                    stage.initStyle(StageStyle.TRANSPARENT);
-                    stage.setTitle(filename);
-                    stage.getIcons().add(image);
-                    Scene scene = new Scene(root, width, height, true, SceneAntialiasing.BALANCED);
-                    scene.setFill(Color.TRANSPARENT);
-                    stage.setScene(scene);
-                    showPictureController.showPicture(image, width, height);
-                    showPictureController.setStage(stage);
-                    stage.show();
-                    event.consume();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
-        });
+        }
+        File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
+        try {
+            image = new Image(new FileInputStream(file));
+            //Image image = Contact.imageDecoder(message.getData());
+            imageView.setImage(image);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        double imageWidth = image.getWidth();
+                        double imageHeight = image.getHeight();
+                        double screenHeight = Screen.getPrimary().getBounds().getHeight();
+                        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+                        double width = Math.min(imageWidth, screenWidth);
+                        double height = Math.min(imageHeight, screenHeight);
+                        if (width < imageWidth || height < imageHeight) {
+                            double ratio = Math.min(width / imageWidth, height / imageHeight);
+                            width = imageWidth * ratio;
+                            height = imageHeight * ratio;
+                        }
+                        double x = (screenWidth - width) / 2;
+                        double y = (screenHeight - height) / 2;
+
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/showPicture.fxml"));
+                        Parent root = loader.load();
+                        ShowPictureController showPictureController = loader.getController();
+                        Stage stage = new Stage();
+                        stage.setX(x);
+                        stage.setY(y);
+                        stage.initStyle(StageStyle.TRANSPARENT);
+                        stage.setTitle(filename);
+                        stage.getIcons().add(image);
+                        Scene scene = new Scene(root, width, height, true, SceneAntialiasing.BALANCED);
+                        scene.setFill(Color.TRANSPARENT);
+                        stage.setScene(scene);
+                        showPictureController.showPicture(image, width, height);
+                        showPictureController.setStage(stage);
+                        stage.show();
+                        event.consume();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private void markRead(Message message) {
         if (message.getRead() == 0) {

@@ -87,6 +87,9 @@ public class Main extends Application {
             Runtime.getRuntime().exec("java -Dfile.encoding=UTF-8 -jar SuperSecureChat.jar");
             Runtime.getRuntime().halt(0);
         } else {
+            String home = System.getProperty("user.home");
+            //noinspection ResultOfMethodCallIgnored
+            new File(home + "/Downloads/SuperSecureChat/").mkdir();
             File update = new File("update.jar");
             if (update.exists()) {
                 if (update.delete()) {

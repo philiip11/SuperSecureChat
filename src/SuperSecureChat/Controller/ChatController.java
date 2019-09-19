@@ -101,7 +101,7 @@ public class ChatController {
         network.sendMessage(message);
         messages.add(message);
         updateListView();
-        Database.getInstance().newMessage(message);
+        Database.getInstance().updateMessage(message);
 
 
     }

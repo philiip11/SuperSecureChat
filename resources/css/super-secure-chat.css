@@ -212,6 +212,6 @@ JFXListView {
     -fx-background-color: #111111;
 }
 
-.EmojiButton {
-    -fx-background-color: transparent;
+.emojiButton {
+    -fx-background-color: #00000000;
 }
