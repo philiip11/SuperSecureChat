@@ -9,7 +9,6 @@ import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
-import emoji4j.EmojiUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,6 +45,7 @@ import java.util.regex.Pattern;
 public class ChatListViewCell extends JFXListCell<Message> {
 
     private static final Pattern htmlEntityPattern = Pattern.compile("&#\\w+;");
+    private static final int MAX_EMOJI_LENGTH = 8;
     @FXML
     Label labelTime;
     @FXML
@@ -221,8 +221,8 @@ public class ChatListViewCell extends JFXListCell<Message> {
 
     }
 
-    private List<Node> parseText(String string) {
-        List<Node> textList = new ArrayList<>();
+    private ArrayList<Node> parseText(String string) {
+        ArrayList<Node> textList = new ArrayList<>();
         /*String htmlifiedText = EmojiUtils.hexHtmlify(string);
         // regex to identify html entitities in htmlified text
         Matcher matcher = htmlEntityPattern.matcher(htmlifiedText);
@@ -256,6 +256,10 @@ public class ChatListViewCell extends JFXListCell<Message> {
         //  false   false   false
         //  false   true    true
         StringBuilder charBuffer = new StringBuilder();
+        StringBuilder lastEmojis = new StringBuilder();
+        /*if(string.equals("\uD83C\uDDE6\uD83C\uDDFA")){
+            System.out.println("Australia");
+        }*/
         while (!success || i < string.length()) {
             i++;
             if (i >= string.length()) {
@@ -277,12 +281,13 @@ public class ChatListViewCell extends JFXListCell<Message> {
             int ch = string.codePointAt(i);
             if (success && ch <= 256 && ch != 169 && ch != 174) {           // Copyright and Registered
                 addText(textList, ch);
+                lastEmojis = new StringBuilder();
             } else if (ch < 55296 || ch > 57343) {
                 success = addEmoji(textList, size, charBuffer + Integer.toHexString(ch));
                 if (!success) {
                     charCounter++;
-                    charBuffer.append(Integer.toHexString(ch)).append("-");
-                    if (charCounter > 4) {
+                    charBuffer.append(Integer.toHexString(ch)).append("_");
+                    if (charCounter > MAX_EMOJI_LENGTH) {
                         i -= charCounter;
                         i++;
                         ch = string.codePointAt(i);
@@ -294,6 +299,17 @@ public class ChatListViewCell extends JFXListCell<Message> {
                     charCounter = 0;
                     charBuffer = new StringBuilder();
                 }
+                if (lastEmojis.length() > 0) {
+                    boolean success2 = addEmoji(textList, size, lastEmojis + Integer.toHexString(ch));
+                    if (success2) {
+                        removePenultimateEmoji(textList);
+                        success = true;
+                        charCounter = 0;
+                        charBuffer = new StringBuilder();
+                    }
+                }
+                lastEmojis.append(Integer.toHexString(ch)).append("_");
+
             }
 
         }
@@ -312,12 +328,17 @@ public class ChatListViewCell extends JFXListCell<Message> {
         return textList;
     }
 
+    private void removePenultimateEmoji(ArrayList<Node> textList) {
+        textList.remove(textList.size() - 2);
+
+    }
+
     private boolean addEmoji(List<Node> textList, int size, String string) {
         String emojiPath = "/emoji/128/emoji_u" + string + ".png";
         try {
             ImageView emoji = new ImageView(getClass().getResource(emojiPath).toExternalForm());
             emoji.setFitHeight(size);
-            emoji.setFitWidth(size);
+            emoji.setPreserveRatio(true);
             emoji.setSmooth(true);
             textList.add(emoji);
             return true;
@@ -326,16 +347,6 @@ public class ChatListViewCell extends JFXListCell<Message> {
         }
     }
 
-    private void addEmoji(List<Node> textList, String emojiCode) {
-        String emojiPath = "/emoji/128/emoji_u" + EmojiUtils.hexHtmlify(emojiCode).replaceAll("&#x", "").replace(";", "") + ".png";
-        System.out.println(emojiPath);
-        try {
-            ImageView emoji = new ImageView(getClass().getResource(emojiPath).toExternalForm());
-            textList.add(emoji);
-        } catch (NullPointerException e) {
-
-        }
-    }
 
     private void addText(List<Node> textList, String htmlifiedText, int start, int end) {
 
