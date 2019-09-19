@@ -29,29 +29,29 @@ public class NotificationHandler {
     }
 
     public void newMessage(Message message) {
+        Contact otherContact = me;
+        if (message.getSender() != null) {
+            otherContact = message.getSender().getId().equals(me.getId()) ?
+                    message.getReceiver() : message.getSender();
+        }
         boolean success = false;
-        for (NotificationController notificationController : notificationControllers) {
-            if (message.getReceiver() != null && message.getSender() != null) {
-                if ((message.getReceiver().getId().equals(me.getId()) &&            // Nachricht von Kontakt an mch
-                        message.getSender().getId().equals(notificationController.getContact().getId())) ||
-                        (message.getReceiver().getId().equals(notificationController.getContact().getId()) &&   // Nachricht von mich an Kontakt
-                                message.getSender().getId().equals(me.getId()))) {
-                    notificationController.newMessage(message);
-                    success = true;
+        if (message.getReceiver() != null && message.getSender() != null) {
+            for (NotificationController notificationController : notificationControllers) {
+                if (notificationController.getContact().getId().equals(otherContact.getId())) {
+                    if ((message.getReceiver().getId().equals(me.getId()) &&            // Nachricht von Kontakt an mch
+                            message.getSender().getId().equals(otherContact.getId())) ||
+                            (message.getReceiver().getId().equals(otherContact.getId()) &&   // Nachricht von mich an Kontakt
+                                    message.getSender().getId().equals(me.getId()))) {
+                        notificationController.newMessage(message);
+                        success = true;
+                    }
                 }
             }
         }
         if (!success) {
-            Contact otherContact = me;
-            if (message.getSender() != null) {
-                otherContact = message.getSender().getId().equals(me.getId()) ?
-                        message.getReceiver() : message.getSender();
-            }
             Contact finalOtherContact = otherContact;
             Platform.runLater(() -> openNotificationWindow(finalOtherContact, message));
-
         }
-
     }
 
     public void closeNotification(Contact contact) {

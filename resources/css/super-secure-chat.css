@@ -211,3 +211,7 @@ JFXListView {
     -fx-min-width: 4;
     -fx-background-color: #111111;
 }
+
+.EmojiButton {
+    -fx-background-color: transparent;
+}

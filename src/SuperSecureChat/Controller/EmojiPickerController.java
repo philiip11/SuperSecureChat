@@ -40,6 +40,7 @@ public class EmojiPickerController {
                 button.setFont(Font.font(0));
                 button.setGraphic(getImageViewFromEmoji(emoji.getEmoji()));
                 button.setOnAction(actionEvent -> emojiButton(emoji.getEmoji()));
+                button.getStyleClass().add("EmojiButton");
                 buttons.add(button);
                 Platform.runLater(() -> tilePane.getChildren().add(button));
 

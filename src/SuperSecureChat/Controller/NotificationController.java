@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class NotificationController {
@@ -37,10 +38,29 @@ public class NotificationController {
         this.stage = stage;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public void newMessage(Message message) {
         Platform.runLater(() -> {
+            ArrayList<Message> remove = new ArrayList<>();
+            boolean update = true;
+            for (Message m : messages) {
+                if (m.getId().equals(message.getId())) {
+                    remove.add(m);
+                    update = false;
+                }
+            }
+            boolean finalUpdate = update;
+            for (Message m : remove) {
+                messages.remove(m);
+            }
             messages.add(message);
             updateListView();
+            if (finalUpdate) {
+                updateListView();
+            } else {
+                messagesListViewNotification.getItems().sort(Comparator.comparingLong(Message::getCreated));
+
+            }
         });
     }
 
