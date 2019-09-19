@@ -2,8 +2,9 @@
 
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="419.0" prefWidth="629.0"
-            xmlns="http://javafx.com/javafx/8.0.192" fx:controller="SuperSecureChat.Controller.ChatController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" onDragDropped="#onDragDropped" onDragOver="#onDragOver"
+            prefHeight="419.0" prefWidth="629.0" xmlns="http://javafx.com/javafx/8.0.192"
+            fx:controller="SuperSecureChat.Controller.ChatController">
     <children>
         <JFXListView fx:id="messagesListView" prefHeight="359.0" prefWidth="544.0" styleClass="chatListView"
                      AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0"
@@ -15,10 +16,9 @@
                               styleClass="chatTextField" unFocusColor="BLACK" AnchorPane.bottomAnchor="8.0"
                               AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="136.0"/>
                 <JFXButton fx:id="openEmojiPicker" buttonType="RAISED" mnemonicParsing="false"
-                           onAction="#openEmojiPicker"
-                           styleClass="chatSendButton" text="☺" AnchorPane.bottomAnchor="6.0"
-                           AnchorPane.rightAnchor="96.0"/>
-                <JFXButton fx:id="sendFile" buttonType="RAISED" mnemonicParsing="false" onAction="#sendFile"
+                           onAction="#openEmojiPicker" styleClass="chatSendButton" text="☺"
+                           AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="96.0"/>
+                <JFXButton fx:id="sendFile" buttonType="RAISED" mnemonicParsing="false" onAction="#showFileChooser"
                            styleClass="chatSendButton" text="📎" AnchorPane.bottomAnchor="6.0"
                            AnchorPane.rightAnchor="62.0"/>
                 <JFXButton fx:id="sendMessage" buttonType="RAISED" mnemonicParsing="false" onAction="#buttonClick"

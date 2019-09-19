@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXMasonryPane?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
@@ -18,8 +17,8 @@
                     prefWidth="350.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="48.0">
 
-            <JFXMasonryPane fx:id="masonryPane" maxWidth="348.0" minHeight="200.0" minWidth="348.0" prefHeight="350.0"
-                            prefWidth="348.0"/>
+            <TilePane fx:id="tilePane" maxWidth="348.0" minHeight="200.0" minWidth="348.0" prefHeight="350.0"
+                      prefWidth="348.0"/>
 
         </ScrollPane>
     </children>

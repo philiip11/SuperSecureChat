@@ -1,17 +1,16 @@
 package SuperSecureChat.Controller;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXMasonryPane;
 import com.jfoenix.controls.JFXTextField;
 import emoji4j.Emoji;
 import emoji4j.EmojiManager;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.TilePane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -22,7 +21,7 @@ public class EmojiPickerController {
     @FXML
     JFXTextField emojiTextField;
     @FXML
-    JFXMasonryPane masonryPane;
+    TilePane tilePane;
     private Stage stage;
     private ChatController chatController;
 
@@ -34,16 +33,15 @@ public class EmojiPickerController {
             for (Emoji emoji : emojis) {
 
                 JFXButton button = new JFXButton();
-                button.setText(emoji.getEmoji());
                 button.setMaxHeight(32);
                 button.setMaxWidth(32);
                 button.setMinHeight(32);
                 button.setMinWidth(32);
                 button.setFont(Font.font(0));
                 button.setGraphic(getImageViewFromEmoji(emoji.getEmoji()));
-                button.setOnAction(this::emojiButton);
+                button.setOnAction(actionEvent -> emojiButton(emoji.getEmoji()));
                 buttons.add(button);
-                Platform.runLater(() -> masonryPane.getChildren().add(button));
+                Platform.runLater(() -> tilePane.getChildren().add(button));
 
             }
             //Platform.runLater(() -> masonryPane.getChildren().addAll(buttons));
@@ -89,9 +87,8 @@ public class EmojiPickerController {
         }
     }
 
-    public void emojiButton(ActionEvent actionEvent) {
-        String input = ((JFXButton) actionEvent.getSource()).getText();
-        chatController.add(input);
+    public void emojiButton(String emoji) {
+        chatController.add(emoji);
 
     }
 }

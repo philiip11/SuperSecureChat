@@ -19,7 +19,7 @@ public class NotificationController {
     @FXML
     ImageView picture;
     @FXML
-    JFXListView<Message> messagesListView;
+    JFXListView<Message> messagesListViewNotification;
     private Stage stage;
     private Contact contact;
     private ObservableList<Message> messages = FXCollections.observableArrayList();
@@ -46,11 +46,11 @@ public class NotificationController {
 
 
     private void updateListView() {
-        messagesListView.setItems(messages);
-        messagesListView.setCellFactory(chatListView -> new ChatListViewCell());
-        messagesListView.setExpanded(true);
-        messagesListView.scrollTo(messages.size() - 1);
-        messagesListView.getItems().sort(Comparator.comparingLong(Message::getCreated));
+        messagesListViewNotification.setItems(messages);
+        messagesListViewNotification.setCellFactory(chatListView -> new ChatListViewCell());
+        messagesListViewNotification.setExpanded(true);
+        messagesListViewNotification.scrollTo(messages.size() - 1);
+        messagesListViewNotification.getItems().sort(Comparator.comparingLong(Message::getCreated));
     }
 
     public void openChat(MouseEvent mouseEvent) {

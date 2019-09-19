@@ -131,4 +131,16 @@ public class ClassConnector {
 
     }
 
+    public ChatController getChatController(Contact contact) {
+        for (ChatController chatController : chatControllers) {
+            if (chatController.getContact().getId().equals(contact.getId())) {
+                return chatController;
+            }
+        }
+        return null;
+    }
+
+    public void removeChatController(ChatController oldChatController) {
+        chatControllers.remove(oldChatController);
+    }
 }

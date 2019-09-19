@@ -9,6 +9,7 @@ import SuperSecureChat.Message;
 import SuperSecureChat.Network.Network;
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,11 +27,14 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import me.marnic.jiconextract.extractor.IconSize;
+import me.marnic.jiconextract.extractor.JIconExtractor;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,11 +44,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class ChatListViewCell extends JFXListCell<Message> {
 
-    private static final Pattern htmlEntityPattern = Pattern.compile("&#\\w+;");
     private static final int MAX_EMOJI_LENGTH = 8;
     @FXML
     Label labelTime;
@@ -133,13 +135,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
                     received.getStyleClass().add("read");
                 }
             } else {
-                if (message.getRead() == 0) {
-                    message.setRead(Instant.now().getEpochSecond());
-                    new Thread(() -> {
-                        Database.getInstance().markRead(message);
-                        Network.getInstance().relayMessage(message, null);
-                    }).start();
-                }
+                markRead(message);
             }
             if (dataMessage) {
                 String filename = crypto.decrypt(message.getText());
@@ -147,64 +143,9 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 if (filenameLower.contains(".png") ||
                         filenameLower.contains(".jpg") ||
                         filenameLower.contains(".jfif")) {
-                    Image image = Contact.imageDecoder(crypto.decrypt(message.getData()));
-                    //Image image = Contact.imageDecoder(message.getData());
-                    imageView.setImage(image);
-                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            try {
-                                double imageWidth = image.getWidth();
-                                double imageHeight = image.getHeight();
-                                double screenHeight = Screen.getPrimary().getBounds().getHeight();
-                                double screenWidth = Screen.getPrimary().getBounds().getWidth();
-                                double width = Math.min(imageWidth, screenWidth);
-                                double height = Math.min(imageHeight, screenHeight);
-                                if (width < imageWidth || height < imageHeight) {
-                                    double ratio = Math.min(width / imageWidth, height / imageHeight);
-                                    width = imageWidth * ratio;
-                                    height = imageHeight * ratio;
-                                }
-                                double x = (screenWidth - width) / 2;
-                                double y = (screenHeight - height) / 2;
-
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/showPicture.fxml"));
-                                Parent root = loader.load();
-                                ShowPictureController showPictureController = loader.getController();
-                                Stage stage = new Stage();
-                                stage.setX(x);
-                                stage.setY(y);
-                                stage.initStyle(StageStyle.TRANSPARENT);
-                                stage.setTitle(filename);
-                                stage.getIcons().add(image);
-                                Scene scene = new Scene(root, width, height, true, SceneAntialiasing.BALANCED);
-                                scene.setFill(Color.TRANSPARENT);
-                                stage.setScene(scene);
-                                showPictureController.showPicture(image, width, height);
-                                showPictureController.setStage(stage);
-                                stage.show();
-                                event.consume();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    showImage(message, crypto, filename);
                 } else {
-                    imageView.setImage(new Image(getClass().getResourceAsStream("/icons/round_attach_file_white_48dp.png")));
-                    imageView.setOnMouseClicked(event -> {
-                        FileChooser fileChooser = new FileChooser();
-                        fileChooser.setInitialFileName(filename);
-                        File file = fileChooser.showSaveDialog(null);
-                        if (file != null) {
-                            try {
-                                Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-
-                    });
+                    showFile(message, crypto, filename);
                 }
 
             }
@@ -219,6 +160,92 @@ public class ChatListViewCell extends JFXListCell<Message> {
             setGraphic(anchorPane);
         }
 
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void showFile(Message message, Crypto crypto, String filename) {
+        String home = System.getProperty("user.home");
+        new File(home + "/Downloads/SuperSecureChat/").mkdir();
+        File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
+        try {
+            Files.write(file.toPath(), Base64.getDecoder().decode(crypto.decrypt(message.getData())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BufferedImage thumbnail = JIconExtractor.getJIconExtractor().extractIconFromFile(file, IconSize.JUMBO);
+        imageView.setImage(SwingFXUtils.toFXImage(thumbnail, null));
+        imageView.setOnMouseClicked(event -> {
+            openFile(message, crypto, filename);
+
+
+        });
+    }
+
+    private void openFile(Message message, Crypto crypto, String filename) {
+        String home = System.getProperty("user.home");
+        File file = new File(home + "/Downloads/SuperSecureChat/" + filename);
+        try {
+            Desktop.getDesktop().open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showImage(Message message, Crypto crypto, String filename) {
+        Image image = Contact.imageDecoder(crypto.decrypt(message.getData()));
+        //Image image = Contact.imageDecoder(message.getData());
+        imageView.setImage(image);
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    double imageWidth = image.getWidth();
+                    double imageHeight = image.getHeight();
+                    double screenHeight = Screen.getPrimary().getBounds().getHeight();
+                    double screenWidth = Screen.getPrimary().getBounds().getWidth();
+                    double width = Math.min(imageWidth, screenWidth);
+                    double height = Math.min(imageHeight, screenHeight);
+                    if (width < imageWidth || height < imageHeight) {
+                        double ratio = Math.min(width / imageWidth, height / imageHeight);
+                        width = imageWidth * ratio;
+                        height = imageHeight * ratio;
+                    }
+                    double x = (screenWidth - width) / 2;
+                    double y = (screenHeight - height) / 2;
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/showPicture.fxml"));
+                    Parent root = loader.load();
+                    ShowPictureController showPictureController = loader.getController();
+                    Stage stage = new Stage();
+                    stage.setX(x);
+                    stage.setY(y);
+                    stage.initStyle(StageStyle.TRANSPARENT);
+                    stage.setTitle(filename);
+                    stage.getIcons().add(image);
+                    Scene scene = new Scene(root, width, height, true, SceneAntialiasing.BALANCED);
+                    scene.setFill(Color.TRANSPARENT);
+                    stage.setScene(scene);
+                    showPictureController.showPicture(image, width, height);
+                    showPictureController.setStage(stage);
+                    stage.show();
+                    event.consume();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void markRead(Message message) {
+        if (message.getRead() == 0) {
+            if (getScene() != null) {
+                message.setRead(Instant.now().getEpochSecond());
+                new Thread(() -> {
+                    Database.getInstance().markRead(message);
+                    Network.getInstance().relayMessage(message, null);
+                }).start();
+            }
+        }
     }
 
     private ArrayList<Node> parseText(String string) {
@@ -379,4 +406,5 @@ public class ChatListViewCell extends JFXListCell<Message> {
         text.setFill(Paint.valueOf("white"));
         textList.add(text);
     }
+
 }

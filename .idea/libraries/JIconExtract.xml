@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="JIconExtract">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/SuperSecureChat/lib/JIconExtract.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

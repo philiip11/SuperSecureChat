@@ -21,9 +21,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -35,6 +33,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.List;
 
 public class ChatController {
 
@@ -58,6 +57,8 @@ public class ChatController {
     private Contact me = Contact.getMyContact();
     private Database database = Database.getInstance();
     private String dataName = null;
+
+    private int postId = 0;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -88,7 +89,7 @@ public class ChatController {
             txtMessage.clear();
         }
 
-        Message message = new Message(me.getId() + Instant.now().getEpochSecond(), "", me, contact, text, data, "", Instant.now().getEpochSecond(), 0, 0);
+        Message message = new Message(me.getId() + Instant.now().getEpochSecond() + postId++, "", me, contact, text, data, "", Instant.now().getEpochSecond(), 0, 0);
         data = "";
         dataName = null;
         Crypto crypto = new Crypto();
@@ -133,24 +134,27 @@ public class ChatController {
                     (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
                             message.getSender().getId().equals(me.getId()))) {
 
-                ArrayList<Message> remove = new ArrayList<>();
-                boolean update = true;
-                for (Message m : messages) {
-                    if (m.getId().equals(message.getId())) {
-                        remove.add(m);
-                        update = false;
-                    }
-                }
-                boolean finalUpdate = update;
+
                 Platform.runLater(() -> {
+                    ArrayList<Message> remove = new ArrayList<>();
+                    boolean update = true;
+                    for (Message m : messages) {
+                        if (m.getId().equals(message.getId())) {
+                            remove.add(m);
+                            update = false;
+                        }
+                    }
+                    boolean finalUpdate = update;
                     for (Message m : remove) {
                         messages.remove(m);
                     }
                     messages.add(message);
+                    updateListView();
                     if (finalUpdate) {
                         updateListView();
                     } else {
                         messagesListView.getItems().sort(Comparator.comparingLong(Message::getCreated));
+
                     }
                 });
             }
@@ -164,22 +168,25 @@ public class ChatController {
         }
     }
 
-    public void sendFile(ActionEvent actionEvent) {
+    public void showFileChooser(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(stage);
-        if (file == null) {
+        List<File> files = fileChooser.showOpenMultipleDialog(stage);
+        sendFiles(files);
+    }
+
+    private void sendFiles(List<File> files) {
+        if (files.size() == 0) {
             return;
         }
-
-        dataName = file.getName();
-        try {
-            data = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
-            buttonClick();
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (File file : files) {
+            dataName = file.getName();
+            try {
+                data = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+                buttonClick();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-
     }
 
     public void openEmojiPicker(ActionEvent actionEvent) {
@@ -216,5 +223,37 @@ public class ChatController {
 
     public void add(String text) {
         txtMessage.setText(txtMessage.getText() + text);
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    void show() {
+        stage.show();
+        stage.toFront();
+    }
+
+    public boolean isShowing() {
+        return stage.isShowing();
+    }
+
+    public void onDragDropped(DragEvent dragEvent) {
+        Dragboard dragboard = dragEvent.getDragboard();
+        boolean success = false;
+        if (dragboard.hasFiles()) {
+            sendFiles(dragboard.getFiles());
+            success = true;
+        }
+        dragEvent.setDropCompleted(success);
+        dragEvent.consume();
+
+    }
+
+    public void onDragOver(DragEvent dragEvent) {
+        if (dragEvent.getDragboard().hasFiles()) {
+            dragEvent.acceptTransferModes(TransferMode.COPY);
+        }
+        dragEvent.consume();
     }
 }

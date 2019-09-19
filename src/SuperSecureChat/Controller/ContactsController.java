@@ -1,5 +1,6 @@
 package SuperSecureChat.Controller;
 
+import SuperSecureChat.ClassConnector;
 import SuperSecureChat.Contacts.Contact;
 import SuperSecureChat.Contacts.ContactList;
 import SuperSecureChat.Contacts.ContactListViewCell;
@@ -78,6 +79,15 @@ public class ContactsController {
     }
 
     public void openChat(Contact contact) {
+        ChatController oldChatController = ClassConnector.getInstance().getChatController(contact);
+        if (oldChatController != null) {
+            if (oldChatController.isShowing()) {
+                oldChatController.show();
+                return;
+            } else {
+                ClassConnector.getInstance().removeChatController(oldChatController);
+            }
+        }
         int width = 500;
         int height = 800;
         try {
@@ -95,8 +105,8 @@ public class ContactsController {
         } catch (Exception ignored) {
 
         }
-
     }
+
 
     public void openNetworkStage() {
         Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
