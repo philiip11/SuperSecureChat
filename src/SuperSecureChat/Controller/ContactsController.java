@@ -99,8 +99,10 @@ public class ContactsController {
     }
 
     public void openNetworkStage() {
-        int width = 1280;
-        int height = 1024;
+        Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
+        int width = (int) Math.min(bounds.getWidth(), 1280);
+        int height = (int) Math.min(bounds.getHeight(), 1024);
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/network.fxml"));
             Parent root = loader.load();
@@ -108,7 +110,6 @@ public class ContactsController {
             stage.setTitle("Netzwerk");
             Image image = new Image(getClass().getResourceAsStream("/icons/round_import_export_white_48dp.png"));
             stage.getIcons().add(image);
-            Rectangle2D bounds = Screen.getScreens().get(Screen.getScreens().size() - 1).getVisualBounds();
             stage.setX(bounds.getMinX() + (bounds.getWidth() - width - 400) / 2);
             stage.setY(0);
 
