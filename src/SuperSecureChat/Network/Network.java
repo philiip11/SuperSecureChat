@@ -60,10 +60,14 @@ public class Network {
     }
 
     public void sendMessage(Message m) {
+        sendMessage(m, false);
+    }
+
+    public void sendMessage(Message m, boolean relay) {
         new Thread(() -> {
             for (String ip : otherIPs) {
                 TCPClient tcpClient = new TCPClient(ip, TCPServer.PORT);
-                tcpClient.sendMessage(m);
+                tcpClient.sendMessage(m, relay);
                 tcpClient.close();
                 Message mm = new Message();
                 mm.setSender(Contact.getMyContact());
@@ -148,7 +152,7 @@ public class Network {
         NetworkController networkController = ClassConnector.getInstance().getNetworkController();
         if (!relayedMessages.contains(message.getId())) {
             relayedMessages.add(message.getId());
-            sendMessage(message);
+            sendMessage(message, true);
             for (String ip : otherIPs) {
                 if (networkMessage != null) {
                     NetworkMessage nm = new NetworkMessage(message.getText(),
