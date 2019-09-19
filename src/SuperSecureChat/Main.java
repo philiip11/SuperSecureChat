@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import mslinks.ShellLink;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
@@ -83,7 +84,7 @@ public class Main extends Application {
                 System.out.println("SuperSecureChat.jar konnte nicht gefunden werden.");
             }
             Files.copy(new File("update.jar").toPath(), jar.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Runtime.getRuntime().exec("java -jar SuperSecureChat.jar");
+            Runtime.getRuntime().exec("java -Dfile.encoding=UTF-8 -jar SuperSecureChat.jar");
             Runtime.getRuntime().halt(0);
         } else {
             File update = new File("update.jar");
@@ -93,6 +94,11 @@ public class Main extends Application {
                 } else {
                     System.out.println("Update konnte nicht gelöscht werden");
                 }
+            }
+
+            if (!Charset.defaultCharset().toString().equals("UTF-8")) {
+                Runtime.getRuntime().exec("java -Dfile.encoding=UTF-8 -jar SuperSecureChat.jar");
+                Runtime.getRuntime().halt(0);
             }
         }
         if (!new File("config.prop").exists()) {
