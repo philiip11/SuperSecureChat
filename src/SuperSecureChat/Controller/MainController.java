@@ -124,7 +124,7 @@ public class MainController {
                 String newVersion = (String) release.get("tag_name");
                 String newVersionName = (String) release.get("name");
                 String newVersionBody = (String) release.get("body");
-
+                System.out.println(newVersion);
                 if (!newVersion.equals(Main.VERSION)) {
                     System.out.println(newVersion + " != " + Main.VERSION);
                     if (welcomeLabel != null) {
@@ -182,6 +182,8 @@ public class MainController {
                         e.printStackTrace();
                     }
                 }
+            } else {
+                System.out.println(status);
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
