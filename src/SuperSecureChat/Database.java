@@ -361,7 +361,7 @@ public class Database {
         }
     }
 
-    public Message getMessagesById(String id) {
+    public Message getMessagesById(String id) throws IndexOutOfBoundsException {
         ArrayList<Message> result = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE id = ?");
@@ -371,7 +371,7 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result.get(0);
+        return result.get(0);       //TODO Fix NullPointer
     }
 
     public void vacuum() {

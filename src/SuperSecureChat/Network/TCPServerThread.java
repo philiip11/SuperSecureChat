@@ -246,15 +246,19 @@ public class TCPServerThread extends Thread {
             }
         }
         if (!message.getReferencId().equals("")) {
-            Message referencedMessage = Database.getInstance().getMessagesById(message.getReferencId());
-            switch (message.getData()) {
-                case "DELDATA:THIS":
-                    referencedMessage.setData("DELDATA");
-                    System.out.println("Delete Data of Message " + referencedMessage.getId());
-                    notification = false;
-                    break;
+            try {
+                Message referencedMessage = Database.getInstance().getMessagesById(message.getReferencId());
+                switch (message.getData()) {
+                    case "DELDATA:THIS":
+                        referencedMessage.setData("DELDATA");
+                        System.out.println("Delete Data of Message " + referencedMessage.getId());
+                        notification = false;
+                        break;
+                }
+                Database.getInstance().updateMessage(referencedMessage);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
             }
-            Database.getInstance().updateMessage(referencedMessage);
 
         }
 
