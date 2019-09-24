@@ -171,7 +171,7 @@ public class TCPServerThread extends Thread {
                     NetworkMessage networkMessage1 = ClassConnector.getInstance().sendIconMessageToNetworkMap(new Image(getClass().getResourceAsStream("/icons/round_all_inbox_white_48dp.png")), mToMe);
 
                     try {
-                        Main.file_put_contents("debug", json);
+                        //Main.file_put_contents("debug", json);
                         JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
                         for (Object o : jsonObject.keySet()) {
                             String commando = (String) o;

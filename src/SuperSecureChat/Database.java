@@ -252,7 +252,7 @@ public class Database {
     public int countUnreadMessagesByContact(Contact contact) {
         int result = 0;
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT count(*) FROM messages WHERE sender like ? AND receiver like ? AND read = 0");
+            PreparedStatement ps = connection.prepareStatement("SELECT count(*) FROM messages WHERE sender like ? AND receiver like ? AND read = 0 AND data != 'DELDATA:THIS'");
             ps.setString(1, contact.getId());
             ps.setString(2, Contact.getMyContact().getId());
             ResultSet resultSet = ps.executeQuery();
