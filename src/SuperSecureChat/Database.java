@@ -175,7 +175,7 @@ public class Database {
     public ArrayList<Message> getMessagesByContacts(Contact contact1, Contact contact2) {
         ArrayList<Message> result = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?)");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?) AND data != 'DELDATA:THIS'");
             ps.setString(1, contact1.getId());
             ps.setString(2, contact2.getId());
             ps.setString(3, contact2.getId());
@@ -371,7 +371,11 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result.get(0);       //TODO Fix NullPointer
+        if (result.size() > 0) {
+            return result.get(0);
+        } else {
+            throw new IndexOutOfBoundsException("Nachricht nicht gefunden! ID: " + id);
+        }
     }
 
     public void vacuum() {

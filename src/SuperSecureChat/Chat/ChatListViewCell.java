@@ -322,6 +322,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
         //  false   true    true
         StringBuilder charBuffer = new StringBuilder();
         StringBuilder lastEmojis = new StringBuilder();
+        int lastEmojiCounter = 0;
         /*if(string.equals("\uD83C\uDDE6\uD83C\uDDFA")){
             System.out.println("Australia");
         }*/
@@ -347,8 +348,11 @@ public class ChatListViewCell extends JFXListCell<Message> {
             if (success && ch <= 256 && ch != 169 && ch != 174) {           // Copyright and Registered
                 addText(textList, ch);
                 lastEmojis = new StringBuilder();
+                lastEmojiCounter = 0;
             } else if (ch < 55296 || ch > 57343) {
+                System.out.print("addEmoji: " + charBuffer + Integer.toHexString(ch) + " ");
                 success = addEmoji(textList, size, charBuffer + Integer.toHexString(ch));
+                System.out.println(success ? "OK" : "Fail");
                 if (!success) {
                     charCounter++;
                     charBuffer.append(Integer.toHexString(ch)).append("_");
@@ -363,18 +367,36 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 } else {
                     charCounter = 0;
                     charBuffer = new StringBuilder();
+                    lastEmojiCounter++;
                 }
+
+                if (lastEmojiCounter > MAX_EMOJI_LENGTH) {
+                    lastEmojiCounter--;
+                    lastEmojis.delete(0, lastEmojis.indexOf("_") + 1);
+                    System.out.println(lastEmojis);
+                }
+                boolean success2 = false;
                 if (lastEmojis.length() > 0) {
-                    boolean success2 = addEmoji(textList, size, lastEmojis + Integer.toHexString(ch));
+                    System.out.print("try " + lastEmojis + Integer.toHexString(ch) + " ");
+                    success2 = addEmoji(textList, size, lastEmojis + Integer.toHexString(ch));
                     if (success2) {
-                        removePenultimateEmoji(textList);
+                        i++;
+                        System.out.println("OK");
+                        removeLastEmojis(lastEmojiCounter, textList);
                         success = true;
+                        lastEmojiCounter = 0;
+                        //removePenultimateEmoji(textList);
                         charCounter = 0;
                         charBuffer = new StringBuilder();
+                    } else {
+                        System.out.println("Fail");
+
                     }
                 }
                 lastEmojis.append(Integer.toHexString(ch)).append("_");
-
+                if (success2) {
+                    lastEmojis = new StringBuilder();
+                }
             }
 
         }
@@ -393,7 +415,18 @@ public class ChatListViewCell extends JFXListCell<Message> {
         return textList;
     }
 
+    private void removeLastEmojis(int length, ArrayList<Node> textList) {
+        int size = textList.size();
+        System.out.println("length: " + length);
+        System.out.println("size: " + size);
+        for (int i = 1; i <= length; i++) {
+            System.out.println("remove " + textList.get(size - i - 1).getId() + " (" + (size - i - 1) + ")");
+            textList.remove(size - i - 1);
+        }
+    }
+
     private void removePenultimateEmoji(ArrayList<Node> textList) {
+        System.out.println(textList.size());
         textList.remove(textList.size() - 2);
 
     }
@@ -405,6 +438,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
             emoji.setFitHeight(size);
             emoji.setPreserveRatio(true);
             emoji.setSmooth(true);
+            emoji.setId(string);
             textList.add(emoji);
             return true;
         } catch (NullPointerException e) {

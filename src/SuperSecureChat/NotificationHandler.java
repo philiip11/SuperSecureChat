@@ -28,11 +28,14 @@ public class NotificationHandler {
         return INSTANCE;
     }
 
-    public void newMessage(Message message) {
+    void newMessage(Message message) {
         Contact otherContact = me;
         if (message.getSender() != null) {
             otherContact = message.getSender().getId().equals(me.getId()) ?
                     message.getReceiver() : message.getSender();
+        }
+        if (message.getData().equals("DELDATA:THIS")) {
+            return;
         }
         boolean success = false;
         if (message.getReceiver() != null && message.getSender() != null) {

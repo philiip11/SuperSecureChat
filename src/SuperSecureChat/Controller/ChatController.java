@@ -134,29 +134,30 @@ public class ChatController {
                     (message.getReceiver().getId().equals(contact.getId()) &&   // Nachricht von mich an Kontakt
                             message.getSender().getId().equals(me.getId()))) {
 
-
-                Platform.runLater(() -> {
-                    ArrayList<Message> remove = new ArrayList<>();
-                    boolean update = true;
-                    for (Message m : messages) {
-                        if (m.getId().equals(message.getId())) {
-                            remove.add(m);
-                            update = false;
+                if (!message.getData().equals("DELDATA:THIS")) {
+                    Platform.runLater(() -> {
+                        ArrayList<Message> remove = new ArrayList<>();
+                        boolean update = true;
+                        for (Message m : messages) {
+                            if (m.getId().equals(message.getId())) {
+                                remove.add(m);
+                                update = false;
+                            }
                         }
-                    }
-                    boolean finalUpdate = update;
-                    for (Message m : remove) {
-                        messages.remove(m);
-                    }
-                    messages.add(message);
-                    updateListView();
-                    if (finalUpdate) {
+                        boolean finalUpdate = update;
+                        for (Message m : remove) {
+                            messages.remove(m);
+                        }
+                        messages.add(message);
                         updateListView();
-                    } else {
-                        messagesListView.getItems().sort(Comparator.comparingLong(Message::getCreated));
+                        if (finalUpdate) {
+                            updateListView();
+                        } else {
+                            messagesListView.getItems().sort(Comparator.comparingLong(Message::getCreated));
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         } else {
             System.out.println("ChatControllerNullPointerException");
