@@ -245,7 +245,7 @@ public class TCPServerThread extends Thread {
                 notification = true;
             }
         }
-        if (!message.getReferencId().equals("")) {
+        if (!message.getReferencId().equals("") && !message.getReferencId().equals("0")) {
             try {
                 Message referencedMessage = Database.getInstance().getMessagesById(message.getReferencId());
                 switch (message.getData()) {

@@ -11,6 +11,7 @@ import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXListCell;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,9 +19,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -67,6 +72,9 @@ public class ChatListViewCell extends JFXListCell<Message> {
     private FXMLLoader mLLoader;
     @FXML
     TextFlow labelMessage;
+
+    final Clipboard clipboard = Clipboard.getSystemClipboard();
+    final ClipboardContent content = new ClipboardContent();
 
     protected static String htmlifyHelper(String text) {
 
@@ -129,7 +137,8 @@ public class ChatListViewCell extends JFXListCell<Message> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            labelMessage.getChildren().addAll(parseText(crypto.decrypt(message.getText())));
+            String decryptedText = crypto.decrypt(message.getText());
+            labelMessage.getChildren().addAll(parseText(decryptedText));
             labelTime.setText(simpleDateFormat.format(new Date(message.getCreated() * 1000L)));
             if (messageFromMe) {
                 received.setVisible(message.getReceived() > 0);
@@ -161,6 +170,17 @@ public class ChatListViewCell extends JFXListCell<Message> {
 
             setText(null);
             setGraphic(anchorPane);
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem copyMessage = new MenuItem("Kopieren");
+            copyMessage.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    content.putString(decryptedText);
+                    clipboard.setContent(content);
+                }
+            });
+            contextMenu.getItems().add(copyMessage);
+            anchorPane.setOnContextMenuRequested(event -> contextMenu.show(anchorPane, event.getScreenX(), event.getScreenY()));
         }
 
     }
@@ -350,9 +370,9 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 lastEmojis = new StringBuilder();
                 lastEmojiCounter = 0;
             } else if (ch < 55296 || ch > 57343) {
-                System.out.print("addEmoji: " + charBuffer + Integer.toHexString(ch) + " ");
+                //System.out.print("addEmoji: " + charBuffer + Integer.toHexString(ch) + " ");
                 success = addEmoji(textList, size, charBuffer + Integer.toHexString(ch));
-                System.out.println(success ? "OK" : "Fail");
+                //System.out.println(success ? "OK" : "Fail");
                 if (!success) {
                     charCounter++;
                     charBuffer.append(Integer.toHexString(ch)).append("_");
@@ -377,11 +397,11 @@ public class ChatListViewCell extends JFXListCell<Message> {
                 }
                 boolean success2 = false;
                 if (lastEmojis.length() > 0) {
-                    System.out.print("try " + lastEmojis + Integer.toHexString(ch) + " ");
+                    //System.out.print("try " + lastEmojis + Integer.toHexString(ch) + " ");
                     success2 = addEmoji(textList, size, lastEmojis + Integer.toHexString(ch));
                     if (success2) {
                         i++;
-                        System.out.println("OK");
+                        //System.out.println("OK");
                         removeLastEmojis(lastEmojiCounter, textList);
                         success = true;
                         lastEmojiCounter = 0;
@@ -389,7 +409,7 @@ public class ChatListViewCell extends JFXListCell<Message> {
                         charCounter = 0;
                         charBuffer = new StringBuilder();
                     } else {
-                        System.out.println("Fail");
+                        //System.out.println("Fail");
 
                     }
                 }
@@ -417,10 +437,10 @@ public class ChatListViewCell extends JFXListCell<Message> {
 
     private void removeLastEmojis(int length, ArrayList<Node> textList) {
         int size = textList.size();
-        System.out.println("length: " + length);
-        System.out.println("size: " + size);
+        //System.out.println("length: " + length);
+        //System.out.println("size: " + size);
         for (int i = 1; i <= length; i++) {
-            System.out.println("remove " + textList.get(size - i - 1).getId() + " (" + (size - i - 1) + ")");
+            //System.out.println("remove " + textList.get(size - i - 1).getId() + " (" + (size - i - 1) + ")");
             textList.remove(size - i - 1);
         }
     }

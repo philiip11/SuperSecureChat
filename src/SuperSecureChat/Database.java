@@ -175,7 +175,7 @@ public class Database {
     public ArrayList<Message> getMessagesByContacts(Contact contact1, Contact contact2) {
         ArrayList<Message> result = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?) AND data != 'DELDATA:THIS'");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM messages WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?) AND length(text) > 0");
             ps.setString(1, contact1.getId());
             ps.setString(2, contact2.getId());
             ps.setString(3, contact2.getId());
