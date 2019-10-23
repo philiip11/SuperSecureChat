@@ -57,9 +57,9 @@ public class ContactsController {
                 Platform.runLater(() -> showContacts());
             }
         }, 0, 5000);
-        if (Contact.getMyContact().getId().equals("Schneiderph")) {
+        /*if (Contact.getMyContact().getId().equals("Schneiderph")) {
             Platform.runLater(this::openNetworkStage);
-        }
+        }*/
 
     }
 
